@@ -19,7 +19,7 @@
     /* LOGIN */
     .login { min-height: 100vh; display: grid; place-items: center; background: linear-gradient(135deg, #edf6f0, #fffaf0); }
     .loginbox { width: min(440px, 92%); background: #fff; padding: 38px; border-radius: 22px; box-shadow: 0 18px 60px #174b3520; }
-    .logo { font-size: 45px; font-weight: 800; color: var(--g); }
+    .logo { font-size: 35px; font-weight: 800; color: var(--g); }
     .logo span { color: var(--gold); }
     h1 { font-size: 30px; margin: 0 0 7px; }
     h2, h3 { margin-top: 0; }
@@ -714,7 +714,7 @@ function pdfInfo(unit, lesson) {
   const key = unit + "-" + lesson;
   if (!PDF_AVAILABLE.includes(key)) return null;
 
-  const path = "pdfs/" + key + ".pdf";
+  const path = key + ".pdf";
   return { view: path};
 }
     /* =========================================================
