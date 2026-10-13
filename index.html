@@ -10143,8 +10143,10 @@ function hasAnswer(q) {
 function isOpenGroup(g) {
   return g.open === true || /کے بارے میں آپ کیا جانتے/.test(g.title || "");
 }
-function isMarkable(g, q) {
-  return !g.noScore && !isOpenGroup(g) && hasAnswer(q);
+function isMarkable(g, q, mode) {
+  /* In MCQ mode the "in your own words" questions are scored too (no self-check there);
+     with typed answers they stay unmarked and use the self-check instead. */
+  return !g.noScore && (mode === "mcq" || !isOpenGroup(g)) && hasAnswer(q);
 }
 function modelText(q) {
   if (!hasAnswer(q)) return null;
@@ -10193,7 +10195,7 @@ async function submitActivities() {
       : [];
     /* LOOP THROUGH SUB QUESTIONS */
     subquestions.forEach(function (question, subIndex) {
-      if (isMarkable(group, question)) {
+      if (isMarkable(group, question, activityGlobalAnswerMode)) {
         totalQuestions++;
       }
       let value = "";
@@ -10233,7 +10235,7 @@ async function submitActivities() {
       }
       answers[groupIndex][subIndex] = value;
       /* SCORE */
-      if (isMarkable(group, question) && value !== "" && checkAnswer(question, value)) {
+      if (isMarkable(group, question, activityGlobalAnswerMode) && value !== "" && checkAnswer(question, value)) {
         score++;
       }
     });
@@ -10264,6 +10266,8 @@ async function submitActivities() {
   const unitState = U(unit);
   unitState.answers[lesson] = answers;
   unitState.scores[lesson] = percentage;
+  unitState.modes = unitState.modes || {};
+  unitState.modes[lesson] = activityGlobalAnswerMode; /* "type" or "mcq" */
   showReview = true;
   save();
   activitySubmissionComplete = true;
@@ -10275,6 +10279,7 @@ async function submitActivities() {
 /* ===== ANSWER REVIEW (shown after submitting) ===== */
 function renderAnswerReview(unit, lesson) {
   const saved = U(unit).answers[lesson] || [];
+  const usedMCQ = ((U(unit).modes || {})[lesson]) === "mcq";
   let html = "", unmarked = 0;
   acts(unit, lesson).forEach(function (g, gi) {
     const open = isOpenGroup(g);
@@ -10284,7 +10289,7 @@ function renderAnswerReview(unit, lesson) {
       const mineText = cleanText(q.type === "bold" ? getBoldText(mine) : q.type === "mcq" ? (q.options || [])[Number(mine)] : mine);
       const model = modelText(q);
       let cls = "", mark = open ? "✎" : "•", modelHTML = "";
-      if (isMarkable(g, q)) {
+      if (isMarkable(g, q, usedMCQ ? "mcq" : "type")) {
         const ok = checkAnswer(q, mine);
         cls = ok ? "rv-ok" : "rv-bad"; mark = ok ? "✓" : "✗";
         if (!ok) modelHTML = '<div class="rv-m">Correct answer: <b>' + escapeHTML(model) + "</b></div>";
@@ -10299,7 +10304,7 @@ function renderAnswerReview(unit, lesson) {
     });
     if (!rows) return;
     html += '<h4 class="rv-title">Question ' + (gi + 1) + ": " + escapeHTML(cleanText(g.title)) + "</h4>" + rows;
-    if (open) {
+    if (open && !usedMCQ) { /* self-assessment is only for typed answers, not MCQs */
       html += '<div class="rv-check"><strong>Self-check</strong>' +
         '<label><input type="checkbox"> My answer has the same main idea as the model answer.</label>' +
         '<label><input type="checkbox"> I did not leave out an important point.</label></div>';
@@ -10806,6 +10811,24 @@ body.dark-mode #wowHello p{color:#aabbb1}
 body.reduce-motion .wow-login-bg::before,body.reduce-motion .wow-float,body.reduce-motion #wowHello,body.reduce-motion #wowHello *{animation:none!important}
 body.reduce-motion .wow-float{opacity:var(--oc,.22);bottom:auto;top:var(--top,40%)}
 @media (prefers-reduced-motion:reduce){.wow-login-bg::before,.wow-float,#wowHello,#wowHello *{animation:none!important}.wow-float{opacity:var(--oc,.22);bottom:auto;top:var(--top,40%)}}
+
+/* ===== Smooth dark mode toggle ===== */
+.wow-theme-btn{position:relative;overflow:hidden}
+.wow-theme-btn svg{width:20px;height:20px;transition:transform .5s cubic-bezier(.2,1.2,.4,1)}
+.wow-theme-btn .sun{display:none}
+body.dark-mode .wow-theme-btn .sun{display:inline}
+body.dark-mode .wow-theme-btn .moon{display:none}
+.wow-theme-btn.spin svg{animation:wowIconSpin .6s cubic-bezier(.2,1.2,.4,1)}
+.wow-theme-btn.login-pos{position:absolute;top:18px;right:18px;z-index:2}
+body.dark-mode .icon-btn:hover{background:#2a4034;border-color:#4b9171}
+@keyframes wowIconSpin{from{transform:rotate(-120deg) scale(.4);opacity:0}to{transform:none;opacity:1}}
+/* soft color fade when View Transitions are unavailable */
+html.wow-theme-fade *,html.wow-theme-fade *::before,html.wow-theme-fade *::after{transition:background-color .5s ease,color .5s ease,border-color .5s ease,box-shadow .5s ease,fill .5s ease,stroke .5s ease!important}
+/* circular reveal from the toggle button */
+html.wow-vt-circle::view-transition-old(root),html.wow-vt-circle::view-transition-new(root){animation:none;mix-blend-mode:normal}
+html.wow-vt-circle::view-transition-old(root){z-index:1}
+html.wow-vt-circle::view-transition-new(root){z-index:2}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.55s}
 </style>
 
 <script>
@@ -11160,6 +11183,96 @@ body.reduce-motion .wow-float{opacity:var(--oc,.22);bottom:auto;top:var(--top,40
       return r;
     };
   }
+
+  /* ---------- 7. SMOOTH DARK MODE TOGGLE ---------- */
+  var themeReady = false, inVT = false;
+  setTimeout(function () { themeReady = true; }, 800);
+
+  function isDark() { return document.body.classList.contains("dark-mode"); }
+  function readPrefs() {
+    var prefs = {};
+    try { prefs = JSON.parse(localStorage.getItem(PREFERENCE_KEY) || "{}") || {}; } catch (e) {}
+    return prefs;
+  }
+  function wantDark() { /* mirrors loadPreferences(): default theme is "light" */
+    var t = readPrefs().theme || "light";
+    return t === "dark" || (t === "system" && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  }
+  function themeTransition(fn, origin) {
+    var root = document.documentElement;
+    if (!document.startViewTransition || reduced() || !themeReady) {
+      if (!reduced() && themeReady) { /* fallback: fade colors */
+        root.classList.add("wow-theme-fade");
+        setTimeout(function () { root.classList.remove("wow-theme-fade"); }, 700);
+      }
+      fn(); return;
+    }
+    root.classList.toggle("wow-vt-circle", !!origin);
+    var vt;
+    try {
+      vt = document.startViewTransition(function () { inVT = true; try { fn(); } finally { inVT = false; } });
+    } catch (e) { root.classList.remove("wow-vt-circle"); fn(); return; }
+    if (origin) {
+      vt.ready.then(function () {
+        var x = origin.x, y = origin.y, r = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+        root.animate(
+          { clipPath: ["circle(0px at " + x + "px " + y + "px)", "circle(" + r + "px at " + x + "px " + y + "px)"] },
+          { duration: 650, easing: "ease-in-out", pseudoElement: "::view-transition-new(root)" }
+        );
+      }).catch(function () {});
+    }
+    vt.finished.then(function () { root.classList.remove("wow-vt-circle"); }, function () { root.classList.remove("wow-vt-circle"); });
+  }
+
+  if (typeof window.loadPreferences === "function") { /* Settings > Color theme also fades smoothly */
+    var origLoad = window.loadPreferences;
+    window.loadPreferences = function () {
+      if (inVT || !themeReady || wantDark() === isDark()) return origLoad.apply(this, arguments);
+      var self = this, args = arguments;
+      themeTransition(function () { origLoad.apply(self, args); }, null);
+    };
+  }
+
+  function switchTheme(origin) {
+    var prefs = readPrefs(), saved = true;
+    prefs.theme = isDark() ? "light" : "dark";
+    try { localStorage.setItem(PREFERENCE_KEY, JSON.stringify(prefs)); } catch (e) { saved = false; }
+    themeTransition(function () {
+      if (saved && typeof window.loadPreferences === "function") window.loadPreferences();
+      else document.body.classList.toggle("dark-mode");
+    }, origin);
+  }
+
+  var SUN = '<svg class="sun ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+  var MOON = '<svg class="moon ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
+
+  function makeThemeButton(extra) {
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "icon-btn wow-theme-btn" + (extra ? " " + extra : "");
+    b.innerHTML = MOON + SUN;
+    b.addEventListener("click", function () {
+      var r = b.getBoundingClientRect();
+      b.classList.remove("spin"); void b.offsetWidth; b.classList.add("spin");
+      switchTheme({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
+    });
+    return b;
+  }
+  var themeButtons = [];
+  function syncThemeButtons() {
+    var label = isDark() ? "Switch to light mode" : "Switch to dark mode";
+    themeButtons.forEach(function (b) {
+      b.setAttribute("aria-label", label); b.title = label.replace("Switch to ", "Switch to ");
+      b.setAttribute("aria-pressed", String(isDark()));
+    });
+  }
+  (function () {
+    var user = document.querySelector(".topbar .user");
+    if (user) { var b1 = makeThemeButton(""); user.insertBefore(b1, user.firstChild); themeButtons.push(b1); }
+    var login = document.getElementById("login");
+    if (login) { var b2 = makeThemeButton("login-pos"); login.appendChild(b2); themeButtons.push(b2); }
+    syncThemeButtons();
+    new MutationObserver(syncThemeButtons).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+  })();
 })();
 </script>
 
