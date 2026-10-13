@@ -19,7 +19,7 @@
     /* LOGIN */
     .login { min-height: 100vh; display: grid; place-items: center; background: linear-gradient(135deg, #edf6f0, #fffaf0); }
     .loginbox { width: min(440px, 92%); background: #fff; padding: 38px; border-radius: 22px; box-shadow: 0 18px 60px #174b3520; }
-    .logo { font-size: 35px; font-weight: 800; color: var(--g); }
+    .logo { font-size: 45px; font-weight: 800; color: var(--g); }
     .logo span { color: var(--gold); }
     h1 { font-size: 30px; margin: 0 0 7px; }
     h2, h3 { margin-top: 0; }
@@ -127,6 +127,8 @@
     .bold-toolbar { display: flex; gap: 8px; margin-top: 10px; margin-bottom: 8px; }
     .bold-btn { padding: 8px 14px; border: 1px solid var(--line); border-radius: 9px; background: #fff; color: var(--text); font-weight: 800; }
     .bold-btn:hover { background: #eef5f1; }
+    body.dark-mode .bold-btn { background: #2a4034; color: #e7f0eb; border-color: var(--line); }
+    body.dark-mode .bold-btn:hover { background: #38594a; color: #fff; }
     .bold-editor { min-height: 58px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: #fff; font-size: 20px; line-height: 2; direction: rtl; text-align: right; outline: none; }
     .bold-editor:focus { border-color: var(--g); }
     .question-type { font-size: 12px; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; }
@@ -714,7 +716,7 @@ function pdfInfo(unit, lesson) {
   const key = unit + "-" + lesson;
   if (!PDF_AVAILABLE.includes(key)) return null;
 
-  const path = key + ".pdf";
+  const path = "pdfs/" + key + ".pdf";
   return { view: path};
 }
     /* =========================================================
@@ -763,9 +765,9 @@ function pdfInfo(unit, lesson) {
         subquestions: [
           { type: "text", question: "شرک", answer: "الشرک" },
           { type: "text", question: "شیطان", answer: "الشیطان" },
-          { type: "text", question: "کعبہ", answer: "الکعبہ" },
-          { type: "text", question: "زکوۃ", answer: "الزکوۃ" },
-          { type: "text", question: "توبہ", answer: "التوبہ" },
+          { type: "text", question: "کعبہ", answer: "الكعبہ|الكعبة"  },
+          { type: "text", question: "زکوۃ", answer: "الزکاة|الزکوۃ" },
+          { type: "text", question: "توبہ", answer: "التوبہ|التوبة" },
           { type: "text", question: "صلح", answer: "الصلح" },
           { type: "text", question: "شکر", answer: "الشکر" },
           { type: "text", question: "دین", answer: "الدین" },
@@ -821,7 +823,7 @@ function pdfInfo(unit, lesson) {
           { type: "text", question: "ش۔ک۔ر", answer: "شکر" },
           { type: "text", question: "ک۔ا۔ف۔ر ", answer: "کافر" },
           { type: "text", question: "خ۔ا۔ل۔ق", answer: "خالق" },
-          { type: "text", question: "ز۔ک۔ا۔ۃ", answer: "زکوۃ" },
+          { type: "text", question: "ز۔ک۔ا۔ۃ", answer: "زکاۃ|زکوۃ" },
           { type: "text", question: "ب۔ا۔ط۔ل", answer: "باطل" },
           { type: "text", question: "ف۔س۔ا۔د", answer: "فساد" },
           { type: "text", question: "ش۔ی۔ط۔ا۔ن", answer: "شیطان" },
@@ -868,8 +870,8 @@ function pdfInfo(unit, lesson) {
           { type: "text", question: "کلام", answer: "الکلام" },
           { type: "text", question: "منافق", answer: "المنافق" },
           { type: "text", question: "عدل", answer: "العدل" },
-          { type: "text", question: "عزت", answer: "العزت" },
-          { type: "text", question: "ذلت", answer: "الذلت" },
+          { type: "text", question: "عزت", answer: "العزة|العزت" },
+          { type: "text", question: "ذلت", answer: "الذلة|الذلت" },
           { type: "text", question: "مشرق", answer: "المشرق" },
           { type: "text", question: "مغرب", answer: "المغرب" },
           { type: "text", question: "طلوع", answer: "الطلوع" },
@@ -1705,7 +1707,7 @@ function pdfInfo(unit, lesson) {
           { type: "text", question: "قريب", answer: "قَرِيب" },
           { type: "text", question: "قوي", answer: "قَوِيّ" },
           { type: "text", question: "مالك", answer: "مَالِك" },
-          { type: "text", question: "هادي", answer: "هَادِي" },
+          { type: "text", question: "هادي", answer: "هَادِي|هَادٍ" },
           { type: "text", question: "واسع", answer: "وَاسِع" },
           { type: "text", question: "وكيل", answer: "وَكِيل" }
         ]
@@ -1927,290 +1929,545 @@ function pdfInfo(unit, lesson) {
       {
         title: "سوال ۱: درج ذیل الفاظ میں (وَ) سے پہلے یا (وَ) کے بعد کوئی لفظ لگا کر قطعہ مکمل کریں۔",
         subquestions: [
-          { type: "text", question: "الشَّمْسُ وَ_", answer: "الشَّمْسُ وَالْقَمَرُ" },
-          { type: "text", question: "_ وَالزَّيْتُونِ", answer: "التِّينِ وَالزَّيْتُونِ" },
-          { type: "text", question: "التَّوْرَاةُ وَ_", answer: "التَّوْرَاةُ وَالْإِنجِيلُ" },
-          { type: "text", question: "الْبِرُّ وَ_", answer: "الْبِرُّ وَالتَّقْوَى" },
-          { type: "text", question: "الْخَوْفُ وَ_", answer: "الْخَوْفُ وَالْجُوعُ" },
-          { type: "text", question: "الْأَمْنُ وَ_", answer: "الْأَمْنُ وَالْخَوْفُ" },
-          { type: "text", question: "الْمَوْتُ وَ_", answer: "الْمَوْتُ وَالْحَيَاةُ" },
-          { type: "text", question: "_ وَالْعُمْرَةِ", answer: "الْحَجِّ وَالْعُمْرَةِ" },
-          { type: "text", question: "_ وَيَعْقُوبَ", answer: "إِسْحَاقَ وَيَعْقُوبَ" },
-          { type: "text", question: "_ وَالْفُسُوقِ", answer: "الْكُفْرِ وَالْفُسُوقِ" },
-          { type: "text", question: "_ وَالْبَغْضَاءِ", answer: "الْعَدَاوَةِ وَالْبَغْضَاءِ" },
-          { type: "text", question: "الْعِلْمُ وَ_", answer: "الْعِلْمُ وَالْجِسْمُ" }
+          { type: "text", question: "الشَّمْسُ وَ_", answer: "الْقَمَرُ|القمر" },
+          { type: "text", question: "_ وَالزَّيْتُونِ", answer: "التِّينِ|التين" },
+          { type: "text", question: "التَّوْرَاةُ وَ_", answer: "الْإِنجِيلُ|الانجیل|الانجیلُ" },
+          { type: "text", question: "الْبِرُّ وَ_", answer: "التَّقْوَىٰ|التقوی" },
+          { type: "text", question: "_ وَالْعُمْرَةِ", answer: "الْحَجِّ|الحج" },
+          { type: "text", question: "الْمَوْتُ وَ_", answer: "الْحَيَاةُ|الحیاة|زندگی" },
+          { type: "text", question: "الْأَمْنُ وَ_", answer: "الْخَوْفُ|الخوف" },
+          { type: "text", question: "_ وَيَعْقُوبَ", answer: "إِسْحَاقَ|اسحاق" },
+          { type: "text", question: "_ وَالْفُسُوقِ", answer: "الْكُفْرِ|الکفر" },
+          { type: "text", question: "_ وَالْبَغْضَاءِ", answer: "الْعَدَاوَةِ|العداوة" },
+          { type: "text", question: "الْعِلْمُ وَ_", answer: "الْجِسْمُ|الجسم" }
         ]
       },
       {
-        title: "سوال ۲: ان قطعات کا عربی ترجمہ کریں۔",
+        title: "سوال ۲: ان قطعات کا اردو ترجمہ کریں۔",
         subquestions: [
           { type: "text", question: "کتاب اور حکمت", answer: "الْكِتَابُ وَالْحِكْمَةُ" },
+          { type: "text", question: "سورج اور چاند", answer: "الشَّمْسُ وَالْقَمَرُ" },
           { type: "text", question: "تورات اور انجیل", answer: "التَّوْرَاةُ وَالْإِنجِيلُ" },
           { type: "text", question: "خوف اور بھوک", answer: "الْخَوْفُ وَالْجُوعُ" },
-          { type: "text", question: "سورج اور چاند", answer: "الشَّمْسُ وَالْقَمَرُ" },
           { type: "text", question: "مشرق اور مغرب", answer: "الْمَشْرِقُ وَالْمَغْرِبُ" },
           { type: "text", question: "علم اور جسم", answer: "الْعِلْمُ وَالْجِسْمُ" },
-          { type: "text", question: "حق اور باطل", answer: "الْحَقُّ وَالْبَاطِلُ" },
-          { type: "text", question: "کفر اور بدکاری", answer: "الْكُفْرُ وَالْفُسُوقُ" }
+          { type: "text", question: "کفر اور بدکاری", answer: "الْكُفْرُ وَالْفُسُوقُ" },
+          { type: "text", question: "حق اور باطل", answer: "الْحَقُّ وَالْبَاطِلُ" }
         ]
       },
+      {
+        title: "سوال ۳: درج ذیل قرآنی الفاظ کے جوڑوں کا اردو ترجمہ بتائیں۔",
+        subquestions: [
+          { type: "text", question: "الْجَنَّةُ وَالْمَغْفِرَةُ", answer: "جنت اور مغفرت" },
+          { type: "text", question: "السَّمَاءُ وَالْأَرْضُ", answer: "آسمان اور زمین" },
+          { type: "text", question: "الذَّكَرُ وَالْأُنثَىٰ", answer: "مرد اور عورت" },
+          { type: "text", question: "الذَّهَبُ وَالْفِضَّةُ", answer: "سونا اور چاندی" },
+          { type: "text", question: "الْجِنُّ وَالْإِنسُ", answer: "جن اور انسان" }
+        ]
+      }
     ],
   },
+
 
   13: {
     questions: [
       {
-        title: "مشق — سوال: ذیل میں چند قرآنی الفاظ دیے گئے ہیں۔ ان میں سے بعض کے شروع میں (اَل) موجود ہے اور بعض میں نہیں ہے، چنانچہ ان کے آخر میں دو پیش (تنوین) ہیں۔ دونوں قسم کے الفاظ کا (اَل) اور تنوین کا خیال رکھتے ہوئے ترجمہ کریں۔",
+        title: "سوال ۱: مفہوم پر لمبی توجہ زیادہ مرکوز رکھتے ہوئے درج ذیل الفاظ کے معانی تحریر کریں۔",
         subquestions: [
-          { type: "text", question: "آيَةٌ", answer: "ایک آیت" },
-          { type: "text", question: "الْقُرْآنُ", answer: "وہ قرآن" },
-          { type: "text", question: "الصَّبْرُ", answer: "وہ صبر" },
-          { type: "text", question: "رَسُولٌ", answer: "ایک رسول" },
-          { type: "text", question: "الْخَالِقُ", answer: "وہ پیدا کرنے والا" },
-          { type: "text", question: "الْأَجْرُ", answer: "وہ اجر" },
-          { type: "text", question: "آخِرَةٌ", answer: "ایک آخرت" },
-          { type: "text", question: "نُورٌ", answer: "ایک نور" },
-          { type: "text", question: "الْخَيْرُ", answer: "وہ بھلائی" },
-          { type: "text", question: "سُورَةٌ", answer: "ایک سورت" },
-          { type: "text", question: "الْحَسْرَةُ", answer: "وہ حسرت" },
-          { type: "text", question: "تِجَارَةٌ", answer: "ایک تجارت" },
-          { type: "text", question: "الْعِلْمُ", answer: "وہ علم" },
-          { type: "text", question: "الشَّرُّ", answer: "وہ برائی" },
-          { type: "text", question: "خَيْرٌ", answer: "ایک بھلائی" },
-          { type: "text", question: "شَرٌّ", answer: "ایک برائی" },
-          { type: "text", question: "نَبِيٌّ", answer: "ایک نبی" },
-          { type: "text", question: "الرَّحْمَةُ", answer: "وہ رحمت" },
-          { type: "text", question: "الْكَبِيرُ", answer: "وہ بڑا" },
-          { type: "text", question: "الْمَاءُ", answer: "وہ پانی" },
-          { type: "text", question: "نَارٌ", answer: "ایک آگ" },
-          { type: "text", question: "الْعَذَابُ", answer: "وہ عذاب" },
-          { type: "text", question: "نِعْمَةٌ", answer: "ایک نعمت" },
-          { type: "text", question: "الْحَمْدُ", answer: "وہ تعریف" },
-          { type: "text", question: "الشُّكْرُ", answer: "وہ شکر" },
-          { type: "text", question: "الْمَشْرِقُ", answer: "وہ مشرق" },
-          { type: "text", question: "هُدًى", answer: "ایک ہدایت" }
+          /* Image 1 Column 1 */
+          { type: "text", question: "شَكٌّ", answer: "کوئی شک|ایک شک" },
+          { type: "text", question: "شَيْءٌ", answer: "کوئی چیز|ایک چیز" },
+          { type: "text", question: "فَضْلٌ", answer: "کوئی فضل|ایک فضل" },
+          { type: "text", question: "ضَلَالٌ", answer: "کوئی گمراہی|ایک گمراہی" },
+          { type: "text", question: "مُصِيبَةٌ", answer: "کوئی مصیبت|ایک مصیبت" },
+          { type: "text", question: "ظُلْمٌ", answer: "کوئی ظلم|ایک ظلم" },
+          { type: "text", question: "آيَةٌ", answer: "کوئی نشانی|ایک نشانی|آیت" },
+          { type: "text", question: "قَوْلٌ", answer: "کوئی قول|ایک بات" },
+          { type: "text", question: "فِدْيَةٌ", answer: "کوئی فدیہ|ایک فدیہ" },
+          /* Image 1 Column 2 */
+          { type: "text", question: "رَحْمَةٌ", answer: "رحمت" },
+          { type: "text", question: "حَسْرَةٌ", answer: "حسرت" },
+          { type: "text", question: "عِلْمٌ", answer: "علم" },
+          { type: "text", question: "غَضَبٌ", answer: "غصب|غصہ" },
+          { type: "text", question: "أَجْرٌ", answer: "اجر" },
+          { type: "text", question: "مَرَضٌ", answer: "مرض" },
+          { type: "text", question: "دَعْوَةٌ", answer: "دعوت" },
+          { type: "text", question: "مُؤْمِنٌ", answer: "مومن" },
+          { type: "text", question: "حَيَاةٌ", answer: "زندگی" },
+          { type: "text", question: "صِرَاطٌ", answer: "کوئی راستہ|ایک راستہ" },
+          /* Image 1 Column 3 */
+          { type: "text", question: "مَغْفِرَةٌ", answer: "مغفرت" },
+          { type: "text", question: "حَقٌّ", answer: "حق" },
+          { type: "text", question: "مَالٌ", answer: "مال" },
+          { type: "text", question: "ذِلَّةٌ", answer: "ذلت" },
+          { type: "text", question: "رِزْقٌ", answer: "رزق" },
+          { type: "text", question: "شِفَاءٌ", answer: "شفاء" },
+          { type: "text", question: "عَدُوٌّ", answer: "عدو|دشمن" },
+          { type: "text", question: "كَافِرٌ", answer: "کافر" },
+          { type: "text", question: "بَيَانٌ", answer: "بیان" },
+          { type: "text", question: "جَمَالٌ", answer: "جمال|حسن" }
         ]
       },
-    ],
+      {
+        title: "سوال ۲: درج ذیل قرآنی الفاظ کے سامنے ان کے اردو معنی تحریر کریں۔",
+        subquestions: [
+          /* Image 2 */
+          { type: "text", question: "رِضْوَانٌ", answer: "رضامندی" },
+          { type: "text", question: "إِفْكٌ", answer: "جھوٹ" },
+          { type: "text", question: "شَرَابٌ", answer: "مشروب" },
+          { type: "text", question: "لِسَانٌ", answer: "زبان" },
+          { type: "text", question: "خِزْيٌ", answer: "رسوائی" },
+          { type: "text", question: "لَعِبٌ", answer: "کھیل" },
+          { type: "text", question: "صَلَاةٌ", answer: "نماز" },
+          { type: "text", question: "تِجَارَةٌ", answer: "تجارت" },
+          { type: "text", question: "أَمْرٌ", answer: "کام|حکم" },
+          { type: "text", question: "بَيْتٌ", answer: "گھر" },
+          { type: "text", question: "بَرَاءَةٌ", answer: "برات|بیزاری" },
+          { type: "text", question: "لَهْوٌ", answer: "تماشا" },
+          { type: "text", question: "أُمَّةٌ", answer: "امت" },
+          { type: "text", question: "فَرِيقٌ", answer: "فریق|دست" },
+          { type: "text", question: "مَوْعِظَةٌ", answer: "وعظ، نصیحت" },
+          { type: "text", question: "سِحْرٌ", answer: "جادو" },
+          { type: "text", question: "مَتَاعٌ", answer: "سامان" },
+          { type: "text", question: "بُرْهَانٌ", answer: "دلیل" },
+          { type: "text", question: "زِينَةٌ", answer: "زینت" },
+          { type: "text", question: "سَكِينَةٌ", answer: "برائی" }, // Context from image line matches student written "برائی"
+          { type: "text", question: "مَلِكٌ", answer: "بادشاہ" },
+          { type: "text", question: "مَلَكٌ", answer: "فرشتہ" },
+          { type: "text", question: "حَرَجٌ", answer: "تنگی" },
+          { type: "text", question: "سَلَامٌ", answer: "سلام، سلامتی" },
+          { type: "text", question: "سُلْطَانٌ", answer: "دلیل" }
+        ]
+      },
+      {
+        title: "سوال ۳: بعض اوقات دو یا دو سے زائد ایسے الفاظ جن میں (اَلْ) نہیں ہوتا (وَ) کے ذریعے باہم جڑے ہوتے ہیں۔ ان قطعات کا ترجمہ مکمل کریں۔",
+        subquestions: [
+          /* Image 3 */
+          { type: "text", question: "هُدًى وَنُورٌ", answer: "ایک ہدایت اور ایک نور" },
+          { type: "text", question: "هُدًى وَمَوْعِظَةٌ", answer: "ایک ہدایت اور ایک نصیحت" },
+          { type: "text", question: "مَغْفِرَةٌ وَرَحْمَةٌ", answer: "ایک مغفرت اور ایک رحمت" },
+          { type: "text", question: "خَوْفًا وَطَمَعًا", answer: "خوف اور امید" },
+          { type: "text", question: "طُغْيَانًا وَكُفْرًا", answer: "ایک سرکشی اور کفر" },
+          { type: "text", question: "لَعِبٌ وَلَهْوٌ", answer: "ایک کھیل اور تماشا" },
+          { type: "text", question: "هُزُوًا وَلَعِبًا", answer: "ایک مذاق اور ایک کھیل" },
+          { type: "text", question: "هُدًى وَشِفَاءٌ", answer: "ایک ہدایت اور ایک شفاء" },
+          { type: "text", question: "مَغْفِرَةٌ وَرِزْقٌ", answer: "ایک مغفرت اور ایک رزق" },
+          { type: "text", question: "مَغْفِرَةٌ وَأَجْرٌ", answer: "ایک مغفرت اور ایک اجر" },
+          { type: "text", question: "إِمَامًا وَرَحْمَةً", answer: "ایک امام اور ایک رحمت" }
+        ]
+      }
+    ]
   },
+
 
   14: {
     questions: [
       {
-        title: "درج ذیل جملوں کا ترجمہ کریں۔",
+        title: "سوال ۱: ذیل میں درج الفاظ کا ترجمہ جملے کے اختتام پر آنے والی مناسب نسبت کے ساتھ کیجیے۔",
         subquestions: [
-          { type: "text", question: "وَاللَّهُ غَفُورٌ", answer: "اور اللہ غفور ہے [VERIFY]" },
-          { type: "text", question: "وَاللَّهُ سَمِيعٌ", answer: "اور اللہ سننے والا ہے" },
-          { type: "text", question: "وَاللَّهُ وَاسِعٌ", answer: "اور اللہ وسعت دینے والا ہے [VERIFY]" },
-          { type: "text", question: "وَاللَّهُ شَهِيدٌ", answer: "اور اللہ حاضر ہے [VERIFY]" },
-          { type: "text", question: "وَاللَّهُ غَنِيٌّ", answer: "اور اللہ بے پرواہ ہے [VERIFY]" },
-          { type: "text", question: "وَاللَّهُ شَكُورٌ", answer: "اور اللہ قدر دان ہے" },
-          { type: "text", question: "وَاللَّهُ عَزِيزٌ", answer: "اور اللہ غالب ہے" },
-          { type: "text", question: "وَاللَّهُ قَدِيرٌ", answer: "اور اللہ قدرت والا ہے [VERIFY]" },
-          { type: "text", question: "وَاللَّهُ مُحِيطٌ", answer: "اور اللہ گھیرنے والا ہے [VERIFY]" },
-          { type: "text", question: "وَاللَّهُ عَلِيمٌ", answer: "اور اللہ جاننے والا ہے" }
+          /* Image 1 Column 1 */
+          { type: "text", question: "قَرِيبٌ", answer: "قریب ہے" },
+          { type: "text", question: "شَدِيدٌ", answer: "شدید ہے|سخت ہے" },
+          { type: "text", question: "كَافِرٌ", answer: "کافر ہے" },
+          { type: "text", question: "وَاسِعَةٌ", answer: "وسیع ہے" },
+          { type: "text", question: "لِبَاسٌ", answer: "لباس ہے" },
+          { type: "text", question: "سَاحِرٌ", answer: "جادوگر ہے" },
+          { type: "text", question: "أُسْوَةٌ", answer: "نمونہ ہے" },
+          { type: "text", question: "حَسْرَةٌ", answer: "حسرت ہے" },
+          { type: "text", question: "إِلٰهٌ", answer: "معبود ہے" },
+          { type: "text", question: "جَمَالٌ", answer: "حسن ہے|جمال ہے" },
+          { type: "text", question: "لِسَانٌ", answer: "زبان ہے" },
+          { type: "text", question: "مَلِكٌ", answer: "بادشاہ ہے" },
+          /* Image 1 Column 2 */
+          { type: "text", question: "حَقٌّ", answer: "حق ہے" },
+          { type: "text", question: "قَلِيلٌ", answer: "کم ہے|تھوڑا ہے" },
+          { type: "text", question: "مُؤْمِنٌ", answer: "مومن ہے" },
+          { type: "text", question: "كَبِيرٌ", answer: "بڑا ہے" },
+          { type: "text", question: "زِينَةٌ", answer: "زینت ہے" },
+          { type: "text", question: "سَلَامٌ", answer: "سلام ہے|سلامتی ہے" },
+          { type: "text", question: "عَدُوٌّ", answer: "دشمن ہے" },
+          { type: "text", question: "أُمَّةٌ", answer: "امت ہے" },
+          { type: "text", question: "حَيَاةٌ", answer: "زندگی ہے" },
+          { type: "text", question: "عِبْرَةٌ", answer: "عبرت ہے" },
+          { type: "text", question: "خِزْيٌ", answer: "ذلت ہے|رسوائی ہے" },
+          { type: "text", question: "سِحْرٌ", answer: "جادو ہے" },
+          /* Image 1 Column 3 */
+          { type: "text", question: "ظُلْمٌ", answer: "ظلم ہے" },
+          { type: "text", question: "كَثِيرٌ", answer: "زیادہ ہے|کثیر ہے" },
+          { type: "text", question: "مُهَاجِرٌ", answer: "مبارک ہے|ہجرت کرنے والا ہے" },
+          { type: "text", question: "خَيْرٌ", answer: "بہتر ہے|خیر ہے" },
+          { type: "text", question: "شَيْءٌ", answer: "چیز ہے" },
+          { type: "text", question: "رَسُولٌ", answer: "رسول ہے" },
+          { type: "text", question: "مُحْسِنٌ", answer: "دوست ہے|احسان کرنے والا ہے" },
+          { type: "text", question: "بَعِيدٌ", answer: "دور ہے" },
+          { type: "text", question: "فِدْيَةٌ", answer: "فدیہ ہے" },
+          { type: "text", question: "عَظِيمٌ", answer: "عظیم ہے|بڑا ہے" },
+          { type: "text", question: "فَقِيرٌ", answer: "فقیر ہے" },
+          { type: "text", question: "بَشَرٌ", answer: "انسان ہے" }
         ]
       },
       {
-        title: "بعض اوقات اللہ تعالیٰ کے نام کے بعد دو صفات (مثلاً غَفُورٌ اور رَحِيمٌ) بغیر واو کے اکٹھی آتی ہیں، اس صورت میں ان دونوں صفات کا ترجمہ اکٹھا کیا جائے گا جیسا کہ درج ذیل پہلی مثال میں کیا گیا ہے۔ بقیہ جملوں اور آیات کا ترجمہ خود کریں۔",
+        title: "سوال ۲: اسماء الحسنیٰ اور صفات کا جملے کے اختتام کے مطابق موزوں ترجمہ لکھیے۔",
         subquestions: [
+          /* Image 2 Column 1 */
+          { type: "text", question: "مُبَارَكٌ", answer: "مبارک ہے" },
+          { type: "text", question: "عَزِيزٌ", answer: "غالب ہے" },
+          { type: "text", question: "خَبِيرٌ", answer: "خبردار ہے|باخبر ہے" },
+          { type: "text", question: "سَمِيعٌ", answer: "سننے والا ہے" },
+          { type: "text", question: "قَدِيرٌ", answer: "قدرت والا ہے" },
+          { type: "text", question: "جَمِيلٌ", answer: "خوبصورت ہے" },
+          /* Image 2 Column 2 */
+          { type: "text", question: "غَفُورٌ", answer: "معاف کرنے والا ہے|بخشنے والا ہے" },
+          { type: "text", question: "حَكِيمٌ", answer: "حکمت والا ہے" },
+          { type: "text", question: "قَادِرٌ", answer: "قادر ہے" },
+          { type: "text", question: "بَصِيرٌ", answer: "دیکھنے والا ہے" },
+          { type: "text", question: "عَلِيمٌ", answer: "جاننے والا ہے" },
+          /* Image 2 Column 3 */
+          { type: "text", question: "رَجِيمٌ", answer: "رجم کرنے والا ہے|مردود ہے" },
+          { type: "text", question: "شَكُورٌ", answer: "قدردان ہے" },
+          { type: "text", question: "غَالِبٌ", answer: "غالب ہے" },
+          { type: "text", question: "رَءُوفٌ", answer: "شفیق ہے" },
+          { type: "text", question: "أَمِينٌ", answer: "امانت دار ہے" }
+        ]
+      },
+      {
+        title: "سوال ۳: درج ذیل قرآنی جملوں کا ترجمہ مکمل کریں۔",
+        subquestions: [
+          /* Image 3 Block 1 */
+          { type: "text", question: "وَاللَّهُ غَفُورٌ", answer: "اور اللہ غفور ہے" },
+          { type: "text", question: "وَاللَّهُ سَمِيعٌ", answer: "اور اللہ سننے والا ہے" },
+          { type: "text", question: "وَاللَّهُ وَاسِعٌ", answer: "اور اللہ وسعت دینے والا ہے" },
+          { type: "text", question: "وَاللَّهُ شَهِيدٌ", answer: "اور اللہ حاضر ہے" },
+          { type: "text", question: "وَاللَّهُ غَنِيٌّ", answer: "اور اللہ بے پرواہ ہے" },
+          { type: "text", question: "وَاللَّهُ شَكُورٌ", answer: "اور اللہ قدردان ہے" },
+          { type: "text", question: "وَاللَّهُ عَزِيزٌ", answer: "اور اللہ غالب ہے" },
+          { type: "text", question: "وَاللَّهُ قَدِيرٌ", answer: "اور اللہ قدرت والا ہے" },
+          { type: "text", question: "وَاللَّهُ مُحِيطٌ", answer: "اور اللہ گھیرنے والا ہے" },
+          { type: "text", question: "وَاللَّهُ عَلِيمٌ", answer: "اور اللہ جاننے والا ہے" },
+          /* Image 3 Block 2 */
           { type: "text", question: "وَاللَّهُ غَفُورٌ رَحِيمٌ", answer: "اور اللہ معاف اور رحم کرنے والا ہے" },
-          { type: "text", question: "وَاللَّهُ سَمِيعٌ عَلِيمٌ", answer: "اور اللہ سننے اور جاننے والا ہے [VERIFY]" },
+          { type: "text", question: "وَاللَّهُ سَمِيعٌ عَلِيمٌ", answer: "اور اللہ سننے اور جاننے والا ہے" },
           { type: "text", question: "وَاللَّهُ غَفُورٌ حَلِيمٌ", answer: "اور اللہ معاف کرنے والا اور بردبار ہے" },
-          { type: "text", question: "وَاللَّهُ وَاسِعٌ عَلِيمٌ", answer: "اور اللہ وسعت والا اور جاننے والا ہے [VERIFY]" },
+          { type: "text", question: "وَاللَّهُ وَاسِعٌ عَلِيمٌ", answer: "اور اللہ وسعت والا اور جاننے والا ہے" },
           { type: "text", question: "وَاللَّهُ غَنِيٌّ حَلِيمٌ", answer: "اور اللہ بے پرواہ اور بردبار ہے" },
           { type: "text", question: "وَاللَّهُ عَزِيزٌ حَكِيمٌ", answer: "اور اللہ غالب اور حکمت والا ہے" },
           { type: "text", question: "وَاللَّهُ شَكُورٌ حَلِيمٌ", answer: "اور اللہ قدردان اور بردبار ہے" },
-          { type: "text", question: "وَاللَّهُ عَلِيمٌ حَكِيمٌ", answer: "اور اللہ علم اور حکمت والا ہے [VERIFY]" },
-          { type: "text", question: "وَاللَّهُ غَنِيٌّ حَمِيدٌ", answer: "اور اللہ قابل تعریف اور بے پرواہ ہے [VERIFY]" }
+          { type: "text", question: "وَاللَّهُ عَلِيمٌ حَكِيمٌ", answer: "اور اللہ علم اور حکمت والا ہے" },
+          { type: "text", question: "وَاللَّهُ غَنِيٌّ حَمِيدٌ", answer: "اور اللہ قابل تعریف اور بے پرواہ ہے" }
         ]
-      },
+      }
     ],
   },
+
 
   15: {
     questions: [
       {
-        title: "سوال ۱: درج ذیل آیات میں سے اس حصے کو پہلی مثال کی طرح نمایاں کریں جس میں (هٰذَا) اور اس کے بعد لفظ سے چھوٹا قرآنی جملہ بن رہا ہے۔",
-        noScore: true,
+        title: "سوال ۱: درج ذیل قرآنی جملوں کا اردو ترجمہ تحریر کریں۔",
         subquestions: [
-          { type: "bold", question: "سُبْحَانَكَ هَذَا بُهْتَانٌ عَظِيمٌ [VERIFY]" },
-          { type: "bold", question: "يَغْشَى النَّاسَ هَذَا عَذَابٌ أَلِيمٌ [VERIFY]" },
-          { type: "bold", question: "هَذَا سِحْرٌ وَإِنَّا بِهِ كَافِرُونَ [VERIFY]" },
-          { type: "bold", question: "وَاتَّبِعُونِي هَذَا صِرَاطٌ مُسْتَقِيمٌ [VERIFY]" },
-          { type: "bold", question: "وَإِذْ لَمْ يَهْتَدُوا بِهِ فَسَيَقُولُونَ هَذَا إِفْكٌ قَدِيمٌ [VERIFY]" },
-          { type: "bold", question: "هَذَا هُدًى وَالَّذِينَ كَفَرُوا [VERIFY]" },
-          { type: "bold", question: "وَهَذَا كِتَابٌ مُصَدِّقٌ [VERIFY]" },
-          { type: "bold", question: "هَذَا نَذِيرٌ مِنَ النُّذُرِ الْأُولَى [VERIFY]" },
-          { type: "bold", question: "فَقَالَ الْكَافِرُونَ هَذَا شَيْءٌ عَجِيبٌ [VERIFY]" }
+          /* Image 1 Column 1 */
+          { type: "text", question: "هَذَا كِتَابٌ", answer: "یہ کتاب ہے" },
+          { type: "text", question: "هَذَا حَرَامٌ", answer: "یہ حرام ہے" },
+          { type: "text", question: "هَذَا صِرَاطٌ", answer: "یہ راستہ ہے" },
+          { type: "text", question: "وَهَذَا ذِكْرٌ", answer: "اور یہ ذکر ہے" },
+          { type: "text", question: "هَذَا بُهْتَانٌ", answer: "یہ بہتان ہے" },
+          { type: "text", question: "هَذَا بَلَاغٌ", answer: "یہ پیغام ہے" },
+          { type: "text", question: "هَذَا عَدُوٌّ", answer: "یہ دشمن ہے" },
+          { type: "text", question: "هَذَا فَوْجٌ", answer: "یہ لشکر ہے" },
+          { type: "text", question: "هَذَا غُلَامٌ", answer: "یہ بچہ ہے|یہ لڑکا ہے" },
+          { type: "text", question: "هَذَا عَذَبٌ", answer: "یہ میٹھا ہے" },
+          /* Image 1 Column 2 */
+          { type: "text", question: "هَذَا بَيَانٌ", answer: "یہ بیان ہے" },
+          { type: "text", question: "هَذَا حَلَالٌ", answer: "یہ حلال ہے" },
+          { type: "text", question: "هَذَا سِحْرٌ", answer: "یہ جادو ہے" },
+          { type: "text", question: "وَهَذَا لِسَانٌ", answer: "اور یہ زبان ہے" },
+          { type: "text", question: "هَذَا إِفْكٌ", answer: "یہ جھوٹ ہے" },
+          { type: "text", question: "هَذَا هُدًى", answer: "یہ ہدایت ہے" },
+          { type: "text", question: "هَذَا نَذِيرٌ", answer: "یہ ڈراوا ہے|یہ ڈرانے والا ہے" },
+          { type: "text", question: "هَذَا يَوْمٌ", answer: "یہ دن ہے" },
+          { type: "text", question: "هَذَا شَيْءٌ", answer: "یہ چیز ہے" },
+          { type: "text", question: "هَذَا مِلْحٌ", answer: "یہ نمکین ہے" }
         ]
       },
-
       {
-        title: "سوال ۲: درج ذیل آیات میں سے صرف اس حصے کو پہلی مثال کی طرح نمایاں کریں جس میں (هٰذَا) اور اس کے بعد (اَلْ) والا لفظ ہے۔",
-        noScore: true,
+        title: "سوال ۲: (هٰذَا) کے بعد (اَلْ) والے اشاروں اور (مَتَىٰ) والے سوالیہ جملوں کا ترجمہ کریں۔",
         subquestions: [
-          { type: "bold", question: "وَهَذَا النَّبِيُّ وَالَّذِينَ آمَنُوا [VERIFY]" },
-          { type: "bold", question: "لِلنَّاسِ فِي هَذَا الْقُرْآنِ مِنْ كُلِّ مَثَلٍ [VERIFY]" },
-          { type: "bold", question: "لَوْلَا نُزِّلَ هَذَا الْقُرْآنُ [VERIFY]" },
-          { type: "bold", question: "وَيَقُولُونَ مَتَى هَذَا الْفَتْحُ [VERIFY]" },
-          { type: "bold", question: "وَأُوحِيَ إِلَيَّ هَذَا الْقُرْآنُ [VERIFY]" },
-          { type: "bold", question: "أَنْ أَكُونَ مِثْلَ هَذَا الْغُرَابِ [VERIFY]" },
-          { type: "bold", question: "إِنَّ هَذَا الْقُرْآنَ يَقُصُّ [VERIFY]" },
-          { type: "bold", question: "وَيَقُولُونَ مَتَى هَذَا الْوَعْدُ [VERIFY]" },
-          { type: "bold", question: "مَالِ هَذَا الرَّسُولِ يَأْكُلُ الطَّعَامَ [VERIFY]" }
+          /* Image 2 Column 1 */
+          { type: "text", question: "هَذَا الْقُرْآنُ", answer: "یہ قرآن" },
+          { type: "text", question: "هَذَا الْوَعْدُ", answer: "یہ وعدہ" },
+          { type: "text", question: "هَذَا الرَّسُولُ", answer: "یہ رسول" },
+          { type: "text", question: "هَذَا الْبَلَدُ", answer: "یہ شہر" },
+          { type: "text", question: "هَذَا النَّبِيُّ", answer: "یہ نبی" },
+          /* Image 2 Column 2 */
+          { type: "text", question: "هَذَا الْحَدِStructuring", answer: "یہ حدیث" },
+          { type: "text", question: "هَذَا الْكِتَابُ", answer: "یہ کتاب" },
+          { type: "text", question: "هَذَا الْفَتْحُ", answer: "یہ فتح" },
+          { type: "text", question: "هَذَا الْبَيْتُ", answer: "یہ گھر" },
+          { type: "text", question: "هَذَا الْغُرَابُ", answer: "یہ کوا" },
+          /* Image 2 Bottom */
+          { type: "text", question: "مَتَى هَذَا الْفَتْحُ", answer: "کب ہے یہ فتح|یہ فتح کب ہے" },
+          { type: "text", question: "مَتَى هَذَا الْوَعْدُ", answer: "کب ہے یہ وعدہ|یہ وعدہ کب ہے" }
         ]
       },
+      {
+        title: "سوال ۳: درج ذیل آیات میں سے اس حصے کو پہلی مثال کی طرح نمایاں کریں جس میں (هٰذَا) اور اس کے بعد لفظ سے چھوٹا قرآنی جملہ بن رہا ہے۔",
+        noScore: true,
+        subquestions: [
+          /* Image 3 Top Block */
+          { type: "bold", question: "سُبْحَانَكَ هَذَا بُهْتَانٌ عَظِيمٌ", answer: "هَذَا بُهْتَانٌ" },
+          { type: "bold", question: "هَذَا سِحْرٌ وَإِنَّا بِهِ كَافِرُونَ", answer: "هَذَا سِحْرٌ" },
+          { type: "bold", question: "يَغْشَى النَّاسَ هَذَا عَذَابٌ أَلِيمٌ", answer: "هَذَا عَذَابٌ" },
+          { type: "bold", question: "هَذَا هُدًى وَالَّذِينَ كَفَرُوا", answer: "هَذَا هُدًى" },
+          { type: "bold", question: "فَسَيَقُولُونَ هَذَا إِفْكٌ قَدِيمٌ", answer: "هَذَا إِفْكٌ" },
+          { type: "bold", question: "وَاتَّبِعُونِي هَذَا صِرَاطٌ مُسْتَقِيمٌ", answer: "هَذَا صِرَاطٌ" },
+          { type: "bold", question: "وَهَذَا كِتَابٌ مُصَدِّقٌ", answer: "وَهَذَا كِتَابٌ" },
+          { type: "bold", question: "هَذَا نَذِيرٌ مِنَ النُّذُرِ الْأُولَى", answer: "هَذَا نَذِيرٌ" },
+          { type: "bold", question: "فَقَالَ الْكَافِرُونَ هَذَا شَيْءٌ عَجِيبٌ", answer: "هَذَا شَيْءٌ" }
+        ]
+      },
+      {
+        title: "سوال ۴: درج ذیل آیات میں سے صرف اس حصے کو پہلی مثال کی طرح نمایاں کریں جس میں (هٰذَا) اور اس کے بعد (اَلْ) والا لفظ ہے۔",
+        noScore: true,
+        subquestions: [
+          /* Image 3 Bottom Block */
+          { type: "bold", question: "وَهَذَا النَّبِيُّ وَالَّذِينَ آمَنُوا", answer: "هَذَا النَّبِيُّ" },
+          { type: "bold", question: "لَوْلَا نُزِّلَ هَذَا الْقُرْآنُ", answer: "هَذَا الْقُرْآنُ" },
+          { type: "bold", question: "لِلنَّاسِ فِي هَذَا الْقُرْآنِ مِنْ كُلِّ مَثَلٍ", answer: "هَذَا الْقُرْآنِ" },
+          { type: "bold", question: "أَنْ أَكُونَ مِثْلَ هَذَا الْغُرَابِ", answer: "هَذَا الْغُرَابِ" },
+          { type: "bold", question: "وَأُوحِيَ إِلَيَّ هَذَا الْقُرْآنُ", answer: "هَذَا الْقُرْآنُ" },
+          { type: "bold", question: "وَيَقُولُونَ مَتَى هَذَا الْفَتْحُ", answer: "هَذَا الْفَتْحُ" },
+          { type: "bold", question: "وَيَقُولُونَ مَتَى هَذَا الْوَعْدُ", answer: "هَذَا الْوَعْدُ" },
+          { type: "bold", question: "إِنَّ هَذَا الْقُرْآنَ يَقُصُّ", answer: "هَذَا الْقُرْآنَ" },
+          { type: "bold", question: "مَالِ هَذَا الرَّسُولِ يَأْكُلُ الطَّعَامَ", answer: "هَذَا الرَّسُولِ" }
+        ]
+      }
     ],
   },
 
-  16: {
-    questions: [
-      {
-        title: "سوال ۱: درج ذیل آیات میں سے اس حصے کو پہلی مثال کی طرح نمایاں کریں جس میں (ذٰلِكَ) اور اس کے بعد والے لفظ سے قرآنی جملہ بن رہا ہے۔",
-        noScore: true,
-        subquestions: [
-          { type: "bold", question: "ذَلِكَ يَوْمٌ مَشْهُودٌ [VERIFY]" },
-          { type: "bold", question: "ذَلِكَ خَيْرٌ وَأَحْسَنُ [VERIFY]" },
-          { type: "bold", question: "ذَلِكَ عِيسَى ابْنُ مَرْيَمَ [VERIFY]" },
-          { type: "bold", question: "ذَلِكَ يَوْمٌ مَجْمُوعٌ لَهُ النَّاسُ [VERIFY]" },
-          { type: "bold", question: "ذَلِكَ وَعْدٌ غَيْرُ مَكْذُوبٍ [VERIFY]" },
-          { type: "bold", question: "ذَلِكَ خَيْرٌ ذَلِكَ مِنْ آيَاتِ اللَّهِ [VERIFY]" },
-          { type: "bold", question: "ذَلِكَ تَخْفِيفٌ مِنْ رَبِّكُمْ [VERIFY]" },
-          { type: "bold", question: "ذَلِكَ ذِكْرَى لِلذَّاكِرِينَ [VERIFY]" },
-          { type: "bold", question: "ذَلِكَ حَشْرٌ عَلَيْنَا يَسِيرٌ [VERIFY]" }
-        ]
-      },
 
-      {
-        title: "سوال ۲: درج ذیل آیات میں (ذٰلِكَ) اور اس کے بعد (اَلْ) والے لفظ سے قطعہ یا جملہ بننے والے حصے کو پہلی مثال کی طرز پر نمایاں کریں۔",
-        noScore: true,
-        subquestions: [
-          { type: "bold", question: "ذَلِكَ الْكِتَابُ لَا رَيْبَ فِيهِ [VERIFY]" },
-          { type: "bold", question: "ذَلِكَ الْخِزْيُ الْعَظِيمُ [VERIFY]" },
-          { type: "bold", question: "وَذَلِكَ الْفَوْزُ الْعَظِيمُ [VERIFY]" },
-          { type: "bold", question: "ذَلِكَ الْفَضْلُ مِنَ اللَّهِ [VERIFY]" },
-          { type: "bold", question: "وَذَلِكَ الْفَوْزُ الْمُبِينُ [VERIFY]" },
-          { type: "bold", question: "ذَلِكَ الدِّينُ الْقَيِّمُ [VERIFY]" },
-          { type: "bold", question: "ذَلِكَ الْخِزْيُ الْعَظِيمُ [VERIFY]" },
-          { type: "bold", question: "وَقَضَيْنَا إِلَيْهِ ذَلِكَ الْأَمْرَ [VERIFY]" },
-          { type: "bold", question: "ذَلِكَ الْيَوْمُ الَّذِي كَانُوا [VERIFY]" },
-          { type: "bold", question: "فَوَقَاهُمُ اللَّهُ شَرَّ ذَلِكَ الْيَوْمِ [VERIFY]" },
-          { type: "bold", question: "ذَلِكَ الْيَوْمُ الْحَقُّ [VERIFY]" }
-        ]
-      },
-    ],
-  },
-
-  17: {
-    questions: [
-      {
-        title: "سوال ۱: درج ذیل آیات میں سے اس حصے کو پہلی مثال کی طرح نمایاں کریں جس میں (هٰذِهٖ) یا (تِلْكَ) اور اس کے بعد والے لفظ سے قرآنی جملہ بن رہا ہے۔",
-        noScore: true,
-        subquestions: [
-          { type: "bold", question: "هَذِهِ نَاقَةٌ لَهَا شِرْبٌ [VERIFY]" },
-          { type: "bold", question: "هَذِهِ نَاقَةُ اللَّهِ لَكُمْ آيَةً [VERIFY]" },
-          { type: "bold", question: "هَذِهِ جَهَنَّمُ الَّتِي كُنْتُمْ تُوعَدُونَ [VERIFY]" },
-          { type: "bold", question: "إِنَّ هَذِهِ تَذْكِرَةٌ [VERIFY]" },
-          { type: "bold", question: "إِنَّ هَذِهِ تَذْكِرَةٌ فَمَنْ شَاءَ اتَّخَذَ [VERIFY]" },
-          { type: "bold", question: "هَذِهِ جَهَنَّمُ الَّتِي يُكَذِّبُ بِهَا [VERIFY]" },
-          { type: "bold", question: "تِلْكَ نِعْمَةٌ تَمُنُّهَا عَلَيَّ [VERIFY]" },
-          { type: "bold", question: "وَتِلْكَ عَادٌ جَحَدُوا [VERIFY]" },
-          { type: "bold", question: "تِلْكَ عُقْبَى الَّذِينَ اتَّقَوْا [VERIFY]" }
-        ]
-      },
-
-      {
-        title: "سوال ۲: درج ذیل آیات میں سے صرف اس حصے کو پہلی مثال کی طرز پر نمایاں کریں جس میں (هٰذِهٖ) یا (تِلْكَ) اور اس کے بعد (اَلْ) والا لفظ آرہا ہے۔",
-        noScore: true,
-        subquestions: [
-          { type: "bold", question: "وَلَا تَقْرَبَا هَذِهِ الشَّجَرَةَ [VERIFY]" },
-          { type: "bold", question: "ادْخُلُوا هَذِهِ الْقَرْيَةَ [VERIFY]" },
-          { type: "bold", question: "أَخْرِجْنَا مِنْ هَذِهِ الْقَرْيَةِ [VERIFY]" },
-          { type: "bold", question: "أَحْسَنُوا فِي هَذِهِ الدُّنْيَا [VERIFY]" },
-          { type: "bold", question: "إِنَّمَا تَقْضِي هَذِهِ الْحَيَاةَ الدُّنْيَا [VERIFY]" },
-          { type: "bold", question: "وَأُتْبِعُوا فِي هَذِهِ الدُّنْيَا لَعْنَةً [VERIFY]" },
-          { type: "bold", question: "تِلْكَ الْجَنَّةُ الَّتِي نُورِثُ [VERIFY]" },
-          { type: "bold", question: "فَلْيَعْبُدُوا رَبَّ هَذَا الْبَلَدِ [VERIFY]" },
-          { type: "bold", question: "هَذِهِ النَّارُ الَّتِي كُنْتُمْ بِهَا تُكَذِّبُونَ [VERIFY]" }
-        ]
-      },
-    ],
-  },
-
-  18: {
-    questions: [
-      {
-        title: "سوال ۱: درج ذیل آیات میں سے صرف اس حصے کو پہلی مثال کی طرح نمایاں کریں جس میں کسی لفظ سے پہلے تاکید کیلئے (لَ) آرہا ہے۔",
-        noScore: true,
-        subquestions: [
-          { type: "bold", question: "وَإِنَّهُ لَعِلْمٌ لِلسَّاعَةِ [VERIFY]" },
-          { type: "bold", question: "وَإِنَّهُ لِحُبِّ الْخَيْرِ لَشَدِيدٌ [VERIFY]" },
-          { type: "bold", question: "إِنَّهُ لَحَقُّ [VERIFY]" },
-          { type: "bold", question: "إِنَّ فِي ذَلِكَ لَآيَةً لَكُمْ [VERIFY]" },
-          { type: "bold", question: "إِنَّ فِي ذَلِكَ لَعِبْرَةً لِأُولِي الْأَبْصَارِ [VERIFY]" },
-          { type: "bold", question: "وَإِنَّهُ لَقُرْآنٌ كَرِيمٌ [VERIFY]" },
-          { type: "bold", question: "وَإِنَّهُ لَقَسَمٌ [VERIFY]" },
-          { type: "bold", question: "وَإِنَّهُ لَفِسْقٌ [VERIFY]" },
-          { type: "bold", question: "وَإِنَّهُ لَذِكْرٌ [VERIFY]" },
-          { type: "bold", question: "وَإِنَّهُ لَتَذْكِرَةٌ لِلْمُتَّقِينَ [VERIFY]" },
-          { type: "bold", question: "وَإِنَّهُ لَكِتَابٌ [VERIFY]" }
-        ]
-      },
-
-      {
-        title: "سوال ۲: درج ذیل آیات میں تاکید کیلئے کلام ایسے لفظ سے آرہا ہے جس کے شروع میں (لَ) موجود ہے۔ پہلی مثال کی طرح ایسے حصے کو نمایاں کریں۔",
-        noScore: true,
-        subquestions: [
-          { type: "bold", question: "لَلْآخِرَةُ أَكْبَرُ دَرَجَاتٍ [VERIFY]" },
-          { type: "bold", question: "إِنَّ لِي عِنْدَهُ لَلْحُسْنَى [VERIFY]" },
-          { type: "bold", question: "إِنَّ عَلَيْنَا لَلْهُدَى [VERIFY]" },
-          { type: "bold", question: "وَلَلْآخِرَةُ خَيْرٌ لَكَ مِنَ الْأُولَى [VERIFY]" },
-          { type: "bold", question: "وَإِنَّ لَنَا لَلْآخِرَةَ وَالْأُولَى [VERIFY]" },
-          { type: "bold", question: "إِنَّهُ لَلْحَقُّ مِنْ رَبِّكَ [VERIFY]" }
-        ]
-      },
-
-      {
-        title: "سوال ۳: درج ذیل الفاظ کا مطلب تاکید کے لام کا خیال رکھتے ہوئے کریں۔",
-        subquestions: [
-          { type: "text", question: "عِلْمٌ", answer: "علم ہے" },
-          { type: "text", question: "لَآيَةٌ", answer: "یقیناً آیت ہے" },
-          { type: "text", question: "كِتَابٌ", answer: "کتاب ہے" },
-          { type: "text", question: "لَذِكْرٌ", answer: "یقیناً ذکر ہے" },
-          { type: "text", question: "ظُلْمٌ", answer: "ظلم ہے" },
-          { type: "text", question: "لَظُلْمٌ", answer: "یقیناً ظلم ہے" },
-          { type: "text", question: "لَلْآخِرَةُ", answer: "یقیناً آخرت ہے" },
-          { type: "text", question: "حَقٌّ", answer: "حق ہے" },
-          { type: "text", question: "لَحَقٌّ", answer: "یقیناً حق ہے" },
-          { type: "text", question: "لَلْحَقُّ", answer: "یقیناً حق ہے" },
-          { type: "text", question: "قَسَمٌ", answer: "قسم ہے" },
-          { type: "text", question: "لَقَسَمٌ", answer: "یقیناً قسم ہے" }
-        ]
-      },
-    ],
-  },
-
-  19: {
-    questions: [
-      {
-        title: "درج ذیل آیات کا ترجمہ کریں۔ [VERIFY]",
-        subquestions: [
-          { type: "text", question: "هَذَا أَكْبَرُ [VERIFY]", answer: "یہ سب سے زیادہ بڑا ہے [VERIFY]" },
-          { type: "text", question: "ذَلِكَ خَيْرٌ [VERIFY]", answer: "وہ سب سے زیادہ بہتر ہے [VERIFY]" },
-          { type: "text", question: "ذَلِكَ أَزْكَى [VERIFY]", answer: "وہ سب سے زیادہ ستھرا ہے [VERIFY]" },
-          { type: "text", question: "وَالْآخِرَةُ خَيْرٌ [VERIFY]", answer: "اور آخرت سب سے بہتر ہے [VERIFY]" },
-          { type: "text", question: "وَالصُّلْحُ خَيْرٌ [VERIFY]", answer: "اور صلح سب سے بہتر ہے [VERIFY]" },
-          { type: "text", question: "وَاللَّهُ أَعْلَمُ [VERIFY]", answer: "اور اللہ سب سے زیادہ جاننے والا ہے [VERIFY]" },
-          { type: "text", question: "ذَلِكَ أَدْنَى [VERIFY]", answer: "یہ سب سے زیادہ قریب ہے [VERIFY]" },
-          { type: "text", question: "وَاللَّهُ خَيْرٌ وَأَبْقَى [VERIFY]", answer: "اور اللہ سب سے بہتر اور باقی رہنے والا ہے [VERIFY]" },
-          { type: "text", question: "وَالْآخِرَةُ خَيْرٌ وَأَبْقَى [VERIFY]", answer: "اور آخرت سب سے بہتر اور باقی رہنے والی ہے [VERIFY]" },
-          { type: "text", question: "وَلَلْآخِرَةُ خَيْرٌ [VERIFY]", answer: "اور یقیناً آخرت سب سے بہتر ہے [VERIFY]" }
+    16: {
+      questions: [
+        {
+          title: "سوال ۱: درج ذیل قرآنی جملوں کا اردو ترجمہ تحریر کریں۔",
+          subquestions: [
+            { type: "text", question: "ذَلِكَ خَيْرٌ", answer: "وہ بہتر ہے" },
+            { type: "text", question: "ذَلِكَ تَخْفِيفٌ", answer: "وہ کمی ہے" },
+            { type: "text", question: "ذَلِكَ وَعْدٌ", answer: "وہ وعدہ ہے" },
+            { type: "text", question: "ذَلِكَ رَجْعٌ", answer: "وہ لوٹنا ہے" },
+            { type: "text", question: "ذَلِكَ جَزَاءٌ", answer: "وہ بدلہ ہے" },
+            { type: "text", question: "ذَلِكَ هُدًى", answer: "وہ ہدایت ہے" },
+            { type: "text", question: "ذَلِكَ عِيسَىٰ", answer: "وہ عیسیٰ ہے" },
+            { type: "text", question: "ذَلِكَ حَشْرٌ", answer: "وہ جمع کرنا ہے" },
+            { type: "text", question: "ذَلِكَ ذِكْرَىٰ", answer: "وہ نصیحت ہے" },
+            { type: "text", question: "ذَلِكَ فَضْلٌ", answer: "وہ فضل ہے" },
+            { type: "text", question: "ذَلِكَ يَوْمٌ", answer: "وہ دن ہے" },
+            { type: "text", question: "ذَلِكَ كَيْلٌ", answer: "وہ وزن ہے" }
           ]
         },
-      ],
+        {
+          title: "سوال ۲: (ذٰلِكَ) کے بعد (اَلْ) والے اشاروں اور تاکیدی جملوں کا ترجمہ کریں۔",
+          subquestions: [
+            { type: "text", question: "ذَلِكَ الْكِتَابُ", answer: "یہ کتاب" },
+            { type: "text", question: "ذَلِكَ الْأَمْرُ", answer: "یہ حکم" },
+            { type: "text", question: "ذَلِكَ الْفَضْلُ", answer: "یہ فضل" },
+            { type: "text", question: "ذَلِكَ الْيَوْمُ", answer: "یہ دن" },
+            { type: "text", question: "ذَلِكَ الْفَوْزُ", answer: "وہی کامیابی ہے" },
+            { type: "text", question: "ذَلِكَ الْخِزْيُ", answer: "وہی رسوائی ہے" },
+            { type: "text", question: "ذَلِكَ الدِّينُ", answer: "وہی دین ہے" }
+          ]
+        },
+        {
+          title: "سوال ۳: درج ذیل آیات میں سے اس حصے کو پہلی مثال کی طرح نمایاں کریں جس میں (ذٰلِكَ) اور اس کے بعد والے لفظ سے قرآنی جملہ بن رہا ہے۔",
+          noScore: true,
+          subquestions: [
+            { type: "bold", question: "ذَلِكَ يَوْمٌ مَشْهُودٌ", answer: "ذَلِكَ يَوْمٌ" },
+            { type: "bold", question: "ذَلِكَ خَيْرٌ وَأَحْسَنُ", answer: "ذَلِكَ خَيْرٌ" },
+            { type: "bold", question: "ذَلِكَ عِيسَى ابْنُ مَرْيَمَ", answer: "ذَلِكَ عِيسَى" },
+            { type: "bold", question: "ذَلِكَ يَوْمٌ مَجْمُوعٌ لَهُ النَّاسُ", answer: "ذَلِكَ يَوْمٌ" },
+            { type: "bold", question: "ذَلِكَ وَعْدٌ غَيْرُ مَكْذُوبٍ", answer: "ذَلِكَ وَعْدٌ" },
+            { type: "bold", question: "ذَلِكَ خَيْرٌ ذَلِكَ مِنْ آيَاتِ اللَّهِ", answer: "ذَلِكَ خَيْرٌ" },
+            { type: "bold", question: "ذَلِكَ تَخْفِيفٌ مِنْ رَبِّكُمْ", answer: "ذَلِكَ تَخْفِيفٌ" },
+            { type: "bold", question: "ذَلِكَ ذِكْرَى لِلذَّاكِرِينَ", answer: "ذَلِكَ ذِكْرَى" },
+            { type: "bold", question: "ذَلِكَ حَشْرٌ عَلَيْنَا يَسِيرٌ", answer: "ذَلِكَ حَشْرٌ" }
+          ]
+        },
+        {
+          title: "سوال ۴: درج ذیل آیات میں (ذٰلِكَ) اور اس کے بعد (اَلْ) والے لفظ سے قطعہ یا جملہ بننے والے حصے کو نمایاں کریں۔",
+          noScore: true,
+          subquestions: [
+            { type: "bold", question: "ذَلِكَ الْكِتَابُ لَا رَيْبَ فِيهِ", answer: "ذَلِكَ الْكِتَابُ" },
+            { type: "bold", question: "ذَلِكَ الْخِزْيُ الْعَظِيمُ", answer: "ذَلِكَ الْخِزْيُ" },
+            { type: "bold", question: "وَذَلِكَ الْفَوْزُ الْعَظِيمُ", answer: "ذَلِكَ الْفَوْزُ" },
+            { type: "bold", question: "ذَلِكَ الْفَضْلُ مِنَ اللَّهِ", answer: "ذَلِكَ الْفَضْلُ" },
+            { type: "bold", question: "وَذَلِكَ الْفَوْزُ الْمُبِينُ", answer: "ذَلِكَ الْفَوْزُ" },
+            { type: "bold", question: "ذَلِكَ الدِّينُ الْقَيِّمُ", answer: "ذَلِكَ الدِّينُ" },
+            { type: "bold", question: "وَقَضَيْنَا إِلَيْهِ ذَلِكَ الْأَمْرَ", answer: "ذَلِكَ الْأَمْرَ" },
+            { type: "bold", question: "ذَلِكَ الْيَوْمُ الَّذِي كَانُوا", answer: "ذَلِكَ الْيَوْمُ" },
+            { type: "bold", question: "فَوَقَاهُمُ اللَّهُ شَرَّ ذَلِكَ الْيَوْمِ", answer: "ذَلِكَ الْيَوْمِ" },
+            { type: "bold", question: "ذَلِكَ الْيَوْمُ الْحَقُّ", answer: "ذَلِكَ الْيَوْمُ" }
+          ]
+        }
+      ]
+    },
+
+
+    17: {
+      questions: [
+        {
+          title: "سوال ۱: درج ذیل قرآنی جملوں کا اردو ترجمہ تحریر کریں۔",
+          subquestions: [
+            { type: "text", question: "هَذِهِ جَهَنَّمُ", answer: "یہ جہنم ہے" },
+            { type: "text", question: "هَذِهِ نَاقَةٌ", answer: "یہ اونٹنی ہے" },
+            { type: "text", question: "هَذِهِ تَذْكِرَةٌ", answer: "یہ یاد دہانی ہے" },
+            { type: "text", question: "تِلْكَ أُمَّةٌ", answer: "وہ امت ہے" },
+            { type: "text", question: "تِلْكَ عَادٌ", answer: "وہ عاد ہے" },
+            { type: "text", question: "تِلْكَ عُقْبَىٰ", answer: "وہ انجام ہے" },
+            { type: "text", question: "تِلْكَ نِعْمَةٌ", answer: "وہ نعمت ہے" },
+            { type: "text", question: "تِلْكَ عَشَرَةٌ", answer: "وہ دس ہے" },
+            { type: "text", question: "تِلْكَ آيَاتٌ", answer: "وہ آیات ہیں" }
+          ]
+        },
+        {
+          title: "سوال ۲: اشارہ اور اسم صفت کے مرکب قطعات کا اردو مفہوم لکھیے۔",
+          subquestions: [
+            { type: "text", question: "هَذِهِ الدُّنْيَا", answer: "یہ دنیا" },
+            { type: "text", question: "هَذِهِ الْبَلْدَةُ", answer: "یہ شہر" },
+            { type: "text", question: "هَذِهِ الشَّجَرَةُ", answer: "یہ درخت" },
+            { type: "text", question: "تِلْكَ الْجَنَّةُ", answer: "وہ جنت" },
+            { type: "text", question: "هَذِهِ الْحَيَاةُ", answer: "یہ زندگی" },
+            { type: "text", question: "هَذِهِ النَّارُ", answer: "یہ آگ" },
+            { type: "text", question: "هَذِهِ الْقَرْيَةُ", answer: "یہ بستی" },
+            { type: "text", question: "تِلْكَ الدَّارُ", answer: "وہ گھر" }
+          ]
+        },
+        {
+          title: "سوال ۳: درج ذیل آیات میں سے اس حصے کو پہلی مثال کی طرح نمایاں کریں جس میں قرآنی جملہ بن رہا ہے۔",
+          noScore: true,
+          subquestions: [
+            { type: "bold", question: "هَذِهِ نَاقَةٌ لَهَا شِرْبٌ", answer: "هَذِهِ نَاقَةٌ" },
+            { type: "bold", question: "هَذِهِ نَاقَةُ اللَّهِ لَكُمْ آيَةً", answer: "هَذِهِ نَاقَةُ" },
+            { type: "bold", question: "هَذِهِ جَهَنَّمُ الَّتِي كُنْتُمْ تُوعَدُونَ", answer: "هَذِهِ جَهَنَّمُ" },
+            { type: "bold", question: "إِنَّ هَذِهِ تَذْكِرَةٌ", answer: "هَذِهِ تَذْكِرَةٌ" },
+            { type: "bold", question: "إِنَّ هَذِهِ تَذْکِرَةٌ فَمَنْ شَاءَ اتَّخَذَ", answer: "هَذِهِ تَذْكِرَةٌ" },
+            { type: "bold", question: "هَذِهِ جَهَنَّمُ الَّتِي يُكَذِّبُ بِهَا", answer: "هَذِهِ جَهَنَّمُ" },
+            { type: "bold", question: "تِلْكَ نِعْمَةٌ تَمُنُّهَا عَلَيَّ", answer: "تِلْكَ نِعْمَةٌ" },
+            { type: "bold", question: "وَتِلْكَ عَادٌ جَحَدُوا", answer: "تِلْكَ عَادٌ" },
+            { type: "bold", question: "تِلْكَ عُقْبَى الَّذِينَ اتَّقَوْا", answer: "تِلْكَ عُقْبَى" }
+          ]
+        },
+        {
+          title: "سوال ۴: درج ذیل آیات میں سے صرف اس حصے کو نمایاں کریں جس میں اسم اشارہ اور اس کے بعد (اَلْ) والا لفظ آرہا ہے۔",
+          noScore: true,
+          subquestions: [
+            { type: "bold", question: "وَلَا تَقْرَبَا هَذِهِ الشَّجَرَةَ", answer: "هَذِهِ الشَّجَرَةَ" },
+            { type: "bold", question: "ادْخُلُوا هَذِهِ الْقَرْيَةَ", answer: "هَذِهِ الْقَرْيَةَ" },
+            { type: "bold", question: "أَخْرِجْنَا مِنْ هَذِهِ الْقَرْيَةِ", answer: "هَذِهِ الْقَرْيَةِ" },
+            { type: "bold", question: "أَحْسَنُوا فِي هَذِهِ الدُّنْيَا", answer: "هَذِهِ الدُّنْيَا" },
+            { type: "bold", question: "إِنَّمَا تَقْضِي هَذِهِ الْحَيَاةَ الدُّنْيَا", answer: "هَذِهِ الْحَيَاةَ" },
+            { type: "bold", question: "وَأُتْبِعُوا فِي هَذِهِ الدُّنْيَا لَعْنَةً", answer: "هَذِهِ الدُّنْيَا" },
+            { type: "bold", question: "تِلْكَ الْجَنَّةُ الَّتِي نُورِثُ", answer: "تِلْكَ الْجَنَّةُ" },
+            { type: "bold", question: "فَلْيَعْبُدُوا رَبَّ هَذَا الْبَلَدِ", answer: "هَذَا الْبَلَدِ" },
+            { type: "bold", question: "هَذِهِ النَّارُ الَّتِي كُنْتُمْ بِهَا تُكَذِّبُونَ", answer: "هَذِهِ النَّارُ" }
+          ]
+        }
+      ]
+    },
+
+
+    18: {
+      questions: [
+        {
+          title: "سوال ۱: کلام عرب میں تاکید پیدا کرنے والے (لَـ) کا خیال رکھتے ہوئے درج ذیل الفاظ کا ترجمہ کریں۔",
+          subquestions: [
+            { type: "text", question: "لَكِتَابٌ", answer: "یقیناً کتاب" },
+            { type: "text", question: "لَعِلْمٌ", answer: "یقیناً علم" },
+            { type: "text", question: "لَقَسَمٌ", answer: "یقیناً قسم" },
+            { type: "text", question: "لَحَسْرَةٌ", answer: "یقیناً حسرت" },
+            { type: "text", question: "لَظُلْمٌ", answer: "یقیناً ظلم" },
+            { type: "text", question: "لَشَهِيدٌ", answer: "یقیناً شاہد|یقیناً گواہ" },
+            { type: "text", question: "لَرَحْمَةٌ", answer: "یقیناً رحمت" },
+            { type: "text", question: "لَمَجْنُونٌ", answer: "یقیناً پاگل" },
+            { type: "text", question: "لَتَذْكِرَةٌ", answer: "یقیناً یاد دہانی" },
+            { type: "text", question: "لَفَرَحٌ", answer: "یقیناً اکڑتا ہے" },
+            { type: "text", question: "لَقُرْآنٌ", answer: "یقیناً قرآن" },
+            { type: "text", question: "لَحَقٌّ", answer: "یقیناً حق" },
+            { type: "text", question: "لَذِكْرٌ", answer: "یقیناً ذکر" },
+            { type: "text", question: "لَهُدًى", answer: "یقیناً ہدایت" },
+            { type: "text", question: "لَشَدِيدٌ", answer: "یقیناً سخت" },
+            { type: "text", question: "لَفِسْقٌ", answer: "یقیناً گناہ" },
+            { type: "text", question: "لَتَنْزِيلٌ", answer: "یقیناً نازل کیا گیا" },
+            { type: "text", question: "لَذِكْرَىٰ", answer: "یقیناً نصیحت" },
+            { type: "text", question: "لَيَئُوسٌ", answer: "یقیناً مایوس ہے" }
+          ]
+        },
+        {
+          title: "سوال ۲: تاکید پیدا کرنے والے (لَـ) کا اسم معرفہ باللام (ال) کے ساتھ ترجمہ کریں۔",
+          subquestions: [
+            { type: "text", question: "لَلْآخِرَةُ", answer: "یقیناً آخرت" },
+            { type: "text", question: "لَلْحَقُّ", answer: "یقیناً حق" },
+            { type: "text", question: "لَلْهُدَىٰ", answer: "یقیناً ہدایت ہے" },
+            { type: "text", question: "لَلْحُسْنَىٰ", answer: "یقیناً اچھائی ہے" }
+          ]
+        },
+        {
+          title: "سوال ۳: درج ذیل قرآنی قطعات میں تاکیدی حروف والے کلمات کو چن کر ان کا مطلب لکھیں۔",
+          subquestions: [
+            { type: "text", question: "عِلْمٌ", answer: "علم ہے" },
+            { type: "text", question: "لَآيَةٌ", answer: "یقیناً آیت ہے" },
+            { type: "text", question: "كِتَابٌ", answer: "کتاب ہے" },
+            { type: "text", question: "لَذِكْرٌ", answer: "یقیناً ذکر ہے" },
+            { type: "text", question: "ظُلْمٌ", answer: "ظلم ہے" },
+            { type: "text", question: "لَظُلْمٌ", answer: "یقیناً ظلم ہے" },
+            { type: "text", question: "لَلْآخِرَةُ", answer: "یقیناً آخرت ہے" },
+            { type: "text", question: "حَقٌّ", answer: "حق ہے" },
+            { type: "text", question: "لَحَقٌّ", answer: "یقیناً حق ہے" },
+            { type: "text", question: "لَلْحَقُّ", answer: "یقیناً حق ہے" },
+            { type: "text", question: "قَسَمٌ", answer: "قسم ہے" },
+            { type: "text", question: "لَقَسَمٌ", answer: "یقیناً قسم ہے" }
+          ]
+        }
+      ]
+    },
+
+
+    19: {
+      questions: [
+        {
+          title: "سوال ۱: اسم تفضیل (سب سے زیادہ / بڑھ کر) کے قرآنی کلمات کے معانی تحریر کریں۔",
+          subquestions: [
+            { type: "text", question: "أَكْبَرُ", answer: "سب سے بڑا" },
+            { type: "text", question: "أexport_صْغَرُ", answer: "سب سے چھوٹا" }, // Using standard variable tag tracking rules
+            { type: "text", question: "أَعْلَمُ", answer: "سب سے زیادہ جاننے والا" },
+            { type: "text", question: "أَرْحَمُ", answer: "سب سے زیادہ رحم کرنے والا" },
+            { type: "text", question: "أَظْلَمُ", answer: "سب سے زیادہ ظالم" },
+            { type: "text", question: "أَحْسَنُ", answer: "سب سے اچھا" },
+            { type: "text", question: "أَقْرَبُ", answer: "سب سے زیادہ قریب" },
+            { type: "text", question: "أَعَزُّ", answer: "سب سے زیادہ معزز" },
+            { type: "text", question: "أَصْدَقُ", answer: "سب سے سچا" },
+            { type: "text", question: "أَظْهَرُ", answer: "سب سے زیادہ پاک" },
+            { type: "text", question: "أَزْكَىٰ", answer: "سب سے زیادہ پاک" },
+            { type: "text", question: "أَهْدَىٰ", answer: "سب سے زیادہ ہدایت پر" },
+            { type: "text", question: "أَحْكَمُ", answer: "سب سے مضبوط" },
+            { type: "text", question: "أَبْقَىٰ", answer: "سب سے زیادہ باقی رہنے والا" },
+            { type: "text", question: "أَقْوَمُ", answer: "سب سے زیادہ صحیح" },
+            { type: "text", question: "أَسْفَلُ", answer: "سب سے گھٹیا" },
+            { type: "text", question: "أَدْنَىٰ", answer: "سب سے قریب تر" },
+            { type: "text", question: "أَوَّلُ", answer: "سب سے پہلا" },
+            { type: "text", question: "أَكْثَرُ", answer: "سب سے زیادہ" },
+            { type: "text", question: "أَضَلُّ", answer: "سب سے زیادہ گمراہ" },
+            { type: "text", question: "أَخْسَرُ", answer: "سب سے زیادہ خسارے والا" },
+            { type: "text", question: "أَعَزُّ", answer: "سب سے زیادہ معزز" },
+            { type: "text", question: "أَذَلُّ", answer: "سب سے زیادہ رسوا" },
+            { type: "text", question: "أَحَقُّ", answer: "سب سے زیادہ حق دار" },
+            { type: "text", question: "أَشَدُّ", answer: "سب سے شدید" },
+            { type: "text", question: "خَيْرٌ", answer: "سب سے بہتر" },
+            { type: "text", question: "شَرٌّ", answer: "سب سے برا" }
+          ]
+        }
+      ]
     },
   },
+
 
  2: {
   1: {
@@ -8211,6 +8468,9 @@ async function enterApp(user) {
   show("dashboard");
 }
 async function logout() {
+  if (!document.getElementById("activities").classList.contains("hidden")) {
+    if (!await askConfirmation("Leave activity?", "Your unfinished activity progress will be lost if you log out.", "Log out", "Stay on activity", true)) return;
+  }
   if (!await askConfirmation("Log out?", "Are you sure you want to log out? Any saved progress will be synced first.", "Log out", "Cancel", true)) return;
   if (saveTimer) { clearTimeout(saveTimer); await pushProgress(); }
   await sb.auth.signOut();
@@ -8221,7 +8481,12 @@ async function logout() {
 }
 
 /* ===== SHOW PAGE ===== */
-function show(id, button) {
+let activitySubmissionComplete = false;
+async function show(id, button) {
+  if (id !== "activities" && !activitySubmissionComplete && !document.getElementById("activities").classList.contains("hidden")) {
+    const destination = ({ dashboard: "Dashboard", books: "Books", progress: "Progress", review: "Review", profile: "Profile", faq: "Help & FAQs", settings: "Settings" })[id] || id;
+    if (!await askConfirmation("Leave activity?", "Your unfinished activity progress will be lost if you go to " + destination + ".", "Go to " + destination, "Stay on activity", true)) return;
+  }
   document.querySelectorAll("main section").forEach(function (section) {
     section.classList.add("hidden");
   });
@@ -8253,7 +8518,7 @@ function show(id, button) {
   updateUI();
   window.scrollTo({
     top: 0,
-    behavior: "smooth",
+    behavior: (document.body.classList.contains("reduce-motion") ? "auto" : "smooth"),
   });
 }
 
@@ -8434,7 +8699,7 @@ function openBook(bookId) {
     </div>
   `;
   $("bookDetail").scrollIntoView({
-    behavior: "smooth",
+    behavior: (document.body.classList.contains("reduce-motion") ? "auto" : "smooth"),
   });
 }
 
@@ -8526,6 +8791,1127 @@ function startActivities() {
   show("activities");
 }
 
+/* Each text subquestion can also contain mcqOptions: ["choice 1", "choice 2", "choice 3", "choice 4"].
+   The correct choice must match one of that question's existing accepted text answers.
+   Leave mcqOptions empty until its real choices have been authored. */
+/* ============================================================
+   MCQ CONTENT EDITOR — ADD YOUR OPTIONS HERE
+   ============================================================
+   Each entry uses: "UNIT-LESSON": { "QUESTION-SUBQUESTION": [choices] }
+   Question and subquestion numbers start at 1 (as shown on screen).
+   Example: "1-1" = Unit 1, Lesson 1; "1-1" inside it =
+   Question 1, subquestion 1.
+
+   IMPORTANT: Include the EXACT existing correct typed answer among
+   the choices, because the same answer checker is used for both modes.
+   Do not change the existing questions or their answer fields.
+
+   COPY THIS EXAMPLE, remove the // markers, and replace the choices:
+
+   "1-1": {
+     "1-1": ["حلال", "CHOICE TWO", "CHOICE THREE", "CHOICE FOUR"],
+     "1-2": ["حرام", "CHOICE TWO", "CHOICE THREE", "CHOICE FOUR"]
+   },
+
+   Leave questions without content empty; Type Answer still works.
+   ============================================================ */
+/* Each text subquestion can also contain mcqOptions: ["choice 1", "choice 2", "choice 3", "choice 4"].
+   The correct choice must match one of that question's existing accepted text answers.
+   Leave mcqOptions empty until its real choices have been authored. */
+/* ============================================================
+   MCQ CONTENT EDITOR — ADD YOUR OPTIONS HERE
+   ============================================================
+   Each entry uses: "UNIT-LESSON": { "QUESTION-SUBQUESTION": [choices] }
+   Question and subquestion numbers start at 1 (as shown on screen).
+   The first choice in every list is the correct answer.
+   ============================================================ */
+const MCQ_CONTENT = {
+  "1-1": {
+    /* ---- Q1: :درج ذیل عربی الفاظ کا مطلب بتائیں ---- */
+    "1-1": ["حلال", "حرام", "فساد", "باطل"],  // الْحَلَال
+    "1-2": ["حرام", "حلال", "کافر", "خیر"],  // الْحَرَام
+    "1-3": ["مومن", "کافر", "فرعون", "حق"],  // الْمُؤْمِن
+    "1-4": ["کافر", "مومن", "باطل", "لباس"],  // الْكَافِر
+    "1-5": ["فساد", "خیر", "حق", "حلال"],  // الْفَسَاد
+    "1-6": ["لباس", "فساد", "حرام", "خیر"],  // الْلِبَاس
+    "1-7": ["فرعون", "کافر", "موسیٰ", "شیطان"],  // فِرْعَوْن
+    "1-8": ["حق", "باطل", "فساد", "حرام"],  // الْحَقّ
+    "1-9": ["باطل", "حق", "کافر", "حرام"],  // الْبَاطِل
+    "1-10": ["خیر", "شر", "فساد", "باطل"],  // الْخَيْر
+ 
+    /* ---- Q2: درج ذیل الفاظ کو عربی میں کیا کہتے ہیں؟ ---- */
+    "2-1": ["الشرک", "الشکر", "الشیطان", "الصلح"],  // شرک
+    "2-2": ["الشیطان", "الطوفان", "الشرک", "الشکر"],  // شیطان
+    "2-3": ["الکعبة", "الجنة", "الصلاة", "الزکاة"],  // کعبہ
+    "2-4": ["الزکوة", "الصلاة", "التوبة", "الفلاح"],  // زکوۃ
+    "2-5": ["التوبة", "الزکاة", "الصلح", "الفلاح"],  // توبہ
+    "2-6": ["الصلح", "الصلاة", "الفلاح", "السلام"],  // صلح
+    "2-7": ["الشکر", "الشرک", "الحمد", "الشیطان"],  // شکر
+    "2-8": ["الدین", "الاسلام", "الدنیا", "السلام"],  // دین
+    "2-9": ["الاسلام", "الدین", "الدنیا", "السلام"],  // islam
+ 
+    /* ---- Q3: درج ذیل الفاظ کے بارے میں آپ کیا جانتے ہیں؟ ---- */
+    "3-1": ["اللہ کی کتاب", "اللہ کا گھر", "اللہ کے نبی", "اللہ کا نافرمان"],  // الْقُرْآن
+    "3-2": ["اللہ کا گھر", "اللہ کی کتاب", "جنت", "اللہ کے نبی"],  // الْكَعْبَة
+    "3-3": ["جنت", "اللہ کے نبی", "اللہ کا گھر", "اللہ کی کتاب"],  // الْجَنَّة
+    "3-4": ["اللہ کا نافرمان", "دوزخ", "اللہ کا گھر", "اللہ کی کتاب"],  // الشَّيْطَان
+    "3-5": ["اللہ کے نبی", "اللہ کا نافرمان", "اللہ کی کتاب", "اللہ کا گھر"],  // مُوسَى
+    "3-6": ["اللہ کے ساتھ کسی کو شریک کرنا", "اللہ کا شکر کرنا", "اللہ کے نبی", "اللہ کا نافرمان"],  // الشِّرْك
+ 
+    /* ---- Q4: درج ذیل نامکمل الفاظ کو مکمل کریں۔ ---- */
+    "4-1": ["ل", "ا", "ب", "ت"],  // الْحَلَا
+    "4-2": ["م", "ا", "ب", "ت"],  // الْحَرَا
+    "4-3": ["د", "ا", "ب", "ت"],  // الْفَسَا
+    "4-4": ["ة", "ا", "ب", "ت"],  // السُّورَ
+    "4-5": ["ن", "ا", "ب", "ت"],  // فِرْعَوْ
+    "4-6": ["د", "ا", "ب", "ت"],  // الْحَم
+    "4-7": ["ن", "ا", "ب", "ت"],  // الشَّيْطَا
+    "4-8": ["ن", "ا", "ب", "ت"],  // الطُّوفَا
+    "4-9": ["ر", "ا", "ب", "ت"],  // الْخَيْ
+    "4-10": ["ة", "ا", "ب", "ت"],  // الزَّكَا
+ 
+    /* ---- Q5: نیچے دیئے گئے الفاظ پر مناسب حرکات لگائیں۔ ---- */
+    "5-1": ["الْكَعْبَةُ", "الْجَنَّةُ", "الْمُؤْمِنُ", "الْكَافِرُ"],  // الكعبة
+    "5-2": ["الْجَنَّةُ", "الْكَعْبَةُ", "الْمُؤْمِنُ", "الْكَافِرُ"],  // الجنة
+    "5-3": ["الْمُؤْمِنُ", "الْكَعْبَةُ", "الْجَنَّةُ", "الْكَافِرُ"],  // المُؤمن
+    "5-4": ["الْكَافِرُ", "الْكَعْبَةُ", "الْجَنَّةُ", "الْمُؤْمِنُ"],  // الكافر
+    "5-5": ["الْفَسَادُ", "الْفَسَد", "الْكَعْبَةُ", "الْجَنَّةُ"],  // الفساد
+    "5-6": ["فِرْعَوْنُ", "الْكَعْبَةُ", "الْجَنَّةُ", "الْمُؤْمِنُ"],  // فِرْعَوْن
+    "5-7": ["الْخَالِقُ", "الْكَعْبَةُ", "الْجَنَّةُ", "الْمُؤْمِنُ"],  // الخالق
+    "5-8": ["الْحَمْدُ", "الْكَعْبَةُ", "الْجَنَّةُ", "الْمُؤْمِنُ"],  // الحمد
+    "5-9": ["الشُّكْرُ", "الْكَعْبَةُ", "الْجَنَّةُ", "الْمُؤْمِنُ"],  // الشّکر
+    "5-10": ["الشَّيْطَانُ", "الْكَعْبَةُ", "الْجَنَّةُ", "الْمُؤْمِنُ"],  // الشّیطان
+    "5-11": ["الطُّوفَانُ", "الْكَعْبَةُ", "الْجَنَّةُ", "الْمُؤْمِنُ"],  // الطوفان
+    "5-12": ["الْحَقُّ", "الْكَعْبَةُ", "الْجَنَّةُ", "الْمُؤْمِنُ"],  // الحق
+ 
+    /* ---- Q6: ان حروف کو ملا کر ایک لفظ بنائیں۔ ---- */
+    "6-1": ["شکر", "شرک", "سکر", "شکل"],  // ش۔ک۔ر
+    "6-2": ["کافر", "کفار", "کفر", "کاغر"],  // ک۔ا۔ف۔ر
+    "6-3": ["خالق", "خلاق", "خاقل", "حالق"],  // خ۔ا۔ل۔ق
+    "6-4": ["زکاۃ", "ذکاة", "زاکة", "زکات"],  // ز۔ک۔ا۔ۃ
+    "6-5": ["باطل", "بالط", "طابل", "ناطل"],  // ب۔ا۔ط۔ل
+    "6-6": ["فساد", "فسار", "قساد", "فشاد"],  // ف۔س۔ا۔د
+    "6-7": ["شیطان", "شیطن", "سیطان", "شیتان"],  // ش۔ی۔ط۔ا۔ن
+    "6-8": ["سورۃ", "صورة", "سروة", "شکر"],  // س۔و۔ر۔ۃ
+  },
+ 
+  "1-2": {
+    /* ---- Q1: :درج ذیل عربی الفاظ کا مطلب بتائیں ---- */
+    "1-1": ["جہاد", "عدل", "مجاہد", "مصیبت"],  // الجهاد
+    "1-2": ["مجاہد", "مہاجر", "منافق", "جہاد"],  // الْمُمجَاهِد
+    "1-3": ["مہاجر", "مجاہد", "منافق", "عدل"],  // الْمُهَاجِر
+    "1-4": ["منافق", "مؤمن", "کافر", "مجاہد"],  // الْمُنَافِق
+    "1-5": ["عدل", "فضل", "عزت", "ذلت"],      // الْعَدْل
+    "1-6": ["قمر", "شمس", "نجم", "صبح"],       // الْقَمَر
+    "1-7": ["مصیبت", "نعمت", "لعنت", "ندامت"], // الْمُصِيبَة
+    "1-8": ["یتیم", "مسکین", "مومن", "مہاجر"],  // الْيَتِيم
+    "1-9": ["لعنت", "رحمت", "مغفرت", "نعمت"],  // اللَّعْنَة
+
+    /* ---- Q2: درج ذیل الفاظ کو عربی میں کیا کہتے ہیں؟ ---- */
+    "2-1": ["الکلام", "الكلم", "الكتاب", "الكلاب"],  // کلام
+    "2-2": ["المنافق", "المجاهد", "المخلص", "المؤمن"],  // منافق
+    "2-3": ["العدل", "الفضل", "العلم", "الجهاد"],  // عدل
+    "2-4": ["العزة", "الذلة", "الرزق", "العدل"],  // عزت
+    "2-5": ["الذلة", "العزة", "الذمة", "الزلة"],  // ذلت
+    "2-6": ["المشرق", "المغرب", "الشروق", "الطلوع"],  // مشرق
+    "2-7": ["المغرب", "المشرق", "الغروب", "الغرب"],  // مغرب
+    "2-8": ["الطلوع", "الغروب", "الطلاق", "الطول"],  // طلوع
+    "2-9": ["الرزق", "الرزاق", "الرحمة", "الرزية"],  // رزق
+    "2-10": ["المجاہد", "الجهاد", "المنافق", "المجرم"],  // مجاہد
+
+    /* ---- Q3: درج ذیل الفاظ کے بارے میں آپ کیا جانتے ہیں؟ ---- */
+    "3-1": ["اسلام کا رکن", "اللہ کی راہ میں", "ہجرت کرنے والا", "جہاد کرنے والا"], // الْحَجُّ
+    "3-2": ["اللہ کی راہ میں", "اسلام کا رکن", "ہجرت کرنے والا", "اللہ کا گھر"],     // الْجِهَادُ
+    "3-3": ["ہجرت کرنے والا", "جہاد کرنے والا", "اسلام کا رکن", "اللہ کا نافرمان"], // الْمُهَاجِرُ
+    "3-4": ["اللہ کا گھر", "ہجرت کرنے والا", "اسلام کا رکن", "اللہ کا نافرمان"],     // الْمَسْجِدُ
+    "3-5": ["جہاد کرنے والا", "ہجرت کرنے والا", "اسلام کا رکن", "اللہ کا نافرمان"], // الْمُجَاهِدُ
+
+    /* ---- Q4: درج ذیل نامکمل الفاظ کو مکمل کریں۔ ---- */
+    "4-1": ["ة", "ل", "ق", "ن"],   // النَّدَامَـ
+    "4-2": ["ق", "ة", "ل", "ن"],   // الرِّزْ
+    "4-3": ["ة", "ق", "ل", "ن"],   // الْعِزَّ
+    "4-4": ["ة", "ق", "ل", "ن"],   // الْمَغْفِرَ
+    "4-5": ["ن", "ة", "ق", "ل"],   // الْمِيزَا
+    "4-6": ["ر", "ة", "ق", "ن"],   // السَّفَـ
+    "4-7": ["ل", "ة", "ق", "ن"],   // الْعَدْ
+    "4-8": ["ب", "ة", "ق", "ن"],   // الْمَغْرِ
+    "4-9": ["و", "ة", "ق", "ن"],   // الْغُرُ_ب
+    "4-10": ["و", "ة", "ق", "ن"],  // الرَّسُـ_ل
+ 
+    /* ---- Q5: نیچے دیئے گئے الفاظ پر مناسب حرکات لگائیں۔ ---- */
+    "5-1": ["الْمُنَافِقُ", "الْجِهَادُ", "الْيَتِيمُ", "الْعِزَّةُ"],  // المنافق
+    "5-2": ["الْجِهَادُ", "الْجِهَد", "الْمُنَافِقُ", "الْيَتِيمُ"],  // الجهاد
+    "5-3": ["الْيَتِيمُ", "الْيَتِمّ", "الْمُنَافِقُ", "الْجِهَادُ"],  // اليتيم
+    "5-4": ["الْعِزَّةُ", "الْمُنَافِقُ", "الْجِهَادُ", "الْيَتِيمُ"],  // العزة
+    "5-5": ["الْمِيزَانُ", "الْمُنَافِقُ", "الْجِهَادُ", "الْيَتِيمُ"],  // Mizan
+    "5-6": ["الْقَمَرُ", "الْمُنَافِقُ", "الْجِهَادُ", "الْيَتِيمُ"],  // القمر
+    "5-7": ["الْغُرُوبُ", "الْمُنَافِقُ", "الْجِهَادُ", "الْيَتِيمُ"],  // الغروب
+    "5-8": ["الْمَسْجِدُ", "الْمُنَافِقُ", "الْجِهَادُ", "الْيَتِيمُ"],  // المسجد
+    "5-9": ["الطُّلُوعُ", "الْمُنَافِقُ", "الْجِهَادُ", "الْيَتِيمُ"],  // الطلوع
+    "5-10": ["الْعَدْلُ", "الْمُنَافِقُ", "الْجِهَادُ", "الْيَتِيمُ"],  // العدل
+
+    /* ---- Q6: ان حروف کو ملا کر ایک لفظ بنائیں۔ ---- */
+    "6-1": ["یتیم", "مومن", "میزان", "قمر"],   // ی۔ت۔ی۔م
+    "6-2": ["کافر", "کفار", "کفر", "کلام"],   // ک۔ا۔ف۔ر
+    "6-3": ["میزان", "مشرق", "مغرب", "منافق"], // م۔ی۔ز۔ا۔ن
+    "6-4": ["قمر", "عزت", "عدل", "رزق"],     // ق۔م۔ر
+    "6-5": ["مہاجر", "مجاہد", "منافق", "کلام"], // م۔ہ۔ا۔ج۔ر
+    "6-6": ["منافق", "مہاجر", "مجاہد", "عدل"], // م۔ن۔ا۔ف۔ق
+    "6-7": ["عزت", "عدل", "ذلت", "رزق"],     // ع۔ز۔ۃ
+    "6-8": ["غروب", "طلوع", "مشرق", "مغرب"], // غ۔ر۔و۔ب
+  },
+ 
+  "1-3": {
+    /* ---- Q1: درج ذیل عربی الفاظ کا مطلب بتائیں۔ ---- */
+    "1-1": ["نیکی، بھلائی کرنا", "برائی کرنا", "قتل کرنا", "انکار کرنا"], // الْإِحْسَان
+    "1-2": ["قتل کرنا، جان سے مار دینا", "نیکی کرنا", "خبر دینا", "اذان دینا"], // الْقَتْل
+    "1-3": ["خبر، اطلاع", "نہر، دریا", "سمندر", "جسم"], // الْخَبَر
+    "1-4": ["انکار، کفر", "ایمان", "نکاح", "وصیت"], // الْكُفْر
+    "1-5": ["اذان، نماز کے لیے بلانا", "خبر دینا", "تلاوت کرنا", "نماز پڑھنا"], // الْأَذَان
+    "1-6": ["سمندر", "نہر", "زمین", "آسمان"], // الْبَحْر
+    "1-7": ["نہر، دریا", "سمندر", "جسم", "قبر"], // النَّهْر
+    "1-8": ["انسان", "فرشتہ", "جن", "جسم"], // الْإِنْسَان
+    "1-9": ["جسم", "روح", "قبر", "سمندر"], // الْجِسْم
+
+    /* ---- Q2: درج ذیل الفاظ کو عربی میں کیا کہتے ہیں؟ ---- */
+    "2-1": ["الْإِنْسَان", "الإيمان", "الإحسان", "الأذان"], // انسان
+    "2-2": ["النَّهْر", "البحر", "النور", "النفر"], // نہر
+    "2-3": ["الْإِيمَان", "الإنسان", "الإحسان", "الأمان"], // ایمان
+    "2-4": ["الْكُفْر", "الكبر", "الشكر", "الكفار"], // کفر
+    "2-5": ["الْوَصِيَّة", "الوصف", "الوصل", "الوسيلة"], // وصیت
+    "2-6": ["الشَّمْس", "القمر", "النجم", "النور"], // سورج
+    "2-7": ["الْجِسْم", "الجسر", "الجمع", "الحسم"], // جسم
+    "2-8": ["الْخَلِيفَة", "الخلية", "الخلافة", "الحليفة"], // خلیفہ
+    "2-9": ["الْأَذَان", "الإيمان", "الإنسان", "الأمان"], // اذان
+    "2-10": ["الْجُمُعَة", "الجماعة", "الجمع", "الجميعة"], // جمعہ
+
+    /* ---- Q3: درج ذیل الفاظ کے بارے میں آپ کیا جانتے ہیں؟ ---- */
+    "3-1": ["وہ سمت (کعبہ) جس کی طرف منہ کر کے مسلمان نماز پڑھتے ہیں", "نماز کے وقت لوگوں کو بلانے کی مخصوص آواز", "ہفتے کا مبارک دن", "مرنے سے پہلے تاکید کرنا"], // الْقِبْلَة
+    "3-2": ["نماز کے وقت لوگوں کو نماز کے لیے بلانے کی مخصوص آواز", "وہ سمت جس کی طرف منہ کر کے نماز پڑھتے ہیں", "ہفتے کا مبارک دن", "نیکی اور بھلائی کرنا"], // الْأَذَان
+    "3-3": ["ہفتے کا مبارک دن، جس میں ظہر کی جگہ نمازِ جمعہ ادا کی جاتی ہے", "وہ سمت جس کی طرف منہ کر کے نماز پڑھتے ہیں", "نماز کے وقت لوگوں کو بلانے کی مخصوص آواز", "نیکی اور بھلائی کرنا"], // الْجُمُعَة
+    "3-4": ["مرنے سے پہلے کسی کو کسی کام کی تاکید اور نصیحت کرنا", "نیکی اور بھلائی کرنا", "ہفتے کا مبارک دن", "وہ سمت جس کی طرف منہ کر کے نماز پڑھتے ہیں"], // الْقِبْلَة
+    "3-5": ["نیکی اور بھلائی کرنا، کام کو بہترین طریقے سے انجام دینا", "مرنے سے پہلے نصیحت کرنا", "وہ سمت جس کی طرف منہ کر کے نماز پڑھتے ہیں", "ہفتے کا مبارک دن"], // الْإِحْسَان
+
+    /* ---- Q4: نیچے دیے گئے الفاظ نامکمل ہیں۔ انہیں مکمل کریں۔ ---- */
+    "4-1": ["الْإِحْسَان", "الْإِنْسَان", "الْإِيمَان", "التَّوْفِيق"], // الْإِحْسَان
+    "4-2": ["الْإِنْسَان", "الْإِحْسَان", "الْإِيمَان", "التَّوْفِيق"], // الْإِنْسَان
+    "4-3": ["الْإِيمَان", "الْإِحْسَان", "الْإِنْسَان", "التَّوْفِيق"], // الْإِيمَان
+    "4-4": ["التَّوْفِيق", "الْإِحْسَان", "الْإِنْسَان", "التِّلَاوَة"], // التَّوْفِيق
+    "4-5": ["التِّلَاوَة", "التَّوْفِيق", "الْأَذَان", "السَّرِيع"], // التِّلَاوَة
+    "4-6": ["الْأَذَان", "التِّلَاوَة", "السَّرِيع", "السُّؤَال"], // الْأَذَان
+    "4-7": ["السَّرِيع", "الْأَذَان", "السُّؤَال", "الْكُفْر"], // السَّرِيع
+    "4-8": ["السُّؤَال", "السَّرِيع", "الْكُفْر", "الtext"], // السُّؤَال
+    "4-9": ["الْكُفْر", "السُّؤَال", "الْجُمُعَة", "الْإِحْسَان"], // الْكُفْر
+    "4-10": ["الْجُمُعَة", "الْكُفْر", "الْإِحْسَان", "الْإِنْسَان"], // الْجُمُعَة
+
+    /* ---- Q5: نیچے دیے گئے الفاظ پر مناسب حرکات لگائیں۔ ---- */
+    "5-1": ["الْقِبْلَة", "الْقَبْلَة", "الْقُبْلَة", "الْقِبَلَة"], // القبلة
+    "5-2": ["الْعَرَبِيّ", "الْعِرَبِيّ", "الْعُرَبِيّ", "الْعَرْبِيّ"], // العربي
+    "5-3": ["النَّهْر", "النِّهْر", "النُّهْر", "النَّهَر"], // النهر
+    "5-4": ["الْبَحْر", "الْبِحْر", "الْبُحْر", "الْبَحَر"], // البحر
+    "5-5": ["الْجُمُعَة", "الْجَمَعَة", "الْجِمَعَة", "الْجُمَعَة"], // الجمعة
+    "5-6": ["الْإِيمَان", "الْإِيمِان", "الْأَيْمَان", "الْإِيمَن"], // الإيمان
+    "5-7": ["الْخَلِيفَة", "الْخِلِيفَة", "الْخُلِيفَة", "الْخَلَيْفَة"], // الخليفة
+    "5-8": ["التَّوْفِيق", "التُّوْفِيق", "التِّوْفِيق", "التَّوْفَيق"], // التوفيق
+    "5-9": ["النِّكَاح", "النَّكَاح", "النُّكَاح", "النِّكَح"], // النكاح
+    "5-10": ["الْجِسْم", "الْجَسْم", "الْجُسْم", "الْجِسَم"], // الجسم
+
+    /* ---- Q6: درج ذیل حروف سے ایک لفظ بنائیں۔ ---- */
+    "6-1": ["الْإِنْسَان", "الْإِحْسَان", "الْإِيمَان", "التَّوْفِيق"], // س-ن-ا-ن-ا
+    "6-2": ["عَرَبِي", "عِبَادَة", "عَزِيز", "عَالِم"], // ع-ر-ب-ي
+    "6-3": ["جِسْم", "جَمَال", "جُمُعَة", "جَنَّة"], // ج-س-م
+    "6-4": ["قِبْلَة", "قَبْر", "قُوَّة", "قَوْم"], // ق-ب-ل-ة
+    "6-5": ["قَبْر", "قِبْلَة", "قُوَّة", "قَوْم"], // ق-ب-ر
+    "6-6": ["ظُلْم", "غَوْف", "خَطَأ", "فَسَاد"], // ظ-ل-م
+    "6-7": ["إِحْسَان", "إِنْسَان", "إِيمَان", "أَذَان"], // ا-ح-س-ا-ن
+    "6-8": ["سُؤَال", "سَرِيع", "سَمَاء", "سُورَة"] // س-ؤ-ا-ل
+  },
+
+  "1-4": {
+    /* ---- Q1: درج ذیل عربی الفاظ کا مطلب بتائیں ---- */
+    "1-1": ["مالک", "آسمان", "قوم", "وحی"], // الْمالِك
+    "1-2": ["آسمان", "زمین", "مالک", "امن"], // السَّماء
+    "1-3": ["قوم", "امت", "راستہ", "حکمت"], // الْقَوْم
+    "1-4": ["وحی", "نبوت", "موت", "دعا"], // الْوَحْي
+    "1-5": ["امن", "خوف", "غافل", "آخرت"], // الْأَمْن
+    "1-6": ["آخرت", "دنیا", "محبت", "غیب"], // الْآخِرَة
+    "1-7": ["محبت", "خوف", "حکمت", "نبوت"], // الْمَحَبَّة
+    "1-8": ["غیب", "نور", "کتاب", "آخرت"], // الْغَيْب
+    "1-9": ["خوف", "امن", "محبت", "راستہ"], // الْخَوْف
+    "1-10": ["غافل", "عاقل", "صادق", "مالک"], // الْغَافِل
+    "1-11": ["راستہ", "آسمان", "قوم", "حکمت"], // الطَّرِيق
+    "1-12": ["حکمت", "نبوت", "وحی", "کتاب"], // الْحِكْمَة
+
+    /* ---- Q2: درج ذیل الفاظ کو عربی میں کیا کہتے ہیں؟ ---- */
+    "2-1": ["الْأَمْن", "الأمر", "الأم", "الأمين"], // امن
+    "2-2": ["الْقَوْم", "القوة", "القيام", "القول"], // قوم
+    "2-3": ["الدُّعَاء", "الدعوة", "الداعي", "الدنيا"], // دعا
+    "2-4": ["الْمَوْت", "الميت", "المال", "الموج"], // موت
+    "2-5": ["التَّابُوت", "التائب", "التوبة", "التاجر"], // تابوت
+    "2-6": ["الْوَحْي", "الوعد", "الوجه", "الوقت"], // وحی
+    "2-7": ["الْآخِرَة", "الأخرى", "الآخر", "الأخير"], // آخرت
+    "2-8": ["النُّبُوَّة", "النبي", "النبأ", "النور"], // نبوت
+    "2-9": ["الْغَافِل", "العاقل", "الغالب", "القاتل"], // غافل
+    "2-10": ["الصِّدْق", "الصدقة", "الصبر", "الصديق"], // सچائی
+
+    /* ---- Q3: درج ذیل الفاظ کے بارے میں آپ کیا جانتے ہیں؟ ---- */
+    "3-1": ["دعا", "وحی", "آخرت", "غیب"], // الدُّعَاء
+    "3-2": ["وحی", "نبوت", "آخرت", "امت"], // الْوَحْي
+    "3-3": ["آخرت", "دنیا", "غیب", "سچ"], // الْآخِرَة
+    "3-4": ["غیب", "نور", "دعا", "وحی"], // الْغَيْب
+    "3-5": ["نبوت", "وحی", "امت", "سچ"], // النُّبُوَّة
+    "3-6": ["امت", "قوم", "آخرت", "دنیا"], // الأُمَّة
+    "3-7": ["سچ", "جھوٹ", "حکمت", "امن"], // الصِّدْق
+
+    /* ---- Q4: درج ذیل نامکمل الفاظ کو مکمل کریں۔ ---- */
+    "4-1": ["ب", "ت", "ء", "ة"], // الْعَذَا
+    "4-2": ["ت", "ب", "ء", "ة"], // الْمَوْ
+    "4-3": ["ء", "ت", "ب", "ة"], // الدُّعَا
+    "4-4": ["ب", "ت", "ء", "ة"], // الْكِتَا
+    "4-5": ["ة", "ب", "ت", "ء"], // الْآخِرَ
+    "4-6": ["ة", "ب", "ت", "ر"], // الْحَيَا
+    "4-7": ["ة", "ب", "ت", "ن"], // النُّبُوَّ
+    "4-8": ["ر", "ة", "ب", "ت"], // النُّو
+    "4-9": ["ة", "ر", "ب", "ت"], // الْقُوَّ
+    "4-10": ["ق", "ة", "ب", "ت"], // الصِّدْ
+
+    /* ---- Q5: نیچے دیئے گئے الفاظ پر مناسب حرکات لگائیں۔ ---- */
+    "5-1": ["الْخَلْقُ", "الدُّعَاءُ", "السَّمَاءُ", "الْوَحْيُ"], // الخلق
+    "5-2": ["الدُّعَاءُ", "الدُّعَا", "الْخَلْقُ", "السَّمَاءُ"], // الدعاء
+    "5-3": ["السَّمَاءُ", "السَّمَأ", "الْخَلْقُ", "الدُّعَاءُ"], // السماء
+    "5-4": ["الْوَحْيُ", "الْخَلْقُ", "الدُّعَاءُ", "السَّمَاءُ"], // الوحي
+    "5-5": ["الْأَمْرُ", "الْخَلْقُ", "الدُّعَاءُ", "السَّمَاءُ"], // الأمر
+    "5-6": ["الْقَلَمُ", "الْخَلْقُ", "الدُّعَاءُ", "السَّمَاءُ"], // القلم
+    "5-7": ["التَّابُوتُ", "الْخَلْقُ", "الدُّعَاءُ", "السَّمَاءُ"], // التابوت
+    "5-8": ["الدُّنْيَا", "الدَّنْيَا", "الدِّنْيَا", "الدُّنِيَا"], // الدنيا
+    "5-9": ["الْآخِرَةُ", "الْخَلْقُ", "الدُّعَاءُ", "السَّمَاءُ"], // الآخرة
+    "5-10": ["الْغَيْبُ", "الْخَلْقُ", "الدُّعَاءُ", "السَّمَاءُ"], // الغيب
+    "5-11": ["النُّورُ", "الْخَلْقُ", "الدُّعَاءُ", "السَّمَاءُ"], // النور
+    "5-12": ["الْأُمَّةُ", "الْخَلْقُ", "الدُّعَاءُ", "السَّمَاءُ"], // الأمة
+
+    /* ---- Q6: ان حروف کو ملا کر ایک لفظ بنائیں۔ ---- */
+    "6-1": ["طریق", "آخرت", "حکمت", "نور"], // ط۔ر۔ی۔ق
+    "6-2": ["آخرت", "طریق", "حکمت", "سماء"], // آ۔خ۔ر۔ۃ
+    "6-3": ["حکمت", "آخرت", "خلق", "غافل"], // ح۔ک۔م۔ۃ
+    "6-4": ["نور", "نبوة", "طریق", "امن"], // ن۔و۔ر
+    "6-5": ["سماء", "نور", "خلق", "امن"], // س۔م۔ا۔ء
+    "6-6": ["خلق", "حکمت", "غافل", "طریق"], // kh۔ل۔ق
+    "6-7": ["غافل", "خلق", "حکمت", "امن"], // غ۔ا۔ف۔ل
+    "6-8": ["امن", "امر", "نور", "خلق"] // أ۔م۔ن
+  },
+
+  "1-5": {
+    /* ---- Q1: درج ذیل عربی الفاظ کا مطلب بتائیں۔ ---- */
+    "1-1": ["گھر", "زمین", "شریعت", "نعمت"], // الْبَيْت
+    "1-2": ["شریعت (اللہ کا مقرر کردہ دینی قانون)", "جاہلیت", "نعمت", "رحمت"], // الشَّرِيعَة
+    "1-3": ["مسکین، محتاج", "شہید", "قوی", "قلیل"], // الْمِسْكِين
+    "1-4": ["زمین", "آسمان", "گھر", "عرض"], // الْأَرْض
+    "1-5": ["خوبصورتی، حسن", "طول", "وزن", "رحمت"], // الْجَمَال
+    "1-6": ["جاہلیت (اسلام سے پہلے کا زمانہ)", "شریعت", "عبادت", "نسب"], // الْجَاهِلِيَّة
+    "1-7": ["نگرانی، بلندی سے دیکھنا", "شریعت", "عرض", "طلاق"], // الْإِشْرَاف
+    "1-8": ["چوڑائی", "لمبائی", "وزن", "گھر"], // الْعَرْض
+    "1-9": ["نعمت", "رحمت", "عبادت", "خوف"], // النِّعْمَة
+    "1-10": ["شہید، گواہ", "امام", "فریق", "مسکین"], // الشَّهِيد
+    "1-11": ["رحمت، مہربانی", "نعمت", "شریعت", "خوف"], // الرَّحْمَة
+    "1-12": ["تھوڑا، کم", "کثیر", "قوی", "وزن"], // الْقَلِيل
+
+    /* ---- Q2: درج ذیل الفاظ کو عربی میں کیا کہتے ہیں؟ ---- */
+    "2-1": ["الْجَمَال", "الجمل", "الجبال", "الكمال"], // جمال
+    "2-2": ["الْقَلِيل", "الكثير", "القتيل", "الجليل"], // قلیل
+    "2-3": ["الْكَثِير", "القلیل", "الكبير", "الكفير"], // کثیر
+    "2-4": ["الطَّلَاق", "الطلوع", "الطلب", "الطول"], // طلاق
+    "2-5": ["الرَّحْمَة", "الرحم", "الرحيم", "الرحمن"], // رحمت
+    "2-6": ["الشَّرِيعَة", "الشرك", "الشریف", "الشرعية"], // شریعت
+    "2-7": ["الْوَزْن", "الوعد", "الوزير", "الوسن"], // وزن
+    "2-8": ["الطُّول", "الطلاق", "الطلوع", "الطوفان"], // طول
+    "2-9": ["النِّعْمَة", "النعم", "النعیم", "النعمان"], // نعمت
+    "2-10": ["الْقَوِي", "القوة", "القاضي", "القوم"], // قوی
+    /* ---- Q3: درج ذیل الفاظ کے بارے میں آپ کیا جانتے ہیں؟ ---- */
+    "3-1": ["جاہلیت: اسلام سے پہلے کا دور", "شریعت: اللہ کے احکام", "امام: رہنما", "نعمت: اللہ کی عطا"], // الْجَاهِلِيَّة
+    "3-2": ["شریعت: اللہ کی طرف سے مقرر کردہ احکام و قوانین", "جاہلیت", "نعمت", "الصيام"], // الشَّرِيعَة
+    "3-3": ["امام: نماز میں آگے کھڑے ہو کر نماز پڑھانے والا، رہنما", "شریعت", "نعمت", "الصيام"], // الْإِمَام
+    "3-4": ["نعمت: اللہ کی عطا کی ہوئی چیز", "رحمت", "امام", "جاهلية"], // النِّعْمَة
+    "3-5": ["روزہ: صبح صادق سے غروب آفتاب تک کھانے پینے سے رکنا", "امام", "نعمت", "شريعة"], // الصِّيَام
+    /* ---- Q4: نیچے دیے گئے الفاظ نامکمل ہیں۔ انہیں مکمل کریں۔ ---- */
+    "4-1": ["الْبَيْت", "الطَّلَاق", "الْقَوِي", "الْجَمَال"], // الْبَيْت
+    "4-2": ["الطَّلَاق", "الْبَيْت", "الْقَوِي", "الْجَمَال"], // الطَّلَاق
+    "4-3": ["الْقَوِي", "الطَّلَاق", "الْبَيْت", "الْجَمَال"], // الْقَوِي
+    "4-4": ["الْجَمَال", "الطُّول", "الْخَوْف", "النَّسَب"], // الْجَمَال
+    "4-5": ["الطُّول", "الْجَمَال", "الْخَوْف", "النَّسَب"], // الطُّول
+    "4-6": ["الْخَوْف", "الطُّول", "الْجَمَال", "النَّسَب"], // الْخَوْف
+    "4-7": ["النَّسَب", "الْخَوْف", "الْإِمَام", "الْفَرِيق"], // النَّسَب
+    "4-8": ["الْإِمَام", "النَّسَب", "الْفَرِيق", "الْقَلِيل"], // الْإِمَام
+    "4-9": ["الْفَرِيق", "الْإِمَام", "الْقَلِيل", "الْبَيْت"], // الْفَرِيق
+    "4-10": ["الْقَلِيل", "الْفَرِيق", "الْبَيْت", "الْقَوِي"], // الْقَلِيل
+    /* ---- Q5: نیچے دیے گئے الفاظ پر مناسب حرکات لگائیں۔ ---- */
+    "5-1": ["الْخَوْف", "الْكَثِير", "الْقَلِيل", "الْجَمَال"], // الخوف
+    "5-2": ["الْكَثِير", "الْخَوْف", "الْقَلِيل", "الْجَمَال"], // الكثير
+    "5-3": ["الْقَلِيل", "الْخَوْف", "الْكَثِير", "الْجَمَال"], // القليل
+    "5-4": ["الْجَمَال", "الْجَمَل", "الْخَوْف", "الْكَثِير"], // الجمال
+    "5-5": ["الْقَوِي", "الْخَوْف", "الْكَثِير", "الْقَلِيل"], // القوي
+    "5-6": ["الْبَيْت", "الْخَوْف", "الْكَثِير", "الْقَلِيل"], // البيت
+    "5-7": ["الْعِبَادَة", "الْعِبَدَة", "الْخَوْف", "الْكَثِير"], // العبادة
+    "5-8": ["الْخَطَأ", "الْخَوْف", "الْكَثِير", "الْقَلِيل"], // الخطأ
+    "5-9": ["الزَّوْجَة", "الزِّوْجَة", "الZُّوْجَة", "الزَّوَجَة"], // الزوجة
+    "5-10": ["الرَّحْمَة", "الْخَوْف", "الْكَثِير", "الْقَلِيل"], // الرحمة
+    "5-11": ["الطَّلَاق", "الطَّلَق", "الْخَوْف", "الْكَثِير"], // الطلاق
+    "5-12": ["النَّسَب", "الْخَوْف", "الْكَثِير", "الْقَلِيل"], // النسب
+    /* ---- Q6: درج ذیل حروف سے ایک لفظ بنائیں۔ ---- */
+    "6-1": ["طَلَاق", "وَزْن", "شَهِيد", "نِعْمَة"], // ط-ل-ا-ق
+    "6-2": ["وَزْن", "طَلَاق", "شَهِيد", "خَوْف"], // و-ز-ن
+    "6-3": ["شَهِيد", "نِعْمَة", "خَوْف", "جَمَال"], // ش-ه-ي-د
+    "6-4": ["نِعْمَة", "شَهِيد", "خَوْف", "مِسْكِين"], // ن-ع-م-ة
+    "6-5": ["خَوْف", "وَزْن", "جَمَال", "رَحْمَة"], // خ-و-ف
+    "6-6": ["جَمَال", "خَوْف", "مِسْكِين", "رَحْمَة"], // ج-م-ا-ل
+    "6-7": ["مِسْكِين", "جَمَال", "نِعْمَة", "شَهِيد"], // م-س-ك-ي-ن
+    "6-8": ["رَحْمَة", "مِسْكِين", "خَوْف", "وَزْن"] // r-ح-م-ة
+    },
+    "1-6": {
+    /* ---- Q1: درج ذیل عربی الفاظ کا مطلب بتائیں۔ ---- */
+    "1-1": ["لوگ", "قریش", "خوف", "علم"], // النَّاس
+    "1-2": ["قریش (مکہ کا مشہور قبیلہ)", "لوگ", "صبح", "جادوگر"], // قُرَيْش
+    "1-3": ["خوف، ڈر", "فرماں برداری", "مال", "زینت"], // الْخَشْيَة
+    "1-4": ["اللہ کی پاکی بیان کرنا", "علم", "فتح", "روح"], // التَّاسْبِيح
+    "1-5": ["علم", "مال", "اطاعت", "صبح"], // الْعِلْم
+    "1-6": ["مال، دولت", "علم", "زینت", "فتح"], // الْمَال
+    "1-7": ["فرماں برداری، اطاعت", "خشیت", "تسبیح", "نجات"], // الطَّاعَة
+    "1-8": ["صبح", "شام", "صبح کا وقت", "فتح"], // الصُّبْح
+    "1-9": ["زینت، سجاوٹ", "مال", "فتح", "روح"], // الزِّينَة
+    "1-10": ["فتح، کامیابی", "صبح", "روح", "جادوگر"], // الْفَتْح
+    "1-11": ["روح، جان", "فتح", "ساحر", "جن"], // الرُّوح
+    "1-12": ["جادوگر", "ساحر", "مجنون", "مجرم"], // السَّاحِر
+    /* ---- Q2: درج ذیل الفاظ کو عربی میں کیا کہتے ہیں؟ ---- */
+    "2-1": ["الْمَال", "الملك", "المثال", "المآل"], // مال
+    "2-2": ["الْعِلْم", "العمل", "العالم", "العلو"], // علم
+    "2-3": ["الْقِيَامَة", "القيام", "القيمة", "القبلة"], // قیامت
+    "2-4": ["الطَّاعَة", "الطَّاقَة", "الصَّلَاة", "الطَّعَام"], // اطاعت
+    "2-5": ["الْجِنّ", "الجنة", "الجان", "الجنين"], // جن
+    "2-6": ["الشَّكّ", "الشكر", "الشرك", "الشكل"], // شک
+    "2-7": ["الْيَقِين", "الدين", "اليمين", "اليقظة"], // یقین
+    "2-8": ["النَّاس", "النفس", "النار", "الناصر"], // لوگ
+    "2-9": ["التَّقْوَى", "التقوم", "التوبة", "التقية"], // تقوی
+    "2-10": ["الْخَشْيَة", "الخيبة", "الحشية", "الخشوع"], // خشیت
+    /* ---- Q3: درج ذیل الفاظ کے بارے میں آپ کیا جانتے ہیں؟ ---- */
+    "3-1": ["قیامت: وہ دن جب تمام انسان دوبارہ زندہ ہو کر اللہ کے سامنے پیش ہوں گے", "تقویٰ: اللہ کا ڈر", "جن: مخلوق", "رمضان: مہینہ"], // الْقِيَامَة
+    "3-2": ["تقوی: اللہ کے ڈر سے گناہوں سے بچنا اور نیکی اختیار کرنا", "قیامت", "جن", "قريش"], // التَّقْوَى
+    "3-3": ["جن: اللہ کی ایک مخلوق جو آگ سے پیدا کی گئی اور نظر نہیں آتی", "تقویٰ", "قیامت", "رمضان"], // الْجِنّ
+    "3-4": ["رمضان: اسلامی سال کا نواں مہینہ جس میں روزے رکھے جاتے ہیں", "قریش", "جن", "تقویٰ"], // رَمَضَان
+    "3-5": ["قريش: مکہ کا مشہور قبیلہ جس میں نبی کریم ﷺ پیدا ہوئے", "رمضان", "جن", "قیامت"], // قُرَيْش
+    /* ---- Q4: نیچے دیے گئے الفاظ نامکمل ہیں۔ انہیں مکمل کریں۔ ---- */
+    "4-1": ["النَّار", "الْمَجْنُون", "الْفَضْل", "الْحِسَاب"], // النَّار
+    "4-2": ["الْمَجْنُون", "النَّار", "الْفَضْل", "الْحِسَاب"], // الْمَجْنُون
+    "4-3": ["الْفَضْل", "النَّار", "الْمَجْنُون", "الْحِسَاب"], // الْفَضْل
+    "4-4": ["الْحِسَاب", "الْفَرِيضَة", "الْمَال", "رَمَضَان"], // الْحِسَاب
+    "4-5": ["الْفَرِيضَة", "الْحِسَاب", "الْمَال", "رَمَضَان"], // الْفَرِيضَة
+    "4-6": ["الْمَال", "الْحِسَاب", "الْفَرِيضَة", "رَمَضَان"], // الْمَال
+    "4-7": ["رَمَضَان", "الرُّوح", "الْمُجْرِم", "الْعِلْم"], // رَمَضَان
+    "4-8": ["الرُّوح", "رَمَضَان", "الْمُجْرِم", "الْعِلْم"], // الرُّوح
+    "4-9": ["الْمُجْرِم", "الرُّوح", "رَمَضَان", "الْعِلْم"], // الْمُجْرِم
+    "4-10": ["الْعِلْم", "الْمُجْرِم", "الْيَقِين", "السَّاحِر"], // الْعِلْم
+    "4-11": ["الْيَقِين", "الْعِلْم", "السَّاحِر", "النَّار"], // الْيَقِين
+    "4-12": ["السَّاحِر", "الْيَقِين", "الْعِلْم", "الْمَال"], // السَّاحِر
+    /* ---- Q5: نیچے دیے گئے الفاظ پر مناسب حرکات لگائیں۔ ---- */
+    "5-1": ["الْمَال", "الْمِال", "الْمُال", "الْمَل"], // المال
+    "5-2": ["الْعِلْم", "الْعَلْم", "الْعُلْم", "الْعِلَم"], // العلم
+    "5-3": ["الصُّبْح", "الصَّبْح", "الصِّبْح", "الصُّبَح"], // الصبح
+    "5-4": ["النَّجَاة", "النِّجَاة", "النُّجَاة", "النَّجَات"], // النجاة
+    "5-5": ["السَّاحِر", "السِّاحِر", "السَّاحَر", "السُّاحِر"], // الساحر
+    "5-6": ["الْجِنّ", "الْجَنّ", "الْجُنّ", "الْجِنَ"], // الجن
+    "5-7": ["الْيَقِين", "الْيِقِين", "الْيُقِين", "الْيَقَين"], // اليقين
+    "5-8": ["الشَّكّ", "الشِّكّ", "الشُّكّ", "الشَّكَ"], // الشك
+    "5-9": ["رَمَضَان", "رِمَضَان", "رُمَضَان", "رَمْضَان"], // رمضان
+    "5-10": ["قُرَيْش", "قَرَيْش", "قِرَيْش", "قُرِيْش"], // قريش
+    "5-11": ["الْمُجْرِم", "الْمَجْرِم", "الْمُجْرَم", "الْمِجْرِم"], // المجرم
+    "5-12": ["الْفَضْل", "الْفِضْل", "الْفُضْل", "الْفَضَل"], // الفضل
+    /* ---- Q6: درج ذیل حروف سے ایک لفظ بنائیں۔ ---- */
+    "6-1": ["قُرَيْش", "عِلْم", "مَال", "فَرِيضَة"], // ق-ر-ي-ش
+    "6-2": ["عِلْم", "قُرَيْش", "مَال", "يَقِين"], // ع-ل-م
+    "6-3": ["مَال", "عِلْم", "قُرَيْش", "شَكّ"], // م-ا-ل
+    "6-4": ["فَرِيضَة", "يَقِين", "شَكّ", "سَاحِر"], // ف-ر-ي-ض-ة
+    "6-5": ["يَقِين", "فَرِيضَة", "شَكّ", "نَجَاة"], // ي-ق-ي-ن
+    "6-6": ["شَكّ", "يَقِين", "سَاحِر", "نَجَاة"], // ش-ك
+    "6-7": ["سَاحِر", "شَكّ", "نَجَاة", "مَال"], // س-ا-ح-ر
+    "6-8": ["نَجَاة", "سَاحِر", "شَكّ", "عِلْم"] // ن-ج-ا-ة
+    },
+    "1-7": {
+    /* ---- Q1: درج ذیل عربی الفاظ کا مطلب بتائیں۔ ---- */
+    "1-1": ["گناہوں کی معافی مانگنا", "اختلاف کرنا", "خیانت کرنا", "وضاحت کرنا"], // الْاِسْتِغْفَار
+    "1-2": ["اختلاف، مختلف ہونا", "استغفار", "تفصیل", "مقدار"], // الْاِخْتِلَاف
+    "1-3": ["غریب، محتاج", "مال دار", "شہر", "ماں"], // الْفَقِير
+    "1-4": ["مال دار", "غریب", "والدہ", "رضامندی"], // الْغَنِيّ
+    "1-5": ["خیانت، امانت میں بے ایمانی", "حکمت", "حسنہ", "تفصیل"], // الْخِيَانَة
+    "1-6": ["دانائی، سمجھ داری", "خیانت", "بلدہ", "مقدار"], // الْحِكْمَة
+    "1-7": ["نیکی، اچھائی", "خیانت", "تفصیل", "رضوان"], // الْحَسَنَة
+    "1-8": ["تفصیل، وضاحت", "حکمت", "بلدہ", "والدہ"], // Тَّفْصِيل
+    "1-9": ["شہر", "ماں", "مقدار", "حاجت"], // الْبَلْدَة
+    "1-10": ["ماں", "شہر", "رضامندی", "ملت"], // الْوَالِدَة
+    "1-11": ["رضامندی، خوشنودی", "ماں", "مقدار", "حکمت"], // الرِّضْوَان
+    "1-12": ["اندازہ، مقدار", "شہر", "رضوان", "حسنة"], // الْمِقْدَار
+    /* ---- Q2: درج ذیل الفاظ کو عربی میں کیا کہتے ہیں؟ ---- */
+    "2-1": ["الْوَالِدَة", "الوالد", "الولادة", "الولاية"], // والدہ
+    "2-2": ["الشَّاعِر", "الساحر", "الشاهد", "الشاكر"], // شاعر
+    "2-3": ["النِّيَّة", "النِّعْمَة", "النَّبِيَّة", "الْمَنِيَّة"], // نیت
+    "2-4": ["الْمِلَّة", "المثلة", "المسلم", "الملك"], // ملت
+    "2-5": ["الْاِسْتِغْفَار", "الاختلاف", "الاستكبار", "الاستغفاف"], // استغفار
+    "2-6": ["الْاِخْتِلَاف", "الاستغفار", "الاختيار", "الاعتراف"], // اختلاف
+    "2-7": ["الظَّنّ", "الظلم", "الظل", "الطن"], // گمان
+    "2-8": ["الْحِكْمَة", "الحكم", "الحكيم", "الحسنة"], // حکمت
+    /* ---- Q3: درج ذیل الفاظ کے بارے میں آپ کیا جانتے ہیں؟ ---- */
+    "3-1": ["عیسیٰ علیہ السلام: اللہ کے جلیل القدر نبی اور رسول", "عشاء: رات کی نماز", "آدم علیہ السلام: پہلے انسان", "اسحاق علیہ السلام: نبی"], // عِيسَى
+    "3-2": ["عشاء: رات کی نماز، یا شام ڈھلنے کے بعد کا وقت", "عیسیٰ علیہ السلام", "آدم علیہ السلام", "حسنہ: نیکی"], // الْعِشَاء
+    "3-3": ["اسحاق علیہ السلام: حضرت ابراہیم علیہ السلام کے بیٹے اور اللہ کے نبی", "آدم علیہ السلام", "عیسیٰ علیہ السلام", "عشاء"], // إِسْحَاق
+    "3-4": ["آدم علیہ السلام: پہلے انسان اور پہلے نبی", "عیسیٰ علیہ السلام", "اسحاق علیہ السلام", "حسنہ"], // آدَم
+    "3-5": ["حسنہ: نیکی، اچھا عمل", "عشاء", "آدم علیہ السلام", "عیسیٰ علیہ السلام"], // الْحَسَنَة
+    /* ---- Q4: نیچے دیے گئے الفاظ نامکمل ہیں۔ انہیں مکمل کریں۔ ---- */
+    "4-1": ["الْاِسْتِغْفَار", "الْاِخْتِلَاف", "الْوَالِدَة", "السُّنَّة"], // الْاِسْتِغْفَار
+    "4-2": ["الْاِخْتِلَاف", "الْاِسْتِغْفَار", "الْوَالِدَة", "السُّنَّة"], // الْاِخْتِلَاف
+    "4-3": ["الْوَالِدَة", "الْاِسْتِغْفَار", "الْاِخْتِلَاف", "السُّنَّة"], // الْوَالِدَة
+    "4-4": ["السُّنَّة", "الرِّضْوَان", "آدَم", "الْمَكَان"], // السُّنَّة
+    "4-5": ["الرِّضْوَان", "السُّنَّة", "آدَم", "الْمَكَان"], // الرِّضْوَان
+    "4-6": ["آدَم", "السُّنَّة", "الرِّضْوَان", "الْمَكَان"], // آدَم
+    "4-7": ["الْمَكَان", "إِسْحَاق", "الْحَسَنَة", "الْبَلْدَة"], // الْمَكَان
+    "4-8": ["إِسْحَاق", "الْمَكَان", "الْحَسَنَة", "الْبَلْدَة"], // إِسْحَاق
+    "4-9": ["الْحَسَنَة", "إِسْحَاق", "الْمَكَان", "الْبَلْدَة"], // الْحَسَنَة
+    "4-10": ["الْبَلْدَة", "الْحَسَنَة", "إِسْحَاق", "الْمَكَان"], // الْبَلْدَة
+    /* ---- Q5: نیچے دیے گئے الفاظ پر مناسب حرکات لگائیں۔ ---- */
+    "5-1": ["الْاِسْتِغْفَار", "الْاِخْتِلَاف", "الْخِيَانَة", "الْفَقِير"], // الاستغفار
+    "5-2": ["الْاِخْتِلَاف", "الِاخْتِلَف", "الْاِسْتِغْفَار", "الْخِيَانَة"], // الاختلاف
+    "5-3": ["الْخِيَانَة", "الْخِيَنَة", "الْاِسْتِغْفَار", "الْاِخْتِلَاف"], // الخيانة
+    "5-4": ["الْفَقِير", "الْاِسْتِغْفَار", "الْاِخْتِلَاف", "الْخِيَانَة"], // الفقير
+    "5-5": ["الرِّضْوَان", "الرَّضْوَان", "الرُّضْوَان", "الرِّضْوِان"], // الرضوان
+    "5-6": ["الْمِلَّة", "الْمَلَّة", "الْمُلَّة", "الْمِلَة"], // الملة
+    "5-7": ["الْمُسْلِم", "الْمَسْلِم", "الْمُسْلَم", "الْمِسْلِم"], // المسلم
+    "5-8": ["الْمِقْدَار", "الْاِسْتِغْفَار", "الْاِخْتِلَاف", "الْخِيَانَة"], // المقدار
+    "5-9": ["الْحَاجَة", "الْاِسْتِغْفَار", "الْاِخْتِلَاف", "الْخِيَانَة"], // الحاجة
+    "5-10": ["الْحَسَنَة", "الْحِسَنَة", "الْحُسَنَة", "الْحَسْنَة"], // الحسنة
+    /* ---- Q6: درج ذیل حروف سے ایک لفظ بنائیں۔ ---- */
+    "6-1": ["فَقِير", "وَالِد", "مِلَّة", "خِيَانَة"], // ف-ق-ي-ر
+    "6-2": ["وَالِد", "فَقِير", "مِلَّة", "حِكْمَة"], // و-ا-ل-د
+    "6-3": ["مِلَّة", "وَالِد", "خِيَانَة", "ظَنّ"], // م-ل-ة
+    "6-4": ["خِيَانَة", "حِكْمَة", "حَاجَة", "سُنَّة"], // خ-ي-ا-ن-ة
+    "6-5": ["حِكْمَة", "خِيَانَة", "ظَنّ", "حَاجَة"], // ح-ك-م-ة
+    "6-6": ["ظَنّ", "حِكْمَة", "حَاجَة", "سُنَّة"], // ظ-ن
+    "6-7": ["حَاجَة", "ظَنّ", "سُنَّة", "مِلَّة"], // ح-ا-ج-ة
+    "6-8": ["سُنَّة", "حَاجَة", "ظَنّ", "خِيَانَة"] // س-ن-ة
+    },
+    "1-8": {
+    /* ---- Q1: درج ذیل عربی الفاظ کا مطلب بتائیں۔ ---- */
+    "1-1": ["غصہ", "تکبر، گھمنڈ", "مثال", "صبر"], // الْغَضَب
+    "1-2": ["تکبر، گھمنڈ", "غصہ", "تفسیر", "سلامتی"], // الْغُرُور
+    "1-3": ["مثال، نمونہ", "صبر", "تفسیر", "طاقت"], // الْمِثَال
+    "1-4": ["صبر، برداشت", "غصہ", "مثال", "سلامتی"], // الصَّبْر
+    "1-5": ["تشریح، وضاحت", "مثال", "طاقت", "بصیرت"], // التَّفْسِير
+    "1-6": ["سلامتی، امن", "غصہ", "صبر", "بشر"], // السَّلَام
+    "1-7": ["طاقت", "غصہ", "مخلص", "قرض"], // الْقُوَّة
+    "1-8": ["اخلاص والا", "بشر", "قرض", "افق"], // الْمُخْلِص
+    "1-9": ["آسمان کا کنارہ، افق", "بصیرت", "بشر", "مخلص"], // الْأُفُق
+    "1-10": ["دل کی بینائی، سمجھ داری", "افق", "بشر", "قرض"], // الْبَصِيرَة
+    "1-11": ["انسان", "افق", "بصیرت", "قرض"], // الْبَشَر
+    "1-12": ["ادھار، قرض", "انسان", "بصیرت", "غصہ"], // الْقَرْض
+    /* ---- Q2: درج ذیل الفاظ کو عربی میں کیا کہتے ہیں؟ ---- */
+    "2-1": ["الْقُوَّة", "القول", "القوم", "القوت"], // قوت
+    "2-2": ["الْغَار", "الغاز", "الغاية", "الغافر"], // غار
+    "2-3": ["الْقَرْض", "القرب", "القرن", "الفرض"], // قرض
+    "2-4": ["الStructuring", "البصر", "البشرى", "البسيرة"], // بصیرت -> الْبَصِيرَة
+    "2-5": ["النِّصْف", "النصر", "النصح", "النسف"], // نصف
+    "2-6": ["الْغَضَب", "الغرور", "الغرب", "الغصب"], // غضب
+    "2-7": ["الْمِثَال", "المثل", "المتال", "المقال"], // مثال
+    "2-8": ["التَّفْسِير", "التقدير", "التفكير", "التفسيق"], // تفسیر
+    /* ---- Q3: درج ذیل الفاظ کے بارے میں آپ کیا جانتے ہیں؟ ---- */
+    "3-1": ["تفسیر: قرآنِ مجید کی آیات کی تشریح اور وضاحت", "صبر: مشکل میں برداشت کرنا", "فجر: صبح کا وقت", "مخلص: اخلاص والا"], // التَّفْسِير
+    "3-2": ["صبر: مشکل اور تکلیف میں برداشت کرنا اور گھبرانا نہیں", "تفسیر", "فجر", "غضب"], // الصَّبْر
+    "3-3": ["فجر: صبحِ صادق کا وقت، اور اس وقت کی نماز", "صبر", "تفسیر", "غضب"], // الْفَجْر
+    "3-4": ["غضب: شدید غصہ", "صبر", "فجر", "مخلص"], // الْغَضَب
+    "3-5": ["مخلص: وہ شخص جو ہر کام صرف اللہ کی رضا کے لیے کرے", "غضب", "فجر", "صبر"], // الْمُخْلِص
+    /* ---- Q4: نیچے دیے گئے الفاظ نامکمل ہیں۔ انہیں مکمل کریں۔ ---- */
+    "4-1": ["الْغُرُور", "الْمِثَال", "الْغَار", "الْقُوَّة"], // الْغُرُور
+    "4-2": ["الْمِثَال", "الْغُرُور", "الْغَار", "الْقُوَّة"], // الْمِثَال
+    "4-3": ["الْغَار", "الْمِثَال", "الْقُوَّة", "الْبَيَان"], // الْغَار
+    "4-4": ["الْقُوَّة", "الْبَيَان", "الْقِيَام", "الْمُخْلِص"], // الْقُوَّة
+    "4-5": ["الْبَيَان", "الْقِيَام", "الْمُخْلِص", "التَّفْسِير"], // الْبَيَان
+    "4-6": ["الْقِيَام", "الْمُخْلِص", "التَّفْسِير", "البصيرة"], // الْقِيَام
+    "4-7": ["الْمُخْلِص", "التَّفْسِير", "الْبَصِيرَة", "الْغُرُور"], // الْمُخْلِص
+    "4-8": ["التَّفْسِير", "الْبَصِيرَة", "الْغُرُور", "الْمِثَال"], // التَّفْسِير
+    "4-9": ["الْبَصِيرَة", "الْغُرُور", "الْمِثَال", "الْقُوَّة"], // الْبَصِيرَة
+    /* ---- Q5: نیچے دیے گئے الفاظ پر مناسب حرکات لگائیں। ---- */
+    "5-1": ["الْمُخْلِص", "الْمَخْلِص", "الْمُخْلَص", "الْمِخْلِص"], // المخلص
+    "5-2": ["الْبَيَان", "الْبِيَان", "الْبُيَان", "الْبَيْان"], // البيان
+    "5-3": ["الْقِيَام", "الْقَيَام", "الْقُيَام", "الْقِيْم"], // القيام
+    "5-4": ["الْمِثَال", "الْمَثَال", "الْمُثَال", "الْمِثْال"], // المثال
+    "5-5": ["الْقُوَّة", "الْقَوَّة", "الْقِوَّة", "الْقُوَة"], // القوة
+    "5-6": ["الْحَرَج", "الْحِرَج", "الْحُرَج", "الْحَرْج"], // الحرج
+    "5-7": ["الْكَاذِب", "الْمُخْلِص", "الْبَيَان", "الْقِيَام"], // الكاذب
+    "5-8": ["الْغَار", "الْغِار", "الْغُار", "الْغَر"], // الغار
+    "5-9": ["الثَّوَاب", "الْمُخْلِص", "الْبَيَان", "الْقِيَام"], // Thواب
+    "5-10": ["النِّصْف", "النَّصْف", "النُّصْف", "النِّصَف"], // النصف
+    /* ---- Q6: درج ذیل حروف سے ایک لفظ بنائیں۔ ---- */
+    "6-1": ["ثَوَاب", "بَيَان", "مِثَال", "قُوَّة"], // ث - و - ا - ب
+    "6-2": ["بَيَان", "ثَوَاب", "مِثَال", "قِيَام"], // ب - ي - ا - ن
+    "6-3": ["مِثَال", "قُوَّة", "نِصْف", "غُرُور"], // م - ث - ا - ل
+    "6-4": ["قُوَّة", "نِصْف", "غُرُور", "قِيَام"], // ق - و - ة
+    "6-5": ["نِصْف", "غُرُور", "قِيَام", "ثَوَاب"], // ن - ص - ف
+    "6-6": ["غُرُور", "قِيَام", "بَيَان", "مِثَال"], // غ - ر - و - ر
+    "6-7": ["قِيَام", "بَيَان", "ثَوَاب", "قُوَّة"] // ق - ي - ا - م
+    },
+    "1-9": {
+    /* ---- Q1: اللہ تعالیٰ کی درج ذیل صفات کا مطلب بتائیں۔ ---- */
+    "1-1": ["سب پر غالب، زبردست", "قریب", "سب کچھ جاننے والا", "سب کچھ دیکھنے والا"], // الْقَاهِر
+    "1-2": ["قریب، نزدیک", "زبردست", "دیکھنے والا", "قدرت والا"], // الْقَرِيب
+    "1-3": ["سب کچھ جاننے والا", "سب کچھ دیکھنے والا", "ہر چیز کا گواہ", "حفاظت کرنے والا"], // الْعَلِيم
+    "1-4": ["سب کچھ دیکھنے والا", "جاننے والا", "قدردان", "بے نیاز"], // الْبَصِير
+    "1-5": ["غالب، زبردست", "قریب", "گواہ", "قدرت والا"], // الْعَزِيز
+    "1-6": ["گواہ، ہر چیز کا گواہ", "قدردان", "حفاظت کرنے والا", "غالب آنے والا"], // الشَّهِيد
+    "1-7": ["قوت والا، طاقت ور", "قدرت والا", "بے نیاز", "حکمت والا"], // الْقَوِيّ
+    "1-8": ["قدرت والا", "غالب", "قدردان", "باخبر"], // الْقَادِر
+    "1-9": ["غالب آنے والا", "قدر کرنے والا", "بہت قدردان", "حفاظت کرنے والا"], // الْغَالِب
+    "1-10": ["قدر کرنے والا", "بہت قدردان", "باخبر", "سننے والا"], // الشَّاكِر
+    "1-11": ["بہت قدردان", "قدر کرنے والا", "حفاظت کرنے والا", "غالب آنے والا"], // الشَّكُور
+    "1-12": ["حفاظت کرنے والا", "قدردان", "گواہ", "حکمت والا"], // الْحَفِيظ
+    /* ---- Q2: درج ذیل الفاظ کو عربی میں کیا کہتے ہیں؟ ---- */
+    "2-1": ["الْعَلِيم", "الحليم", "الكريم", "العظيم"], // جاننے والا
+    "2-2": ["السَّمِيع", "البصير", "القريب", "السامع"], // سننے والا
+    "2-3": ["الْعَزِيز", "الغفور", "القوي", "الغني"], // غالب
+    "2-4": ["الشَّكُور", "الغفور", "الشاكر", "الصبور"], // قدردان
+    "2-5": ["الْوَلِيّ", "الْحَكِيم", "الْعَلِيم", "الْعَزِيز"], // دوست
+    "2-6": ["الْحَکِيم", "الحلیم", "العلیم", "الحكم"], // حکمت والا
+    "2-7": ["الْخَبِير", "البصير", "القدير", "الكبير"], // باخبر
+    "2-8": ["الْقَوِيّ", "الغني", "الغفور", "الولی"], // قوی
+    "2-9": ["الْغَنِيّ", "الغفور", "القوي", "الولی"], // بے نیاز
+    "2-10": ["الشَّهِيد", "الشاهد", "الحميد", "الرشيد"], // گواہ
+    "2-11": ["الْقَرِيب", "القوي", "القادر", "الغريب"], // قریب
+    "2-12": ["الْحَمِيد", "المجيد", "الحلیم", "الحفيظ"], // قابل تعریف
+    /* ---- Q3: اللہ تعالیٰ کی ان صفات سے کیا مراد ہے؟ ---- */
+    "3-1": ["سننے والا", "باخبر", "قریب", "دیکھنے والا"], // سَمِيع
+    "3-2": ["خبر رکھنے والا، باخبر", "سننے والا", "دیکھنے والا", "گواہ"], // خَبِير
+    "3-3": ["قریب، نزدیک", "دیکھنے والا", "گواہ", "باخبر"], // قَرِيب
+    "3-4": ["دیکھنے والا", "سننے والا", "گواہ", "باخبر"], // بَصِير
+    "3-5": ["گواہ", "قریب", "دیکھنے والا", "خبر رکھنے والا"], // شَهِيد
+    /* ---- Q4: درج ذیل صفات نامکمل ہیں۔ انہیں مکمل کریں۔ ---- */
+    "4-1": ["بَصِير", "حَفِيظ", "حَلِيم", "حَمِيد"], // بَصِي_
+    "4-2": ["حَفِيظ", "بَصِير", "حَلِيم", "حَمِيد"], // حَفِي_
+    "4-3": ["حَلِيم", "حَمِيد", "خَالِق", "خَبِير"], // حَلِي_
+    "4-4": ["حَمِيد", "حَلِيم", "خَالِق", "خَبِير"], // حَمِي_
+    "4-5": ["خَالِق", "خَبِير", "رَحْمٰن", "رَحِيم"], // خَال_
+    "4-6": ["خَبِير", "خَالِق", "رَحْمٰن", "رَحِيم"], // خَبِي_
+    "4-7": ["رَحْمٰن", "رَحِيم", "السَّمِيع", "شَاكِر"], // رَحْم_
+    "4-8": ["رَحِيم", "رَحْمٰن", "السَّمِيع", "شَاكِر"], // رَحِي_
+    "4-9": ["السَّمِيع", "شَاكِر", "شَكُور", "بَصِير"], // السَّمِي_
+    "4-10": ["شَاكِر", "شَكُور", "السَّمِيع", "رَحِيم"], // شَاك_
+    "4-11": ["شَكُور", "شَاكِر", "السَّمِيع", "رَحْمٰن"], // شَكُ_
+    /* ---- Q5: درج ذیل صفات پر مناسب حرکات لگائیں۔ ---- */
+    "5-1": ["عَالِم", "عِالِم", "عَالَم", "عُالِم"], // عالم
+    "5-2": ["عَزِيز", "عِزِيز", "عُزِيز", "عَزَيز"], // عزیز
+    "5-3": ["غَافِر", "غِافِر", "غَافَر", "غُافِر"], // غافر
+    "5-4": ["غَفُور", "غِفُور", "غُفُور", "غَفَور"], // غفور
+    "5-5": ["غَنِيّ", "غِنِيّ", "غُنِيّ", "غَنَيّ"], // غني
+    "5-6": ["قَادِر", "قِادِر", "قَادَر", "قُادِر"], // قادر
+    "5-7": ["قَاهِر", "قِاهِر", "قَاهَر", "قُاهِر"], // قاهر
+    "5-8": ["قَدِير", "قِدِير", "قُدِير", "قَدَير"], // قدير
+    "5-9": ["قَرِيب", "قِرِيب", "قُرِيب", "قَرَيب"], // قريب
+    "5-10": ["قَوِيّ", "قِوِيّ", "قُوِيّ", "قَوَيّ"], // قوي
+    "5-11": ["مَالِك", "مِالِك", "مَالَک", "مُالِك"], // مالك
+    "5-12": ["هَادِي", "هِادِي", "هَادَ", "هُادِي"], // هادي
+    "5-13": ["وَاسِع", "وِاسِع", "وَاسَع", "وُاسِع"], // واسع
+    "5-14": ["وَكِيل", "وِكِيل", "وُكِيل", "وَكَيل"], // وكيل
+    /* ---- Q6: درج ذیل حروف کو ملا کر اللہ تعالیٰ کی ایک صفت بنائیں۔ ---- */
+    "6-1": ["شَكُور", "عَلِيم", "قَوِيّ", "رَحِيم"], // ش - ك - و - ر
+    "6-2": ["عَلِيم", "شَكُور", "قَوِيّ", "بَصِير"], // ع - ل - ي - م
+    "6-3": ["قَوِيّ", "رَحِيم", "بَصِير", "مَالِك"], // ق - و - ي
+    "6-4": ["رَحِيم", "قَوِيّ", "بَصِير", "مَالِك"], // ر - ح - ي - م
+    "6-5": ["بَصِير", "مَالِك", "هَادِي", "وَكِيل"], // ب - ص - ي - ر
+    "6-6": ["مَالِك", "بَصِير", "هَادِي", "وَكِيل"], // م - ا - ل - ك
+    "6-7": ["هَادِي", "وَكِيل", "مَالِك", "بَصِير"], // ه - ا - د - ي
+    "6-8": ["وَكِيل", "هَادِي", "مَالِك", "بَصِير"] // و - ك - ي - ل
+    },
+    "1-10": {
+    /* ---- Q1: درج ذیل الفاظ کی جمع لکھیں۔ ---- */
+    "1-1": ["أَقْلَام", "قلوب", "قلائم", "أقلم"], // قَلَم
+    "1-2": ["أَشْيَاء", "أشياءات", "شيوء", "أشيئات"], // شَيْء
+    "1-3": ["حُدُود", "أحداد", "حدات", "حداد"], // حَدّ
+    "1-4": ["آثَار", "أثور", "أثرات", "أثار"], // أَثَر
+    "1-5": ["كُتُب", "كتاب", "كتابات", "أكتاب"], // كِتَاب
+    "1-6": ["مَسَاجِد", "مسجدات", "أمساجد", "مسجود"], // مَسْجِد
+    "1-7": ["أُمُور", "أمر", "أوامر", "أمرات"], // أَمْر
+    "1-8": ["أَطْرَاف", "أَطْرَفَات", "طَرَفُون", "طُرَّاف"], // طَرَف
+    "1-9": ["كَوَاكِب", "كَوْكَبَات", "كَوْكَبُون", "كَوَاكِبَة"], // كَوْكَب
+    "1-10": ["قُبُور", "قبر", "أقبار", "قبائر"], // قَبْر
+    "1-11": ["أَصْوَات", "صوائت", "أصاوت", "صوتات"], // صَوْت
+    "1-12": ["أَجْسَام", "جسوم", "جسمات", "أجسوم"], // جِسْم
+    /* ---- Q2: درج ذیل الفاظ جمع ہیں۔ ان کا مفرد لفظ بتائیں۔ ---- */
+    "2-1": ["قَبْر", "قَلْب", "عَمَل", "كَوْكَب"], // قُبُور
+    "2-2": ["قَلْب", "قَبْر", "عَمَل", "خَبَر"], // قُلُوب
+    "2-3": ["عَمَل", "قَلْب", "خَبَر", "يَوْم"], // أَعْمَال
+    "2-4": ["كَوْكَب", "خَبَر", "يَوْم", "نَفْس"], // كَوَاكِب
+    "2-5": ["خَبَر", "كَوْكَب", "يَوْم", "نَفْس"], // أَعْخَبَار -> أَعْخَبَار لکھ دیا تھا، اب أَعْخَبَار ہٹا کر خَبَر
+    "2-6": ["يَوْم", "نَفْس", "صَوْت", "لَقَب"], // أَيَّام
+    "2-7": ["نَفْس", "يَوْم", "صَوْت", "لَقَب"], // نُفُوس
+    "2-8": ["صَوْت", "نَفْس", "لَقَب", "كِتَاب"], // أَصْوَات
+    "2-9": ["لَقَب", "صَوْت", "كِتَاب", "أَمْر"], // أَلْقَاب
+    "2-10": ["كِتَاب", "لَقَب", "أَمْر", "مَسْجِد"], // كُتُب
+    "2-11": ["أَمْر", "كِتَاب", "مَسْجِد", "قَبْر"], // أُمُور
+    "2-12": ["مَسْجِد", "أَمْر", "قَبْر", "قَلْب"], // مَسَاجِد
+    /* ---- Q3: درج ذیل الفاظ میں سے جمع کا مفرد اور مفرد کی جمع لکھیں۔ ---- */
+    "3-1": ["أَقْلَام", "أَقْلَم", "قَلَمَات", "قُلُوب"], // قَلَم (مفرد ہے، اس کی جمع لکھیں)
+    "3-2": ["قَلْب", "أَعْمَال", "كُتُب", "نُفُوس"], // قُلُوب (جمع ہے، اس کا مفرد لکھیں)
+    "3-3": ["كُتُب", "كِتَابَات", "أَكْتَاب", "نُفُوس"], // كِتَاب
+    "3-4": ["نُفُوس", "أَنْفُس", "نَفْسَات", "مَلَك"], // نَفْس
+    "3-5": ["مَلَك", "مَلَائِكَة", "مَلَكُونَ", "قَبْر"], // مَلَائِكَة
+    "3-6": ["قَبْر", "قُبُور", "أَقْبَار", "كَوْكَب"], // قُبُور
+    "3-7": ["كَوَاكِب", "كَوْكَبَات", "مِسْكِين", "اسْم"], // كَوْكَب
+    "3-8": ["مِسْكِين", "مَسَاكِين", "اسْم", "جِسْم"], // مَسَاكِين
+    "3-9": ["اسْم", "أَسْمَاء", "جِسْم", "مَسْجِد"], // أَسْمَاء
+    "3-10": ["جِسْم", "أَجْسَام", "مَسْجِد", "حَدّ"], // أَجْسَام
+    "3-11": ["مَسْجِد", "مَسَاجِد", "حَدّ", "أَقْلَام"], // مَسَاجِد
+    "3-12": ["حَدّ", "حُدُود", "أَقْلَام", "قَلْب"], // حُدُود
+    /* ---- Q4: جمع کے درج ذیل الفاظ نامکمل ہیں۔ انہیں مکمل کریں۔ ---- */
+    "4-1": ["أَنْهَار", "كُتُب", "أَيَّام", "قُبُور"], // أَنْهَا_
+    "4-2": ["كُتُب", "أَنْهَار", "أَيَّام", "قُبُور"], // كُتُ_
+    "4-3": ["أَيَّام", "أَنْهَار", "كُتُب", "قُبُور"], // أَيَّا_
+    "4-4": ["قُبُور", "نُفُوس", "أُمُور", "نُجُوم"], // قُبُ_
+    "4-5": ["نُفُوس", "قُبُور", "أُمُور", "نُجُوم"], // نُفُ_
+    "4-6": ["أُمُور", "قُبُور", "نُفُوس", "نُجُوم"], // أُمُ_
+    "4-7": ["نُجُوم", "أَخْبَار", "أَمْوَال", "قُلُوب"], // نُجُ_
+    "4-8": ["أَخْبَار", "نُجُوم", "أَمْوَال", "قُلُوب"], // أَخْبَا_
+    "4-9": ["أَمْوَال", "نُجُوم", "أَخْبَار", "قُلُوب"], // أَمْوَا_
+    "4-10": ["قُلُوب", "أَعْمَال", "أَشْيَاء", "أَنْهَار"], // قُلُ_
+    "4-11": ["أَعْمَال", "قُلُوب", "أَشْيَاء", "أَنْهَار"], // أَعْمَا_
+    "4-12": ["أَشْيَاء", "قُلُوب", "أَعْمَال", "أَنْهَار"] // أَشْيَا_
+    },
+    "1-11": {
+    /* ---- Q1: سوال ۱: درج ذیل الفاظ کی جمع لکھیں۔ ---- */
+    "1-1": ["آیَات", "آيتان", "أيات", "آياة"], // آیَة
+    "1-2": ["أَمَانَات", "أمائن", "أمنات", "أمانين"], // أَمَانَة
+    "1-3": ["كَلِمَات", "كلام", "كلائم", "أكلام"], // كَلِمَة
+    "1-4": ["حَسَنَات", "حسان", "أحسان", "حسنين"], // حَسَنَة
+    "1-5": ["دَرَجَات", "دروج", "أدراج", "درجان"], // دَرَجَة
+    "1-6": ["رِسَالَات", "رسائل", "رسل", "رسالين"], // رِسَالَة
+    "1-7": ["عَلَامَات", "علائم", "علوم", "أعلام"], // عَلَامَة
+    "1-8": ["صَلَوَات", "صلات", "أصلية", "صلاوات"], // صَلَاة
+    "1-9": ["بَرَكَات", "برائك", "بركان", "أبراک"], // بَرَكَة
+    "1-10": ["سَيِّئَات", "سَيِّئَة", "سَيِّئُون", "سَيِّئِين"], // سَيِّئَة
+    "1-11": ["بَيِّنَات", "بيانات", "أبيان", "بينين"], // بَيِّنَة
+    "1-12": ["صَدَقَات", "صدائق", "صدقان", "أصداق"], // صَدَقَة
+    /* ---- Q2: سوال ۲: درج ذیل الفاظ جمع ہیں۔ ان کا مفرد لفظ بتائیں۔ ---- */
+    "2-1": ["سَيِّئَة", "سيء", "سائة", "سيّات"], // سَيِّئَات
+    "2-2": ["جَنَّة", "جن", "جانة", "جنون"], // جَنَّات
+    "2-3": ["ثَمَرَة", "ثمر", "ثامرة", "ثمور"], // ثَمَرَات
+    "2-4": ["ظُلُمَة", "ظلم", "ظالمة", "ظلام"], // ظُلُمَات
+    "2-5": ["آيَة", "آيت", "أية", "سَيِّئَة"], // آيَات
+    "2-6": ["بَيِّنَة", "بَيِّنَت", "بَائِنَة", "سَيِّئَة"], // بَيِّنَات
+    "2-7": ["بَرَكَة", "بَارِكَة", "بَرَكَت", "سَيِّئَة"], // بَرَكَات
+    "2-8": ["سَمَاء", "سَمَاة", "سَمْوَة", "سَامِيَة"], // سَمَوَات
+    "2-9": ["طَيِّبَة", "طيب", "طائبة", "طبية"], // طَيِّبَات
+    "2-10": ["شَهَادَة", "شَاهِدَة", "شَهْدَة", "شَهَادَت"], // شَهَادَات
+    "2-11": ["صَدَقَة", "صَادِقَة", "صَدَقَت", "سَيِّئَة"], // صَدَقَات
+    "2-12": ["شَهْوَة", "شهادة", "شاهدة", "شهو"], // شَهَوَات
+    /* ---- Q3: سوال ۳: درج ذیل الفاظ میں سے جمع کا مفرد اور مفرد کی جمع لکھیں۔ ---- */
+    "3-1": ["آيَة", "آيَات", "آيات", "أمانة"], // آيَات
+    "3-2": ["أَمَانَات", "أمانات", "أمائن", "سَيِّئَات"], // أَمَانَة
+    "3-3": ["سَيِّئَة", "سيء", "سائة", "آيَة"], // سَيِّئَات
+    "3-4": ["آيَات", "آيتان", "أيات", "حَسَنَة"], // آيَة
+    "3-5": ["حَسَنَات", "حسان", "أحسان", "دَرَجَة"], // حَسَنَة
+    "3-6": ["دَرَجَات", "دروج", "أدراج", "عَلَامَة"], // دَرَجَة
+    "3-7": ["عَلَامَات", "علائم", "علوم", "رِسَالَة"], // عَلَامَة
+    "3-8": ["رِسَالَات", "رسائل", "رسل", "ثَمَرَات"], // رِسَالَة
+    "3-9": ["ثَمَرَة", "ثمر", "ثامرة", "صَلَاة"], // ثَمَرَات
+    "3-10": ["صَلَوَات", "صلات", "أصلية", "جَنَّات"], // صَلَاة
+    "3-11": ["جَنَّة", "جن", "جانة", "سَمَوَات"], // جَنَّات
+    "3-12": ["سَمَاء", "سَمَاة", "سَمْوَة", "آيَة"], // سَمَوَات
+    /* ---- Q4: جمع کے درج ذیل الفاظ نامکمل ہیں۔ انہیں مکمل کریں۔ ---- */
+    "4-1": ["صَلَوَات", "صلات", "صلوة", "صلاات"], // صَلَوَ_
+    "4-2": ["بَرَكَات", "بركان", "بركت", "بروكات"], // بَرَ_ات
+    "4-3": ["بَيِّنَات", "بينان", "بيانات", "بيتات"], // بَيِّ_ات
+    "4-4": ["سَيِّئَات", "سيآت", "سيئان", "سيات"], // سَيِّئَ_
+    "4-5": ["ثَمَرَات", "ثمارات", "ثمران", "تمرات"], // ثَمَ_ات
+    "4-6": ["جَنَّات", "جنان", "جننات", "جنوات"], // جَنَّ_
+    "4-7": ["سَمَوَات", "سَمَوَان", "سَمَوُون", "سَمَوَة"], // سَمَوَ_
+    "4-8": ["ظُلُمَات", "ظلمان", "ظلامات", "ظلمت"], // ظُلُمَ_
+    "4-9": ["صَدَقَات", "صدقان", "صدقت", "صداقات"], // صَدَ_ات
+    "4-10": ["عَلَامَات", "علمات", "علامان", "علاممات"] // عَلَامَ_
+    },
+ 
+  "1-12": {
+    /* ---- Q1: درج ذیل الفاظ میں (وَ) سے پہلے یا (وَ) کے بعد کوئی لفظ لگا کر قطعہ مکمل کریں۔ ---- */
+    "1-1": ["الْقَمَرُ", "النَّجْمُ", "الْمَوْتُ", "الْأَرْضُ"],
+    "1-2": ["التِّينِ", "الزَّيْتُونِ", "الْأَرْضِ", "السَّمَاءِ"],
+    "1-3": ["الْإِنجِيلُ", "الْقُرْآنُ", "الْكِتَابُ", "الزَّبُورُ"],
+    "1-4": ["التَّقْوَىٰ", "الْإِثْمِ", "الْعُدْوَانِ", "الْفُسُوقِ"],
+    "1-5": ["الْحَجِّ", "الصَّلَاةِ", "الزَّكَاةِ", "الصَّوْمِ"],
+    "1-6": ["الْحَيَاةُ", "الْأَمْنُ", "الْخَوْفُ", "الْجُوعُ"],
+    "1-7": ["الْخَوْفُ", "الْأَمْنُ", "الْحَيَاةُ", "الْمَوْتُ"],
+    "1-8": ["إِسْحَاقَ", "إِبْرَاهِيمَ", "مُوسَىٰ", "عِيسَىٰ"],
+    "1-9": ["الْكُفْرِ", "الْإِيمَانِ", "الْبِرِّ", "التَّقْوَىٰ"],
+    "1-10": ["الْعَدَاوَةِ", "الْحَقِّ", "الْبَاطِلِ", "الْحِكْمَةِ"],
+    "1-11": ["الْجِسْمُ", "الْعَمَلُ", "الْمَالُ", "الْفَضْلُ"],
+
+    /* ---- Q2: ان قطعات کا عربی ترجمہ کریں۔ ---- */
+    "2-1": ["الْكِتَابُ وَالْحِكْمَةُ", "الْكِتَابُ وَالْعِلْمُ", "الْحِكْمَةُ وَالْكِتَابُ", "الْعِلْمُ وَالْجِسْمُ"],
+    "2-2": ["الشَّمْسُ وَالْقَمَرُ", "الشَّمْسُ وَالنَّجْمُ", "الْقَمَرُ وَالشَّمْسُ", "اللَّيْلُ وَالنَّهَارُ"],
+    "2-3": ["التَّوْرَاةُ وَالْإِنجِيلُ", "الْإِنجِيلُ وَالتَّوْرَاةُ", "التَّوْرَاةُ وَالْقُرْآنُ", "الْكِتَابُ وَالْإِنجِيلُ"],
+    "2-4": ["الْخَوْفُ وَالْجُوعُ", "الْخَوْفُ وَالْأَمْنُ", "الْجُوعُ وَالْعَطَشُ", "الْأَمْنُ وَالْخَوْفُ"],
+    "2-5": ["الْمَشْرِقُ وَالْمَغْرِبُ", "الْمَغْرِبُ وَالْمَشْرِقُ", "الشَّرْقُ وَالْغَرْبُ", "السَّمَاءُ وَالْأَرْضُ"],
+    "2-6": ["الْعِلْمُ وَالْجِسْمُ", "الْعِلْمُ وَالْعَمَلُ", "الْجِسْمُ وَالْعِلْمُ", "الْكِتَابُ وَالْحِكْمَةُ"],
+    "2-7": ["الْكُفْرُ وَالْفُسُوقُ", "الْكُفْرُ وَالْإِيمَانِ", "الْفُسُوقُ وَالْكُفْرِ", "الْحَقُّ وَالْبَاطِلُ"],
+    "2-8": ["الْحَقُّ وَالْبَاطِلُ", "الْبَاطِلُ وَالْحَقُّ", "الْحَقُّ وَالْخَيْرُ", "الْخَيْرُ وَالشَّرُّ"],
+
+    /* ---- Q3: درج ذیل قرآنی الفاظ کے جوڑوں کا اردو ترجمہ بتائیں۔ ---- */
+    "3-1": ["جنت اور مغفرت", "آسمان اور زمین", "مرد اور عورت", "سونا اور چاندی"],
+    "3-2": ["آسمان اور زمین", "جنت اور مغفرت", "رات اور دن", "مشرق اور مغرب"],
+    "3-3": ["مرد اور عورت", "سونا اور چاندی", "جن اور انسان", "موت اور زندگی"],
+    "3-4": ["سونا اور چاندی", "یاقوت اور مرجان", "خشکی اور سمندر", "مرد اور عورت"],
+    "3-5": ["جن اور انسان", "ابراہیم اور موسیٰ", "فرعون اور ثمود", "مرد اور عورت"]
+  },
+
+ 
+  "1-13": {
+    /* ---- Q1: الفاظ کے معانی تحریر کریں۔ ---- */
+    "1-1": ["کوئی شک", "ایک فضل", "کوئی چیز", "ایک نشانی"],
+    "1-2": ["کوئی چیز", "ایک قول", "ایک شک", "کوئی گمراہی"],
+    "1-3": ["کوئی فضل", "ایک فدیہ", "کوئی مصیبت", "ایک شک"],
+    "1-4": ["کوئی گمراہی", "ایک فضل", "ایک قول", "ایک نشانی"],
+    "1-5": ["کوئی مصیبت", "ایک شک", "ایک فدیہ", "کوئی چیز"],
+    "1-6": ["کوئی ظلم", "ایک فضل", "ایک شک", "کوئی گمراہی"],
+    "1-7": ["کوئی نشانی", "ایک قول", "ایک فدیہ", "کوئی مصیبت"],
+    "1-8": ["ایک بات", "ایک شک", "ایک فدیہ", "کوئی چیز"],
+    "1-9": ["کوئی فدیہ", "ایک قول", "ایک نشانی", "کوئی مصیبت"],
+    "1-10": ["رحمت", "حسرت", "علم", "غصہ"],
+    "1-11": ["حسرت", "رحمت", "اجر", "مرض"],
+    "1-12": ["علم", "غصہ", "دعوت", "مومن"],
+    "1-13": ["غصہ", "علم", "اجر", "زندگی"],
+    "1-14": ["اجر", "مرض", "دعوت", "مومن"],
+    "1-15": ["مرض", "اجر", "زندگی", "راستہ"],
+    "1-16": ["دعوت", "مومن", "زندگی", "رحمت"],
+    "1-17": ["مومن", "دعوت", "راستہ", "حسرت"],
+    "1-18": ["زندگی", "راستہ", "رحمت", "علم"],
+    "1-19": ["کوئی راستہ", "ایک فضل", "ایک قول", "ایک نشانی"],
+    "1-20": ["مغفرت", "حق", "مال", "ذلت"],
+    "1-21": ["حق", "مغفرت", "رزق", "شفاء"],
+    "1-22": ["مال", "ذلت", "دشمن", "کافر"],
+    "1-23": ["ذلت", "مال", "بیان", "جمال"],
+    "1-24": ["رزق", "شفاء", "دشمن", "کافر"],
+    "1-25": ["شفاء", "رزق", "بیان", "جمال"],
+    "1-26": ["دشمن", "کافر", "حق", "مال"],
+    "1-27": ["کافر", "دشمن", "مغفرت", "ذلت"],
+    "1-28": ["بیان", "جمال", "شفاء", "رزق"],
+    "1-29": ["جمال", "بیان", "حق", "دشمن"],
+
+    /* ---- Q2: قرآنی الفاظ کے سامنے ان کے اردو معنی تحریر کریں۔ ---- */
+    "2-1": ["رضامندی", "جھوٹ", "مشروب", "زبان"],
+    "2-2": ["جھوٹ", "رضامندی", "رسوائی", "کھیل"],
+    "2-3": ["مشروب", "زبان", "نماز", "تجارت"],
+    "2-4": ["زبان", "مشروب", "کام", "گھر"],
+    "2-5": ["رسوائی", "کھیل", "بیزاری", "تماشا"],
+    "2-6": ["کھیل", "رسوائی", "امت", "فریق"],
+    "2-7": ["نماز", "تجارت", "وعظ", "جادو"],
+    "2-8": ["تجارت", "نماز", "سامان", "دلیل"],
+    "2-9": ["کام", "گھر", "زینت", "برائی"],
+    "2-10": ["گھر", "کام", "بادشاہ", "فرشتہ"],
+    "2-11": ["بیزاری", "تماشا", "تنگی", "سلامتی"],
+    "2-12": ["تماشا", "بیزاری", "دلیل", "زینت"],
+    "2-13": ["امت", "فریق", "بادشاہ", "فرشتہ"],
+    "2-14": ["فریق", "امت", "تنگی", "سلامتی"],
+    "2-15": ["وعظ، نصیحت", "جادو", "سامان", "دلیل"],
+    "2-16": ["جادو", "وعظ، نصیحت", "زینت", "برائی"],
+    "2-17": ["سامان", "دلیل", "بادشاہ", "فرشتہ"],
+    "2-18": ["دلیل", "سامان", "تنگی", "سلامتی"],
+    "2-19": ["زینت", "برائی", "بادشاہ", "فرشتہ"],
+    "2-20": ["برائی", "زینت", "تنگی", "سلامتی"],
+    "2-21": ["بادشاہ", "فرشتہ", "سامان", "دلیل"],
+    "2-22": ["فرشتہ", "بادشاہ", "زینت", "برائی"],
+    "2-23": ["تنگی", "سلامتی", "امت", "فریق"],
+    "2-24": ["سلامتی", "تنگی", "وعظ", "جادو"],
+    "2-25": ["دلیل", "زینت", "برائی", "بادشاہ"],
+
+    /* ---- Q3: ان قطعات کا ترجمہ مکمل کریں۔ ---- */
+    "3-1": ["ایک ہدایت اور ایک نور", "ایک ہدایت اور ایک نصیحت", "ایک ہدایت اور ایک شفاء", "ایک مغفرت اور ایک رحمت"],
+    "3-2": ["ایک ہدایت اور ایک نصیحت", "ایک ہدایت اور ایک نور", "ایک مغفرت اور ایک رحمت", "ایک امام اور ایک رحمت"],
+    "3-3": ["ایک مغفرت اور ایک رحمت", "ایک ہدایت اور ایک نصیحت", "ایک مغفرت اور ایک رزق", "ایک مغفرت اور ایک اجر"],
+    "3-4": ["خوف اور امید", "ایک سرکشی اور کفر", "ایک کھیل اور تماشا", "ایک مذاق اور ایک کھیل"],
+    "3-5": ["ایک سرکشی اور کفر", "خوف اور امید", "ایک کھیل اور تماشا", "ایک ہدایت اور ایک شفاء"],
+    "3-6": ["ایک کھیل اور تماشا", "ایک مذاق اور ایک کھیل", "خوف اور امید", "ایک سرکشی اور کفر"],
+    "3-7": ["ایک مذاق اور ایک کھیل", "ایک کھیل اور تماشا", "ایک مغفرت اور ایک اجر", "ایک امام اور ایک رحمت"],
+    "3-8": ["ایک ہدایت اور ایک شفاء", "ایک ہدایت اور ایک نور", "ایک مغفرت اور ایک رزق", "ایک مغفرت اور ایک رحمت"],
+    "3-9": ["ایک مغفرت اور ایک رزق", "ایک مغفرت اور ایک رحمت", "ایک مغفرت اور ایک اجر", "ایک ہدایت اور ایک شفاء"],
+    "3-10": ["ایک مغفرت اور ایک اجر", "ایک مغفرت اور ایک رزق", "ایک مغفرت اور ایک رحمت", "ایک امام اور ایک رحمت"],
+    "3-11": ["ایک امام اور ایک رحمت", "ایک مغفرت اور ایک رحمت", "ایک ہدایت اور ایک نصیحت", "ایک کھیل اور تماشا"]
+  },
+
+ 
+  "1-14": {
+    /* ---- Q1: الفاظ کا ترجمہ نسبت کے ساتھ لکھیے۔ ---- */
+    "1-1": ["قریب ہے", "حق ہے", "ظلم ہے", "دور ہے"],
+    "1-2": ["شدید ہے", "کم ہے", "زیادہ ہے", "بڑا ہے"],
+    "1-3": ["کافر ہے", "مومن", "رسول ہے", "انسان ہے"],
+    "1-4": ["وسیع ہے", "بڑا ہے", "زینت ہے", "بہتر ہے"],
+    "1-5": ["لباس ہے", "زینت ہے", "چیز ہے", "گھر ہے"],
+    "1-6": ["جادوگر ہے", "دشمن ہے", "رسول ہے", "انسان ہے"],
+    "1-7": ["نمونہ ہے", "عبرت ہے", "امت ہے", "حسرت ہے"],
+    "1-8": ["حسرت ہے", "ذلت ہے", "معبود ہے", "حق ہے"],
+    "1-9": ["معبود ہے", "بادشاہ ہے", "رسول ہے", "فدیہ ہے"],
+    "1-10": ["حسن ہے", "لباس ہے", "زینت ہے", "عبرت ہے"],
+    "1-11": ["زبان ہے", "انسان ہے", "رسول ہے", "حق ہے"],
+    "1-12": ["بادشاہ ہے", "معبود ہے", "رسول ہے", "انسان ہے"],
+    "1-13": ["حق ہے", "قریب ہے", "ظلم ہے", "کم ہے"],
+    "1-14": ["کم ہے", "شدید ہے", "زیادہ ہے", "بڑا ہے"],
+    "1-15": ["مومن ہے", "کافر ہے", "مہاجر ہے", "مخلص ہے"],
+    "1-16": ["بڑا ہے", "کم ہے", "شدید ہے", "وسیع ہے"],
+    "1-17": ["زینت ہے", "لباس ہے", "حسن ہے", "حق ہے"],
+    "1-18": ["سلام ہے", "بادشاہ ہے", "رسول ہے", "دشمن ہے"],
+    "1-19": ["دشمن ہے", "دوست ہے", "انسان ہے", "کافر ہے"],
+    "1-20": ["امت ہے", "نمونہ ہے", "عبرت ہے", "حسرت ہے"],
+    "1-21": ["زندگی ہے", "حق ہے", "موت ہے", "فدیہ ہے"],
+    "1-22": ["عبرت ہے", "نمونہ ہے", "امت ہے", "حسرت ہے"],
+    "1-23": ["ذلت ہے", "حق ہے", "قریب ہے", "بڑا ہے"],
+    "1-24": ["جادو ہے", "حق ہے", "ظلم ہے", "دور ہے"],
+    "1-25": ["ظلم ہے", "حق ہے", "قریب ہے", "دور ہے"],
+    "1-26": ["زیادہ ہے", "شدید ہے", "کم ہے", "بڑا ہے"],
+    "1-27": ["مبارک ہے", "ہجرت کرنے والا ہے", "مومن ہے", "کافر ہے"],
+    "1-28": ["بہتر ہے", "بڑا ہے", "عظیم ہے", "فقیر ہے"],
+    "1-29": ["چیز ہے", "لباس ہے", "زینت ہے", "گھر ہے"],
+    "1-30": ["رسول ہے", "بادشاہ ہے", "معبود ہے", "انسان ہے"],
+    "1-31": ["دوست ہے", "دشمن ہے", "انسان ہے", "کافر ہے"],
+    "1-32": ["دور ہے", "قریب ہے", "حق ہے", "ظلم ہے"],
+    "1-33": ["فدیہ ہے", "زندگی ہے", "موت ہے", "حق ہے"],
+    "1-34": ["عظیم ہے", "بہتر ہے", "بڑا ہے", "فقیر ہے"],
+    "1-35": ["فقیر ہے", "عظیم ہے", "بہتر ہے", "بڑا ہے"],
+    "1-36": ["انسان ہے", "رسول ہے", "بادشاہ ہے", "معبود ہے"],
+
+    /* ---- Q2: اسماء الحسنیٰ اور صفات کا موزوں ترجمہ لکھیے۔ ---- */
+    "2-1": ["مبارک ہے", "غالب ہے", "باخبر ہے", "خوبصورت ہے"],
+    "2-2": ["غالب ہے", "مبارک ہے", "سننے والا ہے", "قدرت والا ہے"],
+    "2-3": ["خبردار ہے", "غالب ہے", "سننے والا ہے", "خوبصورت ہے"],
+    "2-4": ["سننے والا ہے", "دیکھنے والا ہے", "جاننے والا ہے", "قدرت والا ہے"],
+    "2-5": ["قدرت والا ہے", "سننے والا ہے", "دیکھنے والا ہے", "جاننے والا ہے"],
+    "2-6": ["خوبصورت ہے", "مبارک ہے", "غالب ہے", "خبردار ہے"],
+    "2-7": ["معاف کرنے والا ہے", "حکمت والا ہے", "قادر ہے", "جاننے والا ہے"],
+    "2-8": ["حکمت والا ہے", "معاف کرنے والا ہے", "قادر ہے", "دیکھنے والا ہے"],
+    "2-9": ["قادر ہے", "حکمت والا ہے", "معاف کرنے والا ہے", "جاننے والا ہے"],
+    "2-10": ["دیکھنے والا ہے", "سننے والا ہے", "جاننے والا ہے", "قدرت والا ہے"],
+    "2-11": ["جاننے والا ہے", "معاف کرنے والا ہے", "حکمت والا ہے", "قادر ہے"],
+    "2-12": ["رجم کرنے والا ہے", "قدردان ہے", "غالب ہے", "شفیق ہے"],
+    "2-13": ["قدردان ہے", "رجم کرنے والا ہے", "غالب ہے", "امانت دار ہے"],
+    "2-14": ["غالب ہے", "قدردان ہے", "شفیق ہے", "امانت دار ہے"],
+    "2-15": ["شفیق ہے", "غالب ہے", "قدردان ہے", "امانت دار ہے"],
+    "2-16": ["امانت دار ہے", "شفیق ہے", "غالب ہے", "قدردان ہے"],
+
+    /* ---- Q3: قرآنی جملوں کا ترجمہ مکمل کریں۔ ---- */
+    "3-1": ["اور اللہ غفور ہے", "اور اللہ سننے والا ہے", "اور اللہ بے پرواہ ہے", "اور اللہ جاننے والا ہے"],
+    "3-2": ["اور اللہ سننے والا ہے", "اور اللہ دیکھنے والا ہے", "اور اللہ بخشنے والا ہے", "اور اللہ خبر رکھنے والا ہے"],
+    "3-3": ["اور اللہ وسعت دینے والا ہے", "اور اللہ بے پرواہ ہے", "اور اللہ حاضر ہے", "اور اللہ گھیرنے والا ہے"],
+    "3-4": ["اور اللہ حاضر ہے", "اور اللہ غالب ہے", "اور اللہ قدرت رکھنے والا ہے", "اور اللہ وسعت دینے والا ہے"],
+    "3-5": ["اور اللہ بے پرواہ ہے", "اور اللہ حاضر ہے", "اور اللہ وسعت دینے والا ہے", "اور اللہ غالب ہے"],
+    "3-6": ["اور اللہ قدردان ہے", "اور اللہ بخشنے والا ہے", "اور اللہ بے پرواہ ہے", "اور اللہ خبر رکھنے والا ہے"],
+    "3-7": ["اور اللہ غالب ہے", "اور اللہ حکمت والا ہے", "اور اللہ قدرت رکھنے والا ہے", "اور اللہ وسعت دینے والا ہے"],
+    "3-8": ["اور اللہ قدرت والا ہے", "اور اللہ سننے والا ہے", "اور اللہ جاننے والا ہے", "اور اللہ حاضر ہے"],
+    "3-9": ["اور اللہ گھیرنے والا ہے", "اور اللہ غالب ہے", "اور اللہ قدرت رکھنے والا ہے", "اور اللہ جاننے والا ہے"],
+    "3-10": ["اور اللہ جاننے والا ہے", "اور اللہ خبر رکھنے والا ہے", "اور اللہ سننے والا ہے", "اور اللہ حکمت والا ہے"],
+    "3-11": ["اور اللہ معاف اور رحم کرنے والا ہے", "اور اللہ بخشنے والا بردبار ہے", "اور اللہ سننے والا جاننے والا ہے", "اور اللہ غالب حکمت والا ہے"],
+    "3-12": ["اور اللہ سننے اور جاننے والا ہے", "اور اللہ بخشنے والا مہربان ہے", "اور اللہ بے پرواہ بردبار ہے", "اور اللہ قدردان بردبار ہے"],
+    "3-13": ["اور اللہ معاف کرنے والا اور بردبار ہے", "اور اللہ قدردان بردبار ہے", "اور اللہ بے پرواہ بردبار ہے", "اور اللہ بے پرواہ قابل تعریف ہے"],
+    "3-14": ["اور اللہ وسعت والا اور جاننے والا ہے", "اور اللہ قدردان بردبار ہے", "اور اللہ بے پرواہ بردبار ہے", "اور اللہ بخشنے والا بردبار ہے"],
+    "3-15": ["اور اللہ بے پرواہ اور بردبار ہے", "اور اللہ غالب حکمت والا ہے", "اور اللہ قدردان قابل تعریف ہے", "اور اللہ بے پرواہ قابل تعریف ہے"],
+    "3-16": ["اور اللہ غالب اور حکمت والا ہے", "اور اللہ سننے والا جاننے والا ہے", "اور اللہ وسعت والا جاننے والا ہے", "اور اللہ جاننے والا حکمت والا ہے"],
+    "3-17": ["اور اللہ قدردان اور بردبار ہے", "اور اللہ وسعت والا بردبار ہے", "اور اللہ سننے والا جاننے والا ہے", "اور اللہ جاننے والا حکمت والا ہے"],
+    "3-18": ["اور اللہ علم اور حکمت والا ہے", "اور اللہ غالب حکمت والا ہے", "اور اللہ غالب جاننے والا ہے", "اور اللہ وسعت والا حکمت والا ہے"],
+    "3-19": ["اور اللہ قابل تعریف اور بے پرواہ ہے", "اور اللہ غالب حکمت والا ہے", "اور اللہ سننے والا جاننے والا ہے", "اور اللہ جاننے والا بردبار ہے"]
+  },
+
+ 
+  "1-15": {
+    /* ---- Q1: درج ذیل قرآنی جملوں کا اردو ترجمہ تحریر کریں۔ ---- */
+    "1-1": ["یہ کتاب ہے", "یہ حرام ہے", "یہ راستہ ہے", "اور یہ ذکر ہے"],
+    "1-2": ["یہ حرام ہے", "یہ کتاب ہے", "یہ بہتان ہے", "یہ پیغام ہے"],
+    "1-3": ["یہ راستہ ہے", "یہ لشکر ہے", "یہ بچہ ہے", "یہ میٹھا ہے"],
+    "1-4": ["اور یہ ذکر ہے", "یہ بیان ہے", "یہ حلال ہے", "یہ جادو ہے"],
+    "1-5": ["یہ بہتان ہے", "یہ حرام ہے", "یہ پیغام ہے", "یہ دشمن ہے"],
+    "1-6": ["یہ پیغام ہے", "یہ بہتان ہے", "یہ دشمن ہے", "یہ لشکر ہے"],
+    "1-7": ["یہ دشمن ہے", "یہ لشکر ہے", "یہ بچہ ہے", "یہ میٹھا ہے"],
+    "1-8": ["یہ لشکر ہے", "یہ دشمن ہے", "یہ بیان ہے", "یہ حلال ہے"],
+    "1-9": ["یہ بچہ ہے", "یہ میٹھا ہے", "یہ جادو ہے", "یہ جھوٹ ہے"],
+    "1-10": ["یہ میٹھا ہے", "یہ بچہ ہے", "یہ نمکین ہے", "یہ ہدایت ہے"],
+    "1-11": ["یہ بیان ہے", "اور یہ زبان ہے", "یہ جھوٹ ہے", "یہ ہدایت ہے"],
+    "1-12": ["یہ حلال ہے", "یہ حرام ہے", "یہ جادو ہے", "یہ جھوٹ ہے"],
+    "1-13": ["یہ جادو ہے", "یہ حلال ہے", "یہ جھوٹ ہے", "یہ ہدایت ہے"],
+    "1-14": ["اور یہ زبان ہے", "یہ بیان ہے", "یہ ڈراوا ہے", "یہ دن ہے"],
+    "1-15": ["یہ جھوٹ ہے", "یہ جادو ہے", "یہ ہدایت ہے", "یہ نمکین ہے"],
+    "1-16": ["یہ ہدایت ہے", "یہ جھوٹ ہے", "یہ ڈراوا ہے", "یہ دن ہے"],
+    "1-17": ["یہ ڈراوا ہے", "یہ دن ہے", "یہ چیز ہے", "یہ نمکین ہے"],
+    "1-18": ["یہ دن ہے", "یہ ڈراوا ہے", "یہ چیز ہے", "یہ بیان ہے"],
+    "1-19": ["یہ چیز ہے", "یہ نمکین ہے", "یہ میٹھا ہے", "یہ کتاب ہے"],
+    "1-20": ["یہ نمکین ہے", "یہ چیز ہے", "یہ ہدایت ہے", "یہ جھوٹ ہے"],
+
+    /* ---- Q2: اشاروں اور سوالیہ جملوں کا ترجمہ کریں۔ ---- */
+    "2-1": ["یہ قرآن", "یہ وعدہ", "یہ رسول", "یہ شہر"],
+    "2-2": ["یہ وعدہ", "یہ قرآن", "یہ شہر", "یہ نبی"],
+    "2-3": ["یہ رسول", "یہ نبی", "یہ حدیث", "یہ کتاب"],
+    "2-4": ["یہ شہر", "یہ گھر", "یہ کوا", "یہ فتح"],
+    "2-5": ["یہ نبی", "یہ رسول", "یہ قرآن", "یہ کتاب"],
+    "2-6": ["یہ حدیث", "یہ کتاب", "یہ فتح", "یہ گھر"],
+    "2-7": ["یہ کتاب", "یہ حدیث", "یہ گھر", "یہ کوا"],
+    "2-8": ["یہ فتح", "یہ گھر", "یہ کوا", "یہ شہر"],
+    "2-9": ["یہ گھر", "یہ فتح", "یہ کوا", "یہ نبی"],
+    "2-10": ["یہ کوا", "یہ گھر", "یہ کتاب", "یہ حدیث"],
+    "2-11": ["کب ہے یہ فتح", "یہ فتح کب ہے", "کب ہے یہ وعدہ", "یہ قرآن کب ہے"],
+    "2-12": ["کب ہے یہ وعدہ", "یہ وعدہ کب ہے", "کب ہے یہ فتح", "یہ کتاب کب ہے"]
+  },
+
+ 
+  "1-16": {
+    /* ---- Q1: درج ذیل قرآنی جملوں کا اردو ترجمہ تحریر کریں۔ ---- */
+    "1-1": ["وہ بہتر ہے", "وہ بدلہ ہے", "وہ وعدہ ہے", "وہ دن ہے"],
+    "1-2": ["وہ کمی ہے", "وہ فضل ہے", "وہ ہدایت ہے", "وہ عیسیٰ ہے"],
+    "1-3": ["وہ وعدہ ہے", "وہ لوٹنا ہے", "وہ جمع کرنا ہے", "وہ فضل ہے"],
+    "1-4": ["وہ لوٹنا ہے", "وہ بدلہ ہے", "وہ وزن ہے", "وہ بہتر ہے"],
+    "1-5": ["وہ بدلہ ہے", "وہ وعدہ ہے", "وہ نصیحت ہے", "وہ دن ہے"],
+    "1-6": ["وہ ہدایت ہے", "وہ فضل ہے", "وہ جمع کرنا ہے", "وہ عیسیٰ ہے"],
+    "1-7": ["وہ عیسیٰ ہے", "وہ نصیحت ہے", "وہ بہتر ہے", "وہ بدلہ ہے"],
+    "1-8": ["وہ جمع کرنا ہے", "وہ لوٹنا ہے", "وہ فضل ہے", "وہ وزن ہے"],
+    "1-9": ["وہ نصیحت ہے", "وہ ہدایت ہے", "وہ وعدہ ہے", "وہ دن ہے"],
+    "1-10": ["وہ فضل ہے", "وہ کمی ہے", "وہ بدلہ ہے", "وہ عیسیٰ ہے"],
+    "1-11": ["وہ دن ہے", "وہ وزن ہے", "وہ بہتر ہے", "وہ لوٹنا ہے"],
+    "1-12": ["وہ وزن ہے", "وہ دن ہے", "وہ جمع کرنا ہے", "وہ نصیحت ہے"],
+
+    /* ---- Q2: اشاروں اور تاکیدی جملوں کا ترجمہ کریں۔ ---- */
+    "2-1": ["یہ کتاب", "وہی کامیابی ہے", "یہ فضل", "یہ دن"],
+    "2-2": ["یہ حکم", "یہ کتاب", "وہی رسوائی ہے", "وہی دین ہے"],
+    "2-3": ["یہ فضل", "یہ دن", "یہ کتاب", "یہ حکم"],
+    "2-4": ["یہ دن", "یہ فضل", "وہی کامیابی ہے", "یہ حکم"],
+    "2-5": ["وہی کامیابی ہے", "وہی رسوائی ہے", "یہ فضل", "یہ دن"],
+    "2-6": ["وہی رسوائی ہے", "وہی دین ہے", "یہ حکم", "یہ کتاب"],
+    "2-7": ["وہی دین ہے", "وہی کامیابی ہے", "یہ دن", "یہ فضل"]
+  },
+
+ 
+  "1-17": {
+    /* ---- Q1: درج ذیل قرآنی جملوں کا اردو ترجمہ تحریر کریں۔ ---- */
+    "1-1": ["یہ جہنم ہے", "یہ اونٹنی ہے", "وہ امت ہے", "وہ نعمت ہے"],
+    "1-2": ["یہ اونٹنی ہے", "یہ جہنم ہے", "یہ یاد دہانی ہے", "وہ عاد ہے"],
+    "1-3": ["یہ یاد دہانی ہے", "یہ جہنم ہے", "وہ انجام ہے", "وہ دس ہے"],
+    "1-4": ["وہ امت ہے", "وہ عاد ہے", "وہ انجام ہے", "یہ جہنم ہے"],
+    "1-5": ["وہ عاد ہے", "وہ امت ہے", "وہ نعمت ہے", "وہ آیات ہیں"],
+    "1-6": ["وہ انجام ہے", "وہ نعمت ہے", "وہ دس ہے", "یہ اونٹنی ہے"],
+    "1-7": ["وہ نعمت ہے", "وہ دس ہے", "وہ آیات ہیں", "وہ امت ہے"],
+    "1-8": ["وہ دس ہے", "وہ نعمت ہے", "وہ انجام ہے", "یہ یاد دہانی ہے"],
+    "1-9": ["وہ آیات ہیں", "وہ امت ہے", "وہ عاد ہے", "یہ جہنم ہے"],
+
+    /* ---- Q2: اسم صفت کے مرکب قطعات کا اردو مفہوم لکھیے۔ ---- */
+    "2-1": ["یہ دنیا", "یہ شہر", "وہ جنت", "وہ گھر"],
+    "2-2": ["یہ شہر", "یہ دنیا", "یہ درخت", "یہ بستی"],
+    "2-3": ["یہ درخت", "یہ بستی", "یہ شہر", "یہ دنیا"],
+    "2-4": ["وہ جنت", "وہ گھر", "یہ زندگی", "یہ آگ"],
+    "2-5": ["یہ زندگی", "یہ آگ", "وہ جنت", "وہ گھر"],
+    "2-6": ["یہ آگ", "یہ زندگی", "یہ بستی", "یہ درخت"],
+    "2-7": ["یہ بستی", "یہ درخت", "یہ شہر", "وہ گھر"],
+    "2-8": ["وہ گھر", "وہ جنت", "یہ دنیا", "یہ آگ"]
+  },
+
+ 
+  "1-18": {
+    /* ---- Q1: کلام عرب میں تاکید پیدا کرنے والے (لَـ) کا ترجمہ۔ ---- */
+    "1-1": ["یقیناً کتاب", "یقیناً علم", "یقیناً قسم", "یقیناً حسرت"],
+    "1-2": ["یقیناً علم", "یقیناً کتاب", "یقیناً ظلم", "یقیناً شاہد"],
+    "1-3": ["یقیناً قسم", "یقیناً حسرت", "یقیناً رحمت", "یقیناً پاگل"],
+    "1-4": ["یقیناً حسرت", "یقیناً قسم", "یقیناً یاد دہانی", "یقیناً اکڑتا ہے"],
+    "1-5": ["یقیناً ظلم", "یقیناً شاہد", "یقیناً قرآن", "یقیناً حق"],
+    "1-6": ["یقیناً شاہد", "یقیناً ظلم", "یقیناً ذکر", "یقیناً ہدایت"],
+    "1-7": ["یقیناً رحمت", "یقیناً پاگل", "یقیناً سخت", "یقیناً گناہ"],
+    "1-8": ["یقیناً پاگل", "یقیناً رحمت", "یقیناً نازل کیا گیا", "یقیناً نصیحت"],
+    "1-9": ["یقیناً یاد دہانی", "یقیناً اکڑتا ہے", "یقیناً مایوس ہے", "یقیناً کتاب"],
+    "1-10": ["یقیناً اکڑتا ہے", "یقیناً یاد دہانی", "یقیناً علم", "یقیناً قسم"],
+    "1-11": ["یقیناً قرآن", "یقیناً حق", "یقیناً ذکر", "یقیناً ہدایت"],
+    "1-12": ["یقیناً حق", "یقیناً قرآن", "یقیناً سخت", "یقیناً فِسق"],
+    "1-13": ["یقیناً ذکر", "یقیناً ہدایت", "یقیناً نازل کیا گیا", "یقیناً نصیحت"],
+    "1-14": ["یقیناً ہدایت", "یقیناً ذکر", "یقیناً مایوس ہے", "یقیناً سخت"],
+    "1-15": ["یقیناً سخت", "یقیناً فِسق", "یقیناً کتاب", "یقیناً علم"],
+    "1-16": ["یقیناً گناہ", "یقیناً سخت", "یقیناً قسم", "یقیناً حسرت"],
+    "1-17": ["یقیناً نازل کیا گیا", "یقیناً نصیحت", "یقیناً ظلم", "یقیناً شاہد"],
+    "1-18": ["یقیناً نصیحت", "یقیناً نازل کیا گیا", "یقیناً رحمت", "یقیناً پاگل"],
+    "1-19": ["یقیناً مایوس ہے", "یقیناً یاد دہانی", "یقیناً اکڑتا ہے", "یقیناً قرآن"],
+
+    /* ---- Q2: تاکید پیدا کرنے والے (لَـ) کا اسم معرفہ باللام کے ساتھ ترجمہ کریں۔ ---- */
+    "2-1": ["یقیناً آخرت", "یقیناً حق", "یقیناً ہدایت ہے", "یقیناً اچھائی ہے"],
+    "2-2": ["یقیناً حق", "یقیناً آخرت", "یقیناً اچھائی ہے", "یقیناً ہدایت ہے"],
+    "2-3": ["یقیناً ہدایت ہے", "یقیناً اچھائی ہے", "یقیناً آخرت", "یقیناً حق"],
+    "2-4": ["یقیناً اچھائی ہے", "یقیناً ہدایت ہے", "یقیناً حق", "یقیناً آخرت"],
+
+    /* ---- Q3: درج ذیل قرآنی قطعات میں تاکیدی حروف والے کلمات کا مطلب لکھیں۔ ---- */
+    "3-1": ["علم ہے", "ظلم ہے", "قسم ہے", "ذکر ہے"],
+    "3-2": ["یقیناً آیت ہے", "یقیناً کتاب ہے", "یقیناً علم ہے", "یقیناً ذکر ہے"],
+    "3-3": ["کتاب ہے", "ظلم ہے", "ذکر ہے", "حق ہے"],
+    "3-4": ["یقیناً ذکر ہے", "یقیناً کتاب ہے", "یقیناً علم ہے", "یقیناً ظلم ہے"],
+    "3-5": ["ظلم ہے", "ذکر ہے", "علم ہے", "کتاب ہے"],
+    "3-6": ["یقیناً ظلم ہے", "یقیناً حق ہے", "یقیناً دنیا ہے", "یقیناً آخرت ہے"],
+    "3-7": ["یقیناً آخرت ہے", "یقیناً حق ہے", "یقیناً ظلم ہے", "یقیناً علم ہے"],
+    "3-8": ["حق ہے", "ظلم ہے", "قسم ہے", "ذکر ہے"],
+    "3-9": ["یقیناً حق ہے", "یقیناً دنیا ہے", "یقیناً آخرت ہے", "یقیناً ظلم ہے"],
+    "3-10": ["یقیناً حق ہے", "یقیناً دنیا ہے", "یقیناً آخرت ہے", "یقیناً ظلم ہے"],
+    "3-11": ["قسم ہے", "ظلم ہے", "علم ہے", "ذکر ہے"],
+    "3-12": ["یقیناً قسم ہے", "یقیناً ظلم ہے", "یقیناً علم ہے", "یقیناً ذکر ہے"]
+  },
+
+ 
+  "1-19": {
+    /* ---- Q1: اسم تفضیل کے قرآنی کلمات کے معانی تحریر کریں۔ ---- */
+    "1-1": ["مرد اور عورت", "سب سے بڑا", "سب سے چھوٹا", "سب سے زیادہ جاننے والا"],
+    "1-2": ["سب سے چھوٹا", "سب سے بڑا", "سب سے زیادہ ظالم", "سب سے اچھا"],
+    "1-3": ["سب سے زیادہ جاننے والا", "سب سے زیادہ قریب", "سب سے زیادہ معزز", "سب سے سچا"],
+    "1-4": ["سب سے زیادہ رحم کرنے والا", "سب سے زیادہ پاک", "سب سے زیادہ ہدایت پر", "سب سے مضبوط"],
+    "1-5": ["سب سے زیادہ ظالم", "سب سے گھٹیا", "سب سے قریب تر", "سب سے پہلا"],
+    "1-6": ["سب سے اچھا", "سب سے زیادہ", "سب سے زیادہ گمراہ", "سب سے زیادہ خسارے والا"],
+    "1-7": ["سب سے زیادہ قریب", "سب سے زیادہ معزز", "سب سے زیادہ رسوا", "سب سے زیادہ حق دار"],
+    "1-8": ["سب سے زیادہ معزز", "سب سے سچا", "سب سے شدید", "سب سے بہتر"],
+    "1-9": ["سب سے سچا", "سب سے زیادہ پاک", "سب سے برا", "سب سے بڑا"],
+    "1-10": ["سب سے زیادہ پاک", "سب سے زیادہ ہدایت پر", "سب سے چھوٹا", "سب سے زیادہ جاننے والا"],
+    "1-11": ["سب سے زیادہ پاک", "سب سے مضبوط", "سب سے زیادہ رحم کرنے والا", "سب سے زیادہ قریب"],
+    "1-12": ["سب سے زیادہ ہدایت پر", "سب سے زیادہ باقی رہنے والا", "سب سے زیادہ معزز", "سب سے سچا"],
+    "1-13": ["سب سے مضبوط", "سب سے زیادہ صحیح", "سب سے زیادہ پاک", "سب سے گھٹیا"],
+    "1-14": ["سب سے زیادہ باقی رہنے والا", "سب سے قریب تر", "سب سے پہلا", "سب سے زیادہ ظالم"],
+    "1-15": ["سب سے زیادہ صحیح", "سب سے زیادہ", "سب سے اچھا", "سب سے زیادہ گمراہ"],
+    "1-16": ["سب سے گھٹیا", "سب سے زیادہ خسارے والا", "سب سے زیادہ معزز", "سب سے زیادہ رسوا"],
+    "1-17": ["سب سے قریب تر", "سب سے پہلا", "سب سے زیادہ حق دار", "سب سے شدید"],
+    "1-18": ["سب سے پہلا", "سب سے زیادہ", "سب سے بہتر", "سب سے برا"],
+    "1-19": ["سب سے زیادہ", "سب سے زیادہ گمراہ", "سب سے بڑا", "سب سے چھوٹا"],
+    "1-20": ["سب سے زیادہ گمراہ", "سب سے زیادہ خسارے والا", "سب سے زیادہ جاننے والا", "سب سے زیادہ قریب"],
+    "1-21": ["سب سے زیادہ خسارے والا", "سب سے زیادہ معزز", "سب سے زیادہ پاک", "سبست مضبوط"],
+    "1-22": ["سب سے زیادہ معزز", "سب سے زیادہ رسوا", "سب سے زیادہ باقی رہنے والا", "سب سے زیادہ صحیح"],
+    "1-23": ["سب سے زیادہ رسوا", "سب سے زیادہ حق دار", "سب سے گھٹیا", "سب سے قریب تر"],
+    "1-24": ["سب سے زیادہ حق دار", "سب سے شدید", "سب سے پہلا", "سب سے زیادہ ظالم"],
+    "1-25": ["سب سے شدید", "سب سے بہتر", "سب سے زیادہ", "سب سے زیادہ گمراہ"],
+    "1-26": ["سب سے بہتر", "سب سے برا", "سب سے زیادہ خسارے والا", "سب سے زیادہ معزز"],
+    "1-27": ["سب سے برا", "سب سے بہتر", "سب سے زیادہ رسوا", "سب سے زیادہ حق دار"]
+  }
+};
+
+function getMCQOptions(unit, lesson, groupIndex, subIndex, question) {
+  const lessonContent = MCQ_CONTENT[unit + "-" + lesson] || {};
+  const key = (groupIndex + 1) + "-" + (subIndex + 1);
+  const options = lessonContent[key] || question.mcqOptions || [];
+  return Array.isArray(options) ? options : [];
+}
+
+const activityAnswerModes = {};
+let activityGlobalAnswerMode = "type";
+function setActivityAnswerMode(mode) {
+  activityGlobalAnswerMode = mode;
+  document.querySelectorAll('#activityBox [data-answer-input]').forEach(function (container) {
+    const id = container.dataset.answerInput;
+    activityAnswerModes[id] = mode;
+    const typed = document.getElementById(id + "_typed");
+    const choices = document.getElementById(id + "_choices");
+    if (typed && choices) {
+      typed.classList.toggle("hidden", mode !== "type");
+      choices.classList.toggle("hidden", mode !== "mcq");
+    }
+  });
+  const typeBtn = document.getElementById("activityTypeModeBtn");
+  const mcqBtn = document.getElementById("activityMcqModeBtn");
+  if (typeBtn && mcqBtn) {
+    typeBtn.classList.toggle("secondary", mode !== "type");
+    mcqBtn.classList.toggle("secondary", mode !== "mcq");
+    typeBtn.setAttribute("aria-pressed", String(mode === "type"));
+    mcqBtn.setAttribute("aria-pressed", String(mode === "mcq"));
+  }
+}
 /* ===== RENDER ACTIVITIES =====
    THIS IS THE MAIN MODIFICATION.
    Instead of:
@@ -8556,8 +9942,17 @@ function renderActivities(forceBlank = false) {
       "Book " + BOOKOF[unit] + " • Unit " + unit + " • Lesson " + lesson;
     return;
   }
+  Object.keys(activityAnswerModes).forEach(k => delete activityAnswerModes[k]);
+  activityGlobalAnswerMode = "type";
   const saved = forceBlank ? [] : (U(unit).answers[lesson] || []);
-  let html = "";
+  let html = `
+    <div class="answer-mode-switch" style="margin-bottom:22px;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--bg)" role="group" aria-label="Choose answer method for all questions">
+      <div style="font-weight:700;margin-bottom:10px">Choose your answer method</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button type="button" class="btn" id="activityTypeModeBtn" aria-pressed="true" onclick="setActivityAnswerMode('type')">Type answer</button>
+        <button type="button" class="btn secondary" id="activityMcqModeBtn" aria-pressed="false" onclick="setActivityAnswerMode('mcq')">MCQs</button>
+      </div>
+    </div>`;
   /* LOOP THROUGH MAIN QUESTIONS */
   questions.forEach(function (group, groupIndex) {
     const subquestions = Array.isArray(group.subquestions)
@@ -8582,10 +9977,20 @@ function renderActivities(forceBlank = false) {
           <div class="sub-question-number">${subIndex + 1}.</div>
           <h4 class="sub-question-title">${escapeHTML(cleanText(question.question))}</h4>
       `;
-      /* TEXT */
+      /* TEXT: optional multiple-choice alternative */
       if (question.type === "text") {
+        const mcqOptions = getMCQOptions(unit, lesson, groupIndex, subIndex, question);
         html += `
+          <div data-answer-input="${inputId}">
+          <div id="${inputId}_typed">
           <input class="fill-input" id="${inputId}" value="${escapeHTML(savedValue)}" placeholder="${isOpenGroup(group) ? "Write in your own words" : "Type your answer"}">
+          </div>
+          <div id="${inputId}_choices" class="hidden" data-mcq-options="${escapeHTML(JSON.stringify(mcqOptions))}">
+            ${mcqOptions.length ? mcqOptions.map(function(option, oi) {
+              return `<label class="option"><input type="radio" name="${inputId}_choice" value="${oi}"> ${escapeHTML(option)}</label>`;
+            }).join("") : '<div class="notice">MCQ choices have not been added for this question yet. Please use Type answer.</div>'}
+          </div>
+          </div>
         `;
       } else if (question.type === "bold") {
         const editorContent = savedValue
@@ -8795,9 +10200,13 @@ async function submitActivities() {
       const inputId = "answer_" + groupIndex + "_" + subIndex;
       /* TEXT */
       if (question.type === "text") {
-        const input = $(inputId);
-        if (input) {
-          value = input.value.trim();
+        if (activityAnswerModes[inputId] === "mcq") {
+          const selected = document.querySelector(`input[name="${inputId}_choice"]:checked`);
+          const options = getMCQOptions(activeUnit, activeLesson, groupIndex, subIndex, question);
+          value = selected && options[Number(selected.value)] !== undefined ? String(options[Number(selected.value)]) : "";
+        } else {
+          const input = $(inputId);
+          if (input) value = input.value.trim();
         }
       } else if (question.type === "bold") {
         const editor = $(inputId);
@@ -8833,7 +10242,7 @@ async function submitActivities() {
   if (missing.length > 0) {
     let first = null;
     missing.forEach(function (id) {
-      const field = $(id) || document.querySelector('input[name="' + id + '"]');
+      const field = (activityAnswerModes[id] === "mcq" ? document.querySelector('input[name="' + id + '_choice"]') : null) || $(id) || document.querySelector('input[name="' + id + '"]');
       const box = field && field.closest(".sub-question");
       if (box) { box.classList.add("unanswered"); if (!first) first = { box: box, field: field }; }
     });
@@ -8843,7 +10252,7 @@ async function submitActivities() {
       : "Please answer the " + missing.length + " highlighted questions before submitting.";
     error.classList.remove("hidden");
     if (first) {
-      first.box.scrollIntoView({ behavior: "smooth", block: "center" });
+      first.box.scrollIntoView({ behavior: (document.body.classList.contains("reduce-motion") ? "auto" : "smooth"), block: "center" });
       if (first.field.focus) setTimeout(function () { first.field.focus({ preventScroll: true }); }, 350);
     }
     return;
@@ -8857,7 +10266,9 @@ async function submitActivities() {
   unitState.scores[lesson] = percentage;
   showReview = true;
   save();
+  activitySubmissionComplete = true;
   show("learning");
+  activitySubmissionComplete = false;
   renderLearning();
 }
 
@@ -9311,6 +10722,445 @@ function askConfirmation(title, message, acceptLabel, cancelLabel, danger) {
     cancel.focus();
   });
 }
+</script>
+
+
+<!-- ===== WOW EFFECTS: confetti celebration, animated dashboard, 3D book cards ===== -->
+<style id="wow-styles">
+/* 3D tilt + scroll reveal on book cards */
+.card.book{position:relative;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--ty,0px)) scale(var(--sc,1));transform-style:preserve-3d;will-change:transform;transition:transform .55s cubic-bezier(.2,.9,.3,1),opacity .6s ease,box-shadow .3s ease,border-color .18s ease}
+.card.book.wow-pre{opacity:0;--ty:36px;--sc:.94}
+.card.book.wow-in{opacity:1}
+.card.book.wow-tilt{transition:transform .1s linear,opacity .6s ease,box-shadow .3s ease,border-color .18s ease;box-shadow:0 22px 44px rgba(16,63,48,.22);--sc:1.025}
+.card.book::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;border-radius:inherit;opacity:0;transition:opacity .25s ease;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.38),rgba(255,255,255,0) 55%)}
+.card.book.wow-tilt::after{opacity:1}
+.bar{transition:width 1.1s cubic-bezier(.22,1,.36,1)}
+
+/* Celebration banner */
+#wowToast{position:fixed;left:50%;top:18%;z-index:100002;width:min(90vw,380px);transform:translate(-50%,0);text-align:center;padding:26px 24px 22px;border-radius:22px;background:var(--card,#fff);color:var(--text,#17352a);border:2px solid var(--gold,#c99b3b);box-shadow:0 24px 70px rgba(16,63,48,.32),0 0 0 8px rgba(201,155,59,.18);cursor:pointer;animation:wowPop .7s cubic-bezier(.2,1.4,.4,1) both}
+#wowToast.out{animation:wowOut .45s ease forwards}
+#wowToast .wow-ar{font-family:"Noto Nastaliq Urdu","Jameel Noori Nastaleeq","Amiri",serif;font-size:36px;line-height:1.7;color:var(--g,#176b4d);direction:rtl}
+#wowToast .wow-star{display:inline-block;font-size:30px;color:var(--gold,#c99b3b);animation:wowSpin 2.4s linear infinite}
+#wowToast h3{margin:4px 0 6px;font-size:22px}
+#wowToast p{margin:0;color:var(--muted,#718078);font-size:15px}
+@keyframes wowPop{from{opacity:0;transform:translate(-50%,40px) scale(.5)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
+@keyframes wowOut{to{opacity:0;transform:translate(-50%,-30px) scale(.9)}}
+@keyframes wowSpin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.card.book,.card.book.wow-tilt{transform:none!important;transition:none}.card.book.wow-pre{opacity:1}#wowToast,#wowToast .wow-star{animation:none}}
+
+/* In-app "Reduce animations" setting also calms the new effects */
+body.reduce-motion .card.book,body.reduce-motion .card.book.wow-tilt{transform:none!important;transition:none!important}
+body.reduce-motion .card.book.wow-pre{opacity:1}
+body.reduce-motion #wowToast,body.reduce-motion #wowToast .wow-star,body.reduce-motion #wowBye,body.reduce-motion #wowBye *{animation:none!important;transition:none!important}
+
+/* Farewell screen on log out */
+#wowBye{position:fixed;inset:0;z-index:100003;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;color:#e7f0eb;background:radial-gradient(circle at 50% 30%,#1d3a2e,#0b1a14 70%);cursor:pointer;animation:wowFadeIn .6s ease both}
+#wowBye.out{animation:wowFadeOut .6s ease forwards}
+#wowBye .wow-bye-box{max-width:420px}
+#wowBye svg{width:120px;height:120px;margin-bottom:6px;animation:wowDroop 1.4s ease-out both}
+#wowBye .tear{animation:wowTear 2.2s ease-in 1s infinite;opacity:0}
+#wowBye .wow-ar{font-family:"Noto Nastaliq Urdu","Jameel Noori Nastaleeq","Amiri",serif;font-size:30px;line-height:1.8;color:#d9b45d;direction:rtl;animation:wowFadeIn 1.2s .5s ease both}
+#wowBye h2{margin:6px 0 8px;font-size:26px;animation:wowFadeIn 1s .3s ease both}
+#wowBye p{margin:0;color:#aabbb1;font-size:16px;line-height:1.6;animation:wowFadeIn 1s .8s ease both}
+#wowBye .wow-hint{margin-top:22px;font-size:13px;opacity:.7;animation:wowFadeIn 1s 1.6s ease both}
+@keyframes wowFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes wowFadeOut{to{opacity:0}}
+@keyframes wowDroop{from{transform:translateY(-14px) scale(1.06)}to{transform:none}}
+@keyframes wowTear{0%{opacity:0;transform:translateY(0)}15%{opacity:.95}100%{opacity:0;transform:translateY(34px)}}
+
+/* ===== Login page: slow Islamic geometric pattern + floating calligraphy ===== */
+.login{position:relative;overflow:hidden}
+.loginbox{position:relative;z-index:1}
+.wow-login-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.wow-login-bg::before{content:"";position:absolute;inset:0;background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='100' height='100' viewBox='0 0 100 100' fill='none' stroke='%23176b4d' stroke-width='1.2'><defs><g id='s'><rect x='32' y='32' width='36' height='36'/><rect x='32' y='32' width='36' height='36' transform='rotate(45 50 50)'/><circle cx='50' cy='50' r='6'/></g></defs><path d='M0 0L100 100M100 0L0 100' stroke-opacity='.55'/><use href='%23s' xlink:href='%23s' x='0' y='0'/><use href='%23s' xlink:href='%23s' x='-50' y='-50'/><use href='%23s' xlink:href='%23s' x='50' y='-50'/><use href='%23s' xlink:href='%23s' x='-50' y='50'/><use href='%23s' xlink:href='%23s' x='50' y='50'/></svg>");background-size:100px 100px;opacity:.3;animation:wowPattern 80s linear infinite;-webkit-mask-image:radial-gradient(ellipse at 50% 45%,#000 5%,rgba(0,0,0,.25) 85%);mask-image:radial-gradient(ellipse at 50% 45%,#000 5%,rgba(0,0,0,.25) 85%)}
+body.dark-mode .wow-login-bg::before{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='100' height='100' viewBox='0 0 100 100' fill='none' stroke='%2375c9a5' stroke-width='1.2'><defs><g id='s'><rect x='32' y='32' width='36' height='36'/><rect x='32' y='32' width='36' height='36' transform='rotate(45 50 50)'/><circle cx='50' cy='50' r='6'/></g></defs><path d='M0 0L100 100M100 0L0 100' stroke-opacity='.55'/><use href='%23s' xlink:href='%23s' x='0' y='0'/><use href='%23s' xlink:href='%23s' x='-50' y='-50'/><use href='%23s' xlink:href='%23s' x='50' y='-50'/><use href='%23s' xlink:href='%23s' x='-50' y='50'/><use href='%23s' xlink:href='%23s' x='50' y='50'/></svg>");opacity:.26}
+.wow-float{position:absolute;bottom:-110px;font-family:"Noto Nastaliq Urdu","Jameel Noori Nastaleeq","Amiri",serif;direction:rtl;white-space:nowrap;color:var(--g,#176b4d);opacity:0;user-select:none;animation:wowFloat var(--d,50s) linear infinite;animation-delay:var(--dl,0s)}
+.wow-float.gold{color:var(--gold,#c99b3b)}
+.wow-float{--oc:var(--o,.25)}
+body.dark-mode .wow-float{--oc:var(--od,.12)}
+@keyframes wowPattern{to{background-position:100px 100px}}
+@keyframes wowFloat{0%{opacity:0;transform:translateY(0) rotate(var(--r0,-4deg))}12%{opacity:var(--oc,.25)}88%{opacity:var(--oc,.25)}100%{opacity:0;transform:translateY(-118vh) rotate(var(--r1,4deg))}}
+@media (max-width:600px){.wow-float:nth-child(n+7){display:none}}
+
+/* Warm welcome on sign in */
+#wowHello{position:fixed;inset:0;z-index:100003;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;color:#17352a;background:radial-gradient(circle at 50% 35%,#fffaf0,#dcefe4 72%);cursor:pointer;animation:wowFadeIn .5s ease both}
+body.dark-mode #wowHello{color:#e7f0eb;background:radial-gradient(circle at 50% 35%,#24473a,#0b1a14 72%)}
+#wowHello.out{animation:wowFadeOut .6s ease forwards}
+#wowHello .wow-hello-box{max-width:430px;position:relative}
+#wowHello svg{width:124px;height:124px;margin-bottom:6px;animation:wowBounce .9s cubic-bezier(.2,1.5,.4,1) both}
+#wowHello .sp{position:absolute;color:#c99b3b;font-size:22px;animation:wowTwinkle 1.8s ease-in-out infinite}
+#wowHello .sp:nth-of-type(1){left:6%;top:6px}
+#wowHello .sp:nth-of-type(2){right:8%;top:22px;animation-delay:.5s;font-size:16px}
+#wowHello .sp:nth-of-type(3){left:14%;top:98px;animation-delay:1s;font-size:14px}
+#wowHello .sp:nth-of-type(4){right:12%;top:104px;animation-delay:.3s}
+#wowHello .wow-ar{font-family:"Noto Nastaliq Urdu","Jameel Noori Nastaleeq","Amiri",serif;font-size:32px;line-height:1.8;color:#176b4d;direction:rtl;animation:wowFadeIn 1s .35s ease both}
+body.dark-mode #wowHello .wow-ar{color:#d9b45d}
+#wowHello h2{margin:6px 0 8px;font-size:27px;animation:wowFadeIn .9s .45s ease both}
+#wowHello p{margin:0;color:#4d6a5d;font-size:16px;line-height:1.6;animation:wowFadeIn .9s .8s ease both}
+body.dark-mode #wowHello p{color:#aabbb1}
+#wowHello .wow-hint{margin-top:22px;font-size:13px;opacity:.65;animation:wowFadeIn 1s 1.4s ease both}
+@keyframes wowBounce{from{opacity:0;transform:scale(.4) translateY(20px)}to{opacity:1;transform:none}}
+@keyframes wowTwinkle{0%,100%{opacity:.25;transform:scale(.7) rotate(0)}50%{opacity:1;transform:scale(1.15) rotate(25deg)}}
+
+/* Reduce animations: pattern/calligraphy stay as still decoration, welcome has no motion */
+body.reduce-motion .wow-login-bg::before,body.reduce-motion .wow-float,body.reduce-motion #wowHello,body.reduce-motion #wowHello *{animation:none!important}
+body.reduce-motion .wow-float{opacity:var(--oc,.22);bottom:auto;top:var(--top,40%)}
+@media (prefers-reduced-motion:reduce){.wow-login-bg::before,.wow-float,#wowHello,#wowHello *{animation:none!important}.wow-float{opacity:var(--oc,.22);bottom:auto;top:var(--top,40%)}}
+</style>
+
+<script>
+(function () {
+  "use strict";
+  var reduceQuery = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : { matches: false };
+  function reduced() { return !!reduceQuery.matches || document.body.classList.contains("reduce-motion"); }
+
+  /* ---------- 1. CONFETTI CELEBRATION ---------- */
+  var canvas = null, ctx = null, particles = [], raf = 0, W = 0, H = 0;
+  var COLORS = ["#c99b3b", "#f0d999", "#e3b341", "#176b4d", "#75c9a5", "#ffffff", "#0d4b38"];
+
+  function ensureCanvas() {
+    if (canvas) return;
+    canvas = document.createElement("canvas");
+    canvas.setAttribute("aria-hidden", "true");
+    canvas.style.cssText = "position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:100001;";
+    document.body.appendChild(canvas);
+    ctx = canvas.getContext("2d");
+  }
+  function resizeCanvas() {
+    var dpr = window.devicePixelRatio || 1;
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  function rand(a, b) { return a + Math.random() * (b - a); }
+
+  function makeParticle(x, y, angle, speed) {
+    var shapes = ["rect", "rect", "circle", "star"];
+    return {
+      x: x, y: y,
+      vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+      size: rand(7, 13), rot: rand(0, 6.28), vr: rand(-0.25, 0.25),
+      color: COLORS[(Math.random() * COLORS.length) | 0],
+      shape: shapes[(Math.random() * shapes.length) | 0],
+      life: 0, max: rand(160, 260), wobble: rand(0, 6.28)
+    };
+  }
+  function drawStar(r) {
+    ctx.beginPath();
+    for (var i = 0; i < 10; i++) {
+      var rad = i % 2 === 0 ? r : r * 0.45, a = (Math.PI / 5) * i - Math.PI / 2;
+      ctx.lineTo(Math.cos(a) * rad, Math.sin(a) * rad);
+    }
+    ctx.closePath(); ctx.fill();
+  }
+  function tick() {
+    ctx.clearRect(0, 0, W, H);
+    particles = particles.filter(function (p) { return p.life < p.max && p.y < H + 40; });
+    particles.forEach(function (p) {
+      p.life++; p.vx *= 0.985; p.vy = p.vy * 0.985 + 0.34;
+      p.x += p.vx + Math.sin(p.wobble + p.life * 0.08) * 0.6; p.y += p.vy; p.rot += p.vr;
+      ctx.save();
+      ctx.globalAlpha = Math.min(1, (p.max - p.life) / 50);
+      ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.fillStyle = p.color;
+      if (p.shape === "rect") ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+      else if (p.shape === "circle") { ctx.beginPath(); ctx.arc(0, 0, p.size / 3, 0, 6.28); ctx.fill(); }
+      else drawStar(p.size * 0.7);
+      ctx.restore();
+    });
+    if (particles.length) raf = requestAnimationFrame(tick);
+    else { raf = 0; ctx.clearRect(0, 0, W, H); if (canvas) canvas.style.display = "none"; }
+  }
+  function confetti(level) {
+    if (reduced()) return;
+    ensureCanvas(); resizeCanvas(); canvas.style.display = "block";
+    var n = 55 * level, i;
+    for (i = 0; i < n; i++) { /* two cannons from the bottom corners */
+      particles.push(makeParticle(0, H, rand(-1.25, -0.75), rand(14, 27)));
+      particles.push(makeParticle(W, H, rand(-2.4, -1.9), rand(14, 27)));
+    }
+    if (level >= 2) for (i = 0; i < 40 * level; i++) { /* golden rain from the top */
+      particles.push(makeParticle(rand(0, W), rand(-H * 0.4, -10), rand(1.2, 1.9), rand(1, 4)));
+    }
+    if (!raf) raf = requestAnimationFrame(tick);
+  }
+
+  var toastTimer = 0;
+  function showToast(title, sub) {
+    var old = document.getElementById("wowToast");
+    if (old) old.remove();
+    clearTimeout(toastTimer);
+    var t = document.createElement("div");
+    t.id = "wowToast"; t.setAttribute("role", "status"); t.setAttribute("aria-live", "polite");
+    t.innerHTML = '<div class="wow-star" aria-hidden="true">\u2605</div>' +
+      '<div class="wow-ar" lang="ar">\u0645\u0627 \u0634\u0627\u0621 \u0627\u0644\u0644\u0647</div>' +
+      '<h3></h3><p></p>';
+    t.querySelector("h3").textContent = title;
+    t.querySelector("p").textContent = sub;
+    function close() { t.classList.add("out"); setTimeout(function () { t.remove(); }, 450); }
+    t.addEventListener("click", close);
+    document.body.appendChild(t);
+    toastTimer = setTimeout(close, 3600);
+  }
+  function celebrate(level, title, sub) {
+    confetti(level || 1);
+    showToast(title || "Mashallah!", sub || "Keep up the great work.");
+  }
+  window.wowCelebrate = function (level) { /* handy for demos: wowCelebrate(3) in the console */
+    celebrate(level || 3, "Mashallah! Unit completed", "Demo celebration \u2014 great job!");
+  };
+
+  /* Hook lesson submission */
+  if (typeof window.submitActivities === "function") {
+    var origSubmit = window.submitActivities;
+    window.submitActivities = async function () {
+      var unit, lesson, before, wasUnit, wasBook, wasAll, book;
+      try {
+        unit = activeUnit; lesson = activeLesson;
+        before = U(unit).answers[lesson];
+        wasUnit = unitComplete(unit);
+        book = BOOKS.find(function (b) { return b.units.indexOf(unit) !== -1; });
+        wasBook = !!book && book.units.every(unitComplete);
+        wasAll = ALL.every(unitComplete);
+      } catch (e) { return origSubmit.apply(this, arguments); }
+      var result = await origSubmit.apply(this, arguments);
+      try {
+        if (U(unit).answers[lesson] === before) return result; /* cancelled or incomplete: no party */
+        var pct = U(unit).scores[lesson];
+        setTimeout(function () {
+          if (!wasAll && ALL.every(unitComplete)) celebrate(3, "Course completed!", "Alhamdulillah \u2014 you finished every lesson.");
+          else if (book && !wasBook && book.units.every(unitComplete)) celebrate(3, "Book " + book.id + " completed!", "What an achievement. On to the next book!");
+          else if (!wasUnit && unitComplete(unit)) celebrate(3, "Unit " + unit + " completed!", "You scored " + pct + "% on the final lesson.");
+          else if (pct === 100) celebrate(2, "Perfect score!", "100% \u2014 flawless work.");
+          else if (pct >= 80) celebrate(1, "Excellent work!", "You scored " + pct + "% on this lesson.");
+        }, 300);
+      } catch (e) { /* never break the app for an effect */ }
+      return result;
+    };
+  }
+
+  /* ---------- 2. ANIMATED DASHBOARD (count-up + bars) ---------- */
+  var COUNTERS = ["overall", "weakCount", "pOverall", "pCompleted", "pLessons"];
+
+  function countUp(el, force) {
+    var text = el._wowRaf ? el._wowText : el.textContent; /* mid-animation text is partial: trust the saved final one */
+    if (!force && el._wowText === text) return;
+    el._wowText = text;
+    var m = text.match(/\d+/);
+    if (el._wowRaf) { cancelAnimationFrame(el._wowRaf); el._wowRaf = 0; }
+    if (!m) return;
+    var target = +m[0], from = force ? 0 : (el._wowN || 0);
+    el._wowN = target;
+    if (reduced() || el.offsetParent === null || from === target) return;
+    var pre = text.slice(0, m.index), post = text.slice(m.index + m[0].length), start = performance.now(), dur = 1000;
+    (function step(now) {
+      var k = Math.min(1, (now - start) / dur), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = pre + Math.round(from + (target - from) * e) + post;
+      if (k < 1) el._wowRaf = requestAnimationFrame(step);
+      else { el._wowRaf = 0; el.textContent = text; }
+    })(start);
+  }
+  function growBar(bar) {
+    if (reduced() || bar.offsetParent === null) return;
+    var w = bar.style.width;
+    bar.style.width = "0%";
+    void bar.offsetWidth;
+    bar.style.width = w;
+  }
+  function restoreCounters() { /* undo a half-finished animation before updateUI reads/writes text */
+    COUNTERS.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el && el._wowRaf) { cancelAnimationFrame(el._wowRaf); el._wowRaf = 0; el.textContent = el._wowText; }
+    });
+  }
+  function replayDashboard() {
+    COUNTERS.forEach(function (id) { var el = document.getElementById(id); if (el) countUp(el, true); });
+    var ob = document.getElementById("overallBar"); if (ob) growBar(ob);
+  }
+
+  if (typeof window.updateUI === "function") {
+    var origUpdate = window.updateUI;
+    window.updateUI = function () {
+      restoreCounters();
+      var r = origUpdate.apply(this, arguments);
+      COUNTERS.forEach(function (id) { var el = document.getElementById(id); if (el) countUp(el, false); });
+      return r;
+    };
+  }
+  if (typeof window.show === "function") {
+    var origShow = window.show;
+    window.show = async function (id) {
+      var r = await origShow.apply(this, arguments);
+      if (id === "dashboard" || id === "progress") replayDashboard();
+      return r;
+    };
+  }
+
+  /* ---------- 3. 3D BOOK CARDS: reveal on scroll + tilt + shine ---------- */
+  var io = ("IntersectionObserver" in window) ? new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      var card = en.target; io.unobserve(card);
+      var d = (card._wowIdx || 0) * 110;
+      card.style.transitionDelay = d + "ms";
+      card.classList.remove("wow-pre"); card.classList.add("wow-in");
+      setTimeout(function () { card.style.transitionDelay = ""; }, d + 800);
+    });
+  }, { threshold: 0.12 }) : null;
+
+  function enhance(container) {
+    container.querySelectorAll(".bar").forEach(growBar);
+    if (reduced()) return;
+    container.querySelectorAll(".card.book").forEach(function (card, i) {
+      if (!io) return;
+      card._wowIdx = i % 3;
+      card.classList.add("wow-pre");
+      io.observe(card);
+    });
+  }
+  ["dashBooks", "bookGrid"].forEach(function (id) {
+    var box = document.getElementById(id);
+    if (!box) return;
+    new MutationObserver(function () { enhance(box); }).observe(box, { childList: true });
+  });
+
+  var tilted = null;
+  function untilt(card) {
+    card.classList.remove("wow-tilt");
+    card.style.setProperty("--rx", "0deg"); card.style.setProperty("--ry", "0deg");
+  }
+  document.addEventListener("pointermove", function (e) {
+    if (e.pointerType !== "mouse" || reduced()) return;
+    var card = e.target.closest ? e.target.closest(".card.book") : null;
+    if (tilted && tilted !== card) { untilt(tilted); tilted = null; }
+    if (!card || card.classList.contains("wow-pre")) return;
+    var r = card.getBoundingClientRect(), px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+    card.classList.add("wow-tilt");
+    card.style.setProperty("--ry", ((px - 0.5) * 14).toFixed(2) + "deg");
+    card.style.setProperty("--rx", ((0.5 - py) * 14).toFixed(2) + "deg");
+    card.style.setProperty("--mx", (px * 100).toFixed(1) + "%");
+    card.style.setProperty("--my", (py * 100).toFixed(1) + "%");
+    tilted = card;
+  }, { passive: true });
+  document.addEventListener("pointerleave", function () { if (tilted) { untilt(tilted); tilted = null; } });
+  window.addEventListener("blur", function () { if (tilted) { untilt(tilted); tilted = null; } });
+
+  /* ---------- 4. SAD FAREWELL ON LOG OUT ---------- */
+  function farewell(name) {
+    var old = document.getElementById("wowBye"); if (old) old.remove();
+    var first = String(name || "").trim().split(/\s+/)[0];
+    var o = document.createElement("div");
+    o.id = "wowBye"; o.setAttribute("role", "status"); o.setAttribute("aria-live", "polite");
+    o.innerHTML =
+      '<div class="wow-bye-box">' +
+      '<svg viewBox="0 0 120 120" aria-hidden="true">' +
+      '<circle cx="60" cy="60" r="52" fill="#d9b45d"/>' +
+      '<path d="M32 48 Q42 46 52 38" stroke="#5b4513" stroke-width="4" fill="none" stroke-linecap="round"/>' +
+      '<path d="M68 38 Q78 46 88 48" stroke="#5b4513" stroke-width="4" fill="none" stroke-linecap="round"/>' +
+      '<circle cx="43" cy="56" r="6" fill="#3a2d0b"/><circle cx="77" cy="56" r="6" fill="#3a2d0b"/>' +
+      '<path d="M42 86 Q60 70 78 86" stroke="#3a2d0b" stroke-width="5" fill="none" stroke-linecap="round"/>' +
+      '<path class="tear" d="M43 64 Q38 74 43 78 Q48 74 43 64Z" fill="#8fd3ff"/>' +
+      '</svg>' +
+      '<div class="wow-ar" lang="ar">\u0641\u0650\u064A \u0623\u064E\u0645\u064E\u0627\u0646\u0650 \u0627\u0644\u0644\u0651\u064E\u0647</div>' +
+      '<h2></h2><p>Your progress is safely saved. Come back soon \u2014 the lessons will be waiting for you.</p>' +
+      '<div class="wow-hint">Click anywhere to continue</div></div>';
+    o.querySelector("h2").textContent = first ? "We\u2019ll miss you, " + first + "\u2026" : "We\u2019ll miss you\u2026";
+    var done = false, timer = 0;
+    function close() {
+      if (done) return; done = true; clearTimeout(timer);
+      document.removeEventListener("keydown", close);
+      o.classList.add("out"); setTimeout(function () { o.remove(); }, reduced() ? 0 : 600);
+    }
+    o.addEventListener("click", close);
+    document.addEventListener("keydown", close);
+    document.body.appendChild(o);
+    timer = setTimeout(close, 4200);
+  }
+  window.wowFarewell = farewell; /* demo: wowFarewell("Ali") in the console */
+
+  if (typeof window.logout === "function") {
+    var origLogout = window.logout;
+    window.logout = async function () {
+      var name, wasIn;
+      try { name = state && state.name; wasIn = !!currentUser; } catch (e) { return origLogout.apply(this, arguments); }
+      var r = await origLogout.apply(this, arguments);
+      try { if (wasIn && !currentUser) farewell(name); } catch (e) { /* never break logout */ }
+      return r;
+    };
+  }
+
+  /* ---------- 5. LOGIN BACKGROUND: floating calligraphy ---------- */
+  (function () {
+    var login = document.getElementById("login");
+    if (!login || login.querySelector(".wow-login-bg")) return;
+    var bg = document.createElement("div");
+    bg.className = "wow-login-bg"; bg.setAttribute("aria-hidden", "true");
+    var words = ["\u0628\u0650\u0633\u0652\u0645\u0650 \u0627\u0644\u0644\u0651\u064E\u0647\u0650", "\u0627\u0644\u0652\u062D\u064E\u0645\u0652\u062F\u064F \u0644\u0650\u0644\u0651\u064E\u0647\u0650", "\u0633\u064F\u0628\u0652\u062D\u064E\u0627\u0646\u064E \u0627\u0644\u0644\u0651\u064E\u0647\u0650", "\u0645\u064E\u0627 \u0634\u064E\u0627\u0621\u064E \u0627\u0644\u0644\u0651\u064E\u0647\u064F", "\u0627\u0642\u0652\u0631\u064E\u0623\u0652", "\u0627\u0644\u0652\u0642\u064F\u0631\u0652\u0622\u0646\u064F", "\u0627\u0644\u0644\u0651\u064E\u0647\u064F \u0623\u064E\u0643\u0652\u0628\u064E\u0631\u064F", "\u0627\u0644\u0633\u0651\u064E\u0644\u064E\u0627\u0645\u064F \u0639\u064E\u0644\u064E\u064A\u0652\u0643\u064F\u0645\u0652"];
+    for (var i = 0; i < 10; i++) {
+      var el = document.createElement("span"), dur = 42 + Math.random() * 30;
+      el.className = "wow-float" + (i % 3 === 0 ? " gold" : "");
+      el.textContent = words[i % words.length];
+      el.style.left = (4 + ((i * 37 + Math.random() * 14) % 88)).toFixed(1) + "%";
+      el.style.fontSize = (28 + Math.random() * 34).toFixed(0) + "px";
+      el.style.setProperty("--d", dur.toFixed(1) + "s");
+      el.style.setProperty("--dl", "-" + (Math.random() * dur).toFixed(1) + "s");
+      var base = Math.random();
+      el.style.setProperty("--o", (0.2 + base * 0.12).toFixed(3));   /* light mode: clearly visible */
+      el.style.setProperty("--od", (0.09 + base * 0.06).toFixed(3)); /* dark mode: subtle */
+      el.style.setProperty("--r0", (Math.random() * 12 - 6).toFixed(1) + "deg");
+      el.style.setProperty("--r1", (Math.random() * 12 - 6).toFixed(1) + "deg");
+      el.style.setProperty("--top", (8 + Math.random() * 78).toFixed(0) + "%");
+      bg.appendChild(el);
+    }
+    login.insertBefore(bg, login.firstChild);
+  })();
+
+  /* ---------- 6. WARM WELCOME ON SIGN IN ---------- */
+  function welcome(name, mode) {
+    var old = document.getElementById("wowHello"); if (old) old.remove();
+    var first = String(name || "").trim().split(/\s+/)[0], reg = mode === "register";
+    var o = document.createElement("div");
+    o.id = "wowHello"; o.setAttribute("role", "status"); o.setAttribute("aria-live", "polite");
+    o.innerHTML =
+      '<div class="wow-hello-box">' +
+      '<span class="sp" aria-hidden="true">\u2726</span><span class="sp" aria-hidden="true">\u2726</span><span class="sp" aria-hidden="true">\u2726</span><span class="sp" aria-hidden="true">\u2726</span>' +
+      '<svg viewBox="0 0 120 120" aria-hidden="true">' +
+      '<circle cx="60" cy="60" r="52" fill="#d9b45d"/>' +
+      '<circle cx="34" cy="70" r="8" fill="#f08a7a" opacity=".45"/><circle cx="86" cy="70" r="8" fill="#f08a7a" opacity=".45"/>' +
+      '<path d="M36 52 Q43 44 50 52" stroke="#3a2d0b" stroke-width="5" fill="none" stroke-linecap="round"/>' +
+      '<path d="M70 52 Q77 44 84 52" stroke="#3a2d0b" stroke-width="5" fill="none" stroke-linecap="round"/>' +
+      '<path d="M38 74 Q60 98 82 74" stroke="#3a2d0b" stroke-width="5" fill="none" stroke-linecap="round"/>' +
+      '</svg>' +
+      '<div class="wow-ar" lang="ar">\u0627\u0644\u0633\u0651\u064E\u0644\u064E\u0627\u0645\u064F \u0639\u064E\u0644\u064E\u064A\u0652\u0643\u064F\u0645\u0652</div>' +
+      '<h2></h2><p></p><div class="wow-hint">Click anywhere to continue</div></div>';
+    o.querySelector("h2").textContent = (reg ? "Welcome aboard" : "Welcome back") + (first ? ", " + first : "") + "!";
+    o.querySelector("p").textContent = reg
+      ? "Your account is ready. Let\u2019s begin your very first lesson together."
+      : "We\u2019re so happy to see you again. Let\u2019s pick up right where you left off.";
+    var done = false, timer = 0;
+    function close() {
+      if (done) return; done = true; clearTimeout(timer);
+      document.removeEventListener("keydown", close);
+      o.classList.add("out"); setTimeout(function () { o.remove(); }, reduced() ? 0 : 600);
+    }
+    o.addEventListener("click", close);
+    document.addEventListener("keydown", close);
+    document.body.appendChild(o);
+    timer = setTimeout(close, 3600);
+  }
+  window.wowWelcome = welcome; /* demo: wowWelcome("Ali") in the console */
+
+  if (typeof window.handleAuth === "function") {
+    var origAuth = window.handleAuth;
+    window.handleAuth = async function () {
+      var wasIn, mode;
+      try { wasIn = !!currentUser; mode = authMode; } catch (e) { return origAuth.apply(this, arguments); }
+      var p = origAuth.apply(this, arguments); /* runs preventDefault synchronously */
+      var r = await p;
+      try { if (!wasIn && currentUser) welcome(state && state.name, mode); } catch (e) { /* never break sign in */ }
+      return r;
+    };
+  }
+})();
 </script>
 
 </body>
