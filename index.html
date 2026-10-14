@@ -716,7 +716,7 @@ function pdfInfo(unit, lesson) {
   const key = unit + "-" + lesson;
   if (!PDF_AVAILABLE.includes(key)) return null;
 
-  const path = "pdfs/" + key + ".pdf";
+  const path = key + ".pdf"; // PDF files are stored in the same folder as index.html
   return { view: path};
 }
     /* =========================================================
