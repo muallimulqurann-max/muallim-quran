@@ -364,15 +364,19 @@
       <form id="authForm" onsubmit="return handleAuth(event)" novalidate>
         <div id="nameRow"><label for="loginName">Full name</label>
         <input id="loginName" name="full-name" type="text" autocomplete="name" placeholder="Your full name" /></div>
-        <label for="loginEmail">Email</label>
-        <input id="loginEmail" name="username" type="email" autocomplete="username" placeholder="you@example.com" required />
-        <label for="loginPass">Password</label>
+        <p id="authHint" class="sub hidden" style="font-size:14px;margin:0 0 14px"></p>
+        <div id="emailRow"><label for="loginEmail">Email</label>
+        <input id="loginEmail" name="username" type="email" autocomplete="username" placeholder="you@example.com" required /></div>
+        <label for="loginPass" id="passLabel">Password</label>
         <div class="password-field">
           <input id="loginPass" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required />
           <button class="password-toggle" type="button" onclick="togglePasswordVisibility()" aria-label="Show password" title="Show password" aria-pressed="false">
             <svg class="ui-icon eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
         </div>
+        <p id="forgotRow" style="text-align:right;margin:-6px 0 14px;font-size:14px"><a href="#" id="forgotLink" style="display:inline-block;padding:8px 0" onclick="return setAuthMode('forgot')">Forgot password?</a></p>
+        <div id="confirmRow" class="hidden"><label for="loginPass2">Confirm new password</label>
+        <input id="loginPass2" name="confirm-password" type="password" autocomplete="new-password" placeholder="Type the new password again" /></div>
         <p id="passwordRules" class="sub hidden" style="font-size:12px;margin:6px 0 12px">Use at least 8 characters, including an uppercase letter, a lowercase letter, a number, and a symbol.</p>
         <p id="authMsg" class="notice hidden" role="alert" aria-live="assertive" aria-atomic="true"></p>
         <button class="btn" id="authBtn" type="submit" style="width: 100%">Log in</button>
@@ -8416,29 +8420,111 @@ function overall() {
 }
 
 /* ===== LOGIN ===== */
+/* Read the URL BEFORE Supabase processes (and clears) it: did the student arrive from a reset-password email? */
+const RECOVERY_FROM_URL = /(^|[#&?])type=recovery/.test(location.hash);
+const RESET_LINK_ERROR = /error_code=|error=access_denied/.test(location.hash);
+let recoveryActive = RECOVERY_FROM_URL;
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let authMode = "login";
-function toggleAuthMode() {
-  authMode = authMode === "login" ? "register" : "login";
-  const reg = authMode === "register";
+let resetCooldown = null;
+function setAuthMode(mode) {
+  clearInterval(resetCooldown); $("authBtn").disabled = false;
+  authMode = mode;
+  const reg = mode === "register", forgot = mode === "forgot", rec = mode === "recovery";
   $("nameRow").classList.toggle("hidden", !reg);
-  $("authBtn").textContent = reg ? "Create account" : "Log in";
-  $("authSwitchText").textContent = reg ? "Already registered?" : "New student?";
-  $("authSwitch").textContent = reg ? "Log in" : "Create an account";
-  $("loginPass").autocomplete = reg ? "new-password" : "current-password";
-  $("loginPass").placeholder = reg ? "Create a strong password" : "Enter your password";
-  $("passwordRules").classList.toggle("hidden", !reg);
+  $("emailRow").classList.toggle("hidden", rec);
+  $("passLabel").classList.toggle("hidden", forgot);
+  document.querySelector("#authForm .password-field").classList.toggle("hidden", forgot);
+  $("forgotRow").classList.toggle("hidden", mode !== "login");
+  $("confirmRow").classList.toggle("hidden", !rec);
+  $("passwordRules").classList.toggle("hidden", !(reg || rec));
+  $("authBtn").textContent = ({ login: "Log in", register: "Create account", forgot: "Send reset link", recovery: "Save new password" })[mode];
+  $("passLabel").textContent = rec ? "New password" : "Password";
+  $("loginPass").autocomplete = (reg || rec) ? "new-password" : "current-password";
+  $("loginPass").placeholder = rec ? "Create a new strong password" : reg ? "Create a strong password" : "Enter your password";
   $("loginName").required = reg;
+  $("loginPass2").type = $("loginPass").type;
   $("loginEmail").autocomplete = "username";
+  const sw = ({ login: ["New student?", "Create an account"], register: ["Already registered?", "Log in"], forgot: ["Remembered your password?", "Back to log in"], recovery: ["", "Cancel"] })[mode];
+  $("authSwitchText").textContent = sw[0]; $("authSwitch").textContent = sw[1];
+  const hint = ({ forgot: "Enter the email you registered with and we will send you a link to reset your password.", recovery: "Choose a new password for your account." })[mode] || "";
+  $("authHint").textContent = hint; $("authHint").classList.toggle("hidden", !hint);
   authNotice("");
   return false;
 }
-function authNotice(msg) {
-  const el = $("authMsg"); el.textContent = msg; el.classList.toggle("hidden", !msg);
+function toggleAuthMode() {
+  if (authMode === "recovery") { cancelRecovery(); return false; }
+  return setAuthMode(authMode === "login" ? "register" : "login");
 }
+function authNotice(msg, ok) {
+  const el = $("authMsg"); el.textContent = msg; el.classList.toggle("hidden", !msg); el.classList.toggle("success", !!(ok && msg));
+}
+function passwordRulesMet(pass) {
+  return pass.length >= 8 && /[a-z]/.test(pass) && /[A-Z]/.test(pass) && /\d/.test(pass) && /[^A-Za-z0-9]/.test(pass);
+}
+function cleanResetUrl() { try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {} }
+
+/* ---- Forgot password: step 1, email the reset link ---- */
+async function sendResetLink(email) {
+  if (!email) { authNotice("Please enter your email address."); $("loginEmail").focus(); return false; }
+  if (!$("loginEmail").checkValidity()) { authNotice("Enter a valid email address, such as name@example.com."); $("loginEmail").focus(); return false; }
+  const btn = $("authBtn"); btn.disabled = true;
+  const opts = /^https?:$/.test(location.protocol) ? { redirectTo: location.origin + location.pathname } : {};
+  const { error } = await sb.auth.resetPasswordForEmail(email, opts);
+  if (error) { btn.disabled = false; authNotice("We could not send the reset link. " + (error.message || "Please wait a minute and try again.")); return false; }
+  /* Same message whether or not the account exists, so nobody can use this to find out who is registered. */
+  authNotice("If an account exists for " + email + ", a password reset link is on its way. Check your inbox and spam folder. The link can be used once and expires soon.", true);
+  let left = 60; btn.textContent = "Resend in " + left + "s";
+  clearInterval(resetCooldown);
+  resetCooldown = setInterval(function () {
+    left--;
+    if (left <= 0) { clearInterval(resetCooldown); btn.disabled = false; btn.textContent = "Send reset link again"; }
+    else btn.textContent = "Resend in " + left + "s";
+  }, 1000);
+  return false;
+}
+
+/* ---- Forgot password: step 2, choose a new password (after clicking the emailed link) ---- */
+function startRecovery() {
+  recoveryActive = true;
+  $("app").classList.add("hidden");
+  $("login").classList.remove("hidden");
+  setAuthMode("recovery");
+  cleanResetUrl();
+  setTimeout(function () { $("loginPass").focus(); }, 50);
+}
+async function saveNewPassword(pass, confirm) {
+  if (!pass) { authNotice("Please type your new password."); $("loginPass").focus(); return false; }
+  if (!passwordRulesMet(pass)) { authNotice("Your password does not meet the requirements. Use at least 8 characters with an uppercase letter, a lowercase letter, a number, and a symbol."); $("loginPass").focus(); return false; }
+  if (pass !== confirm) { authNotice("The two passwords do not match. Type the same password in both boxes."); $("loginPass2").focus(); return false; }
+  $("authBtn").disabled = true;
+  const { data, error } = await sb.auth.updateUser({ password: pass });
+  $("authBtn").disabled = false;
+  if (error) { authNotice("We could not update your password. " + (error.message || "Please request a new reset link and try again.")); return false; }
+  const email = (data && data.user && data.user.email) || "";
+  recoveryActive = false;
+  await sb.auth.signOut();
+  cleanResetUrl();
+  $("loginPass").value = ""; $("loginPass2").value = "";
+  setAuthMode("login");
+  $("loginEmail").value = email;
+  authNotice("Your password has been updated. Log in with your new password.", true);
+  $("loginPass").focus();
+  return false;
+}
+async function cancelRecovery() {
+  recoveryActive = false;
+  try { await sb.auth.signOut(); } catch (e) {}
+  cleanResetUrl();
+  $("loginPass").value = ""; $("loginPass2").value = "";
+  setAuthMode("login");
+}
+
 async function handleAuth(e) {
   e.preventDefault();
   const name = $("loginName").value.trim(), email = $("loginEmail").value.trim(), pass = $("loginPass").value;
+  if (authMode === "forgot") return await sendResetLink(email);
+  if (authMode === "recovery") return await saveNewPassword(pass, $("loginPass2").value);
   if (authMode === "register" && !name) { authNotice("Please enter your full name so we can create your account."); $("loginName").focus(); return false; }
   if (!email || !pass) { authNotice("Please enter your email address and password. Both fields are required."); (!email ? $("loginEmail") : $("loginPass")).focus(); return false; }
   if (!$("loginEmail").checkValidity()) { authNotice("Enter a valid email address, such as name@example.com."); $("loginEmail").focus(); return false; }
@@ -10573,6 +10659,7 @@ function togglePasswordVisibility() {
   if (!input || !button) return;
   const showing = input.type === "password";
   input.type = showing ? "text" : "password";
+  const confirmBox = document.getElementById("loginPass2"); if (confirmBox) confirmBox.type = input.type;
   button.setAttribute("aria-label", showing ? "Hide password" : "Show password");
   button.setAttribute("title", showing ? "Hide password" : "Show password");
   button.setAttribute("aria-pressed", showing ? "true" : "false");
@@ -10589,8 +10676,19 @@ $("loginPass").autocomplete = "current-password";
 
 /* ===== AUTO LOGIN ===== */
 sb.auth.getSession().then(function (r) {
-  if (r.data.session) enterApp(r.data.session.user);
+  if (r.data.session && !recoveryActive) enterApp(r.data.session.user);
 });
+/* Reset-password email link: show "set a new password" instead of logging straight in */
+sb.auth.onAuthStateChange(function (event) {
+  if (event === "PASSWORD_RECOVERY" && authMode !== "recovery") startRecovery();
+});
+if (RESET_LINK_ERROR) {
+  cleanResetUrl();
+  setAuthMode("forgot");
+  authNotice("That reset link has expired or was already used. Enter your email to get a new one.");
+} else if (RECOVERY_FROM_URL) {
+  startRecovery();
+}
 
 /* ===== CLEAR "UNANSWERED" HIGHLIGHT ===== */
 ["input", "click", "keyup"].forEach(function (evt) {
@@ -11270,6 +11368,207 @@ html.wow-vt-circle::view-transition-new(root){z-index:2}
     syncThemeButtons();
     new MutationObserver(syncThemeButtons).observe(document.body, { attributes: true, attributeFilter: ["class"] });
   })();
+})();
+</script>
+
+<style>
+  /* success notices (e.g. "reset link sent") must not inherit the red alert colour */
+  #authMsg.success { color: #1d5c3a; background: #e8f6ee; border-color: #cce8d8; }
+  body.dark-mode #authMsg.success { color: #bff0d3; background: #1d3a2a; border-color: #2f6b4a; }
+</style>
+<!-- ===== MAGNIFIER (accessibility) ===== -->
+<style>
+  .mag-btn[aria-pressed="true"] { background: var(--g); color: #fff; border-color: var(--g); }
+  .mag-btn.mag-login { position: fixed; top: 18px; right: 68px; z-index: 50; }
+  #magLens {
+    position: fixed; z-index: 100000; pointer-events: none; display: none;
+    max-width: min(620px, 94vw); min-width: 120px; padding: 14px 20px;
+    background: var(--card, #fff); color: var(--text, #17352a);
+    border: 3px solid var(--g, #176b4d); border-radius: 16px;
+    box-shadow: 0 14px 44px rgba(0, 0, 0, .35);
+    font-size: calc(18px * var(--mag-zoom, 2.5)); line-height: 1.9;
+    text-align: center; overflow-wrap: anywhere; unicode-bidi: plaintext;
+  }
+  #magLens strong, #magLens b { background: #ffe58a; color: #000; border-radius: 6px; padding: 0 4px; }
+  #magBar {
+    position: fixed; top: 84px; right: 14px; z-index: 100001; display: none;
+    align-items: center; gap: 8px; padding: 8px 10px;
+    background: var(--card, #fff); color: var(--text, #17352a);
+    border: 2px solid var(--g, #176b4d); border-radius: 14px; box-shadow: 0 8px 26px rgba(0, 0, 0, .25);
+    font-weight: 700; font-size: 14px;
+  }
+  #magBar button { min-width: 44px; min-height: 44px; border-radius: 10px; background: #eaf3ee; color: var(--g, #176b4d); font-weight: 800; font-size: 20px; }
+  #magBar button.mag-off { font-size: 14px; padding: 0 12px; background: var(--red, #b84c4c); color: #fff; }
+  body.dark-mode #magBar button:not(.mag-off) { background: #2a4034; color: #d9f2e5; }
+  #magBar .mag-level { min-width: 44px; text-align: center; }
+  body.mag-on { cursor: zoom-in; }
+  body.mag-on input, body.mag-on textarea, body.mag-on .bold-editor { cursor: text; }
+  @media (max-width: 640px) { #magBar { top: auto; bottom: 76px; right: 8px; left: 8px; justify-content: space-between; } }
+</style>
+<div id="magLens" role="status" aria-live="off" dir="auto"></div>
+<div id="magBar" role="group" aria-label="Magnifier controls">
+  <span>Magnifier</span>
+  <button type="button" id="magMinus" aria-label="Zoom out" title="Zoom out">−</button>
+  <span class="mag-level" id="magLevel" aria-live="polite">2.5×</span>
+  <button type="button" id="magPlus" aria-label="Zoom in" title="Zoom in">+</button>
+  <button type="button" class="mag-off" id="magOff">Turn off</button>
+</div>
+<script>
+(function () {
+  var KEY = "muallimQuranMagnifier";
+  var LEVELS = [1.5, 2, 2.5, 3, 4];
+  var state = { on: false, zoom: 2.5 };
+  try { var s = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; if (typeof s.on === "boolean") state.on = s.on; if (LEVELS.indexOf(s.zoom) > -1) state.zoom = s.zoom; } catch (e) {}
+  var lens = document.getElementById("magLens"), bar = document.getElementById("magBar");
+  var buttons = [], hideTimer = null, last = { x: 0, y: 0, touch: false };
+
+  var ICON = '<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.9-4.9M10.5 7.5v6M7.5 10.5h6"/></svg>';
+  function makeBtn(extra) {
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "icon-btn mag-btn" + (extra ? " " + extra : "");
+    b.setAttribute("aria-label", "Magnifier: make small text bigger"); b.title = "Magnifier";
+    b.innerHTML = ICON + '<span class="utility-label">Magnifier</span>';
+    b.addEventListener("click", function () { setOn(!state.on); });
+    buttons.push(b); return b;
+  }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+  function render() {
+    document.body.classList.toggle("mag-on", state.on);
+    document.documentElement.style.setProperty("--mag-zoom", state.zoom);
+    document.getElementById("magLevel").textContent = state.zoom + "×";
+    bar.style.display = state.on ? "flex" : "none";
+    buttons.forEach(function (b) { b.setAttribute("aria-pressed", String(state.on)); });
+    if (!state.on) lens.style.display = "none";
+    document.getElementById("magMinus").disabled = state.zoom <= LEVELS[0];
+    document.getElementById("magPlus").disabled = state.zoom >= LEVELS[LEVELS.length - 1];
+  }
+  function setOn(v) { state.on = v; save(); render(); }
+  function step(d) {
+    var i = Math.max(0, Math.min(LEVELS.length - 1, LEVELS.indexOf(state.zoom) + d));
+    state.zoom = LEVELS[i]; save(); render();
+    if (state.on) showAt(last.x, last.y, last.touch, null);
+  }
+  document.getElementById("magMinus").addEventListener("click", function () { step(-1); });
+  document.getElementById("magPlus").addEventListener("click", function () { step(1); });
+  document.getElementById("magOff").addEventListener("click", function () { setOn(false); });
+
+  /* ---- find the text to show ---- */
+  function boldOnly(src, dest) {
+    src.childNodes.forEach(function (n) {
+      if (n.nodeType === 3) dest.appendChild(document.createTextNode(n.nodeValue));
+      else if (n.nodeType === 1) {
+        var t = n.tagName;
+        if (t === "B" || t === "STRONG") { var s = document.createElement("strong"); boldOnly(n, s); dest.appendChild(s); }
+        else if (n.getAttribute("aria-hidden") !== "true") boldOnly(n, dest);
+      }
+    });
+  }
+  function norm(t) { return (t || "").replace(/\s+/g, " ").trim(); }
+  function hasOwnText(el) {
+    for (var i = 0; i < el.childNodes.length; i++) if (el.childNodes[i].nodeType === 3 && norm(el.childNodes[i].nodeValue)) return true;
+    return false;
+  }
+  function windowAround(x, y) {
+    var node = null, off = 0;
+    if (document.caretPositionFromPoint) { var p = document.caretPositionFromPoint(x, y); if (p) { node = p.offsetNode; off = p.offset; } }
+    else if (document.caretRangeFromPoint) { var r = document.caretRangeFromPoint(x, y); if (r) { node = r.startContainer; off = r.startOffset; } }
+    if (!node || node.nodeType !== 3) return "";
+    var s = node.nodeValue, a = Math.max(0, off - 45), b = Math.min(s.length, off + 45);
+    while (a > 0 && !/\s/.test(s[a - 1])) a--;
+    while (b < s.length && !/\s/.test(s[b])) b++;
+    return norm(s.slice(a, b));
+  }
+  function contentAt(x, y, target) {
+    var el = target || document.elementFromPoint(x, y);
+    if (!el || el === document.body || el === document.documentElement) return null;
+    if (el.closest("#magLens, #magBar, iframe, .skip-link")) return null;
+    if (el.tagName === "IFRAME") return null;
+    /* form fields */
+    var f = el.closest("input, textarea, select");
+    if (f) {
+      if (f.type === "password") return { text: f.placeholder || "Password" };
+      if (f.type === "radio" || f.type === "checkbox") { var lab = f.closest("label"); return { text: norm(lab ? lab.textContent : "") }; }
+      if (f.tagName === "SELECT") return { text: norm(f.options[f.selectedIndex] ? f.options[f.selectedIndex].text : "") };
+      return { text: f.value || f.placeholder || "" };
+    }
+    /* bold/highlight editor: keep the highlighted words visible */
+    var ed = el.closest(".bold-editor");
+    if (ed) { var box = document.createElement("div"); boldOnly(ed, box); return { node: box }; }
+    /* walk up to the nearest element with readable text of sensible size */
+    var cur = el;
+    for (var d = 0; cur && cur !== document.body && d < 6; d++, cur = cur.parentElement) {
+      var txt = norm(cur.innerText || cur.textContent);
+      if (txt && txt.length <= 180 && (hasOwnText(cur) || cur.children.length <= 3)) return { text: txt };
+      if (txt && txt.length > 180) break;
+    }
+    var w = windowAround(x, y);
+    if (w) return { text: w };
+    var any = norm(el.innerText || el.textContent);
+    return any ? { text: any.slice(0, 160) } : null;
+  }
+
+  /* ---- place the lens ---- */
+  function showAt(x, y, touch, target) {
+    if (!state.on) return;
+    var c = contentAt(x, y, target);
+    if (!c || (!c.text && !c.node)) { lens.style.display = "none"; return; }
+    lens.textContent = "";
+    if (c.node) lens.appendChild(c.node); else lens.textContent = c.text;
+    lens.style.display = "block";
+    var vw = window.innerWidth, vh = window.innerHeight, w = lens.offsetWidth, h = lens.offsetHeight;
+    var left = Math.max(8, Math.min(vw - w - 8, x - w / 2));
+    var top = touch ? y - h - 36 : y + 26;       /* above a finger, below a mouse pointer */
+    if (top + h > vh - 8) top = y - h - 22;      /* flip up if no room below */
+    if (top < 8) top = Math.min(vh - h - 8, y + 26); /* flip down if no room above */
+    lens.style.left = left + "px"; lens.style.top = Math.max(8, top) + "px";
+  }
+  function scheduleHide(ms) { clearTimeout(hideTimer); hideTimer = setTimeout(function () { lens.style.display = "none"; }, ms); }
+
+  document.addEventListener("pointermove", function (e) {
+    if (!state.on) return;
+    var touch = e.pointerType === "touch";
+    last = { x: e.clientX, y: e.clientY, touch: touch };
+    clearTimeout(hideTimer);
+    showAt(e.clientX, e.clientY, touch, null);
+    if (touch) scheduleHide(2500);
+  }, { passive: true });
+  document.addEventListener("pointerdown", function (e) {
+    if (!state.on || e.pointerType !== "touch") return;
+    last = { x: e.clientX, y: e.clientY, touch: true };
+    clearTimeout(hideTimer); showAt(e.clientX, e.clientY, true, null); scheduleHide(2500);
+  }, { passive: true });
+  document.addEventListener("mouseleave", function () { lens.style.display = "none"; });
+  window.addEventListener("scroll", function () { if (state.on && !last.touch) lens.style.display = "none"; }, { passive: true });
+
+  /* keyboard users: magnify whatever has focus */
+  document.addEventListener("focusin", function (e) {
+    if (!state.on || !e.target || e.target.closest("#magBar")) return;
+    var r = e.target.getBoundingClientRect();
+    last = { x: r.left + r.width / 2, y: r.bottom, touch: false };
+    showAt(last.x, r.top + r.height / 2, false, e.target);
+    var h = lens.offsetHeight, top = r.bottom + 10;
+    if (top + h > window.innerHeight - 8) top = Math.max(8, r.top - h - 10);
+    lens.style.top = top + "px";
+    scheduleHide(4000);
+  });
+  document.addEventListener("input", function (e) {
+    if (!state.on || !e.target || !e.target.matches || !e.target.matches("input, .bold-editor")) return;
+    showAt(0, 0, false, e.target);
+    var r = e.target.getBoundingClientRect();
+    lens.style.top = Math.max(8, Math.min(window.innerHeight - lens.offsetHeight - 8, r.bottom + 10)) + "px";
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && state.on) lens.style.display = "none";
+    if (state.on && e.altKey && (e.key === "+" || e.key === "=")) { e.preventDefault(); step(1); }
+    if (state.on && e.altKey && e.key === "-") { e.preventDefault(); step(-1); }
+  });
+
+  /* ---- add the buttons ---- */
+  var user = document.querySelector(".topbar .user");
+  if (user) user.insertBefore(makeBtn(""), user.firstChild);
+  var login = document.getElementById("login");
+  if (login) login.appendChild(makeBtn("mag-login"));
+  render();
 })();
 </script>
 
