@@ -351,6 +351,85 @@
   </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="config.js"></script>
+<style>
+
+
+  /* RESPONSIVE LAYOUT PATCH: phones, tablets, laptops and wide screens */
+  *, *::before, *::after { box-sizing: border-box; }
+  html { width: 100%; max-width: 100%; overflow-x: clip; -webkit-text-size-adjust: 100%; }
+  body { width: 100%; max-width: 100%; overflow-x: clip; }
+  img, video, canvas, svg, iframe { max-width: 100%; }
+  input, select, textarea, button { max-width: 100%; }
+  main, section, .card, .loginbox, .settings-card, .course, .grid, .bookgrid, .unitgrid { min-width: 0; }
+  .grid, .bookgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .course { grid-template-columns: minmax(0, 2.1fr) minmax(0, 1fr); }
+  table { max-width: 100%; }
+  .card:has(table), .accessibility-table-wrap { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .topbar { min-width: 0; gap: 12px; }
+  .topbar > *, .user > * { min-width: 0; }
+  .user { flex-wrap: nowrap; }
+  .loginbox { max-width: calc(100vw - 24px); }
+  .loginbox input, .fill-input, .fill-input input { min-width: 0; }
+  .pdfbox iframe { display: block; max-width: 100%; }
+  .cover { min-width: 0; }
+  .actions > * { max-width: 100%; }
+
+  @media (max-width: 1100px) {
+    .grid, .bookgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .course { grid-template-columns: minmax(0, 1fr); }
+    main { padding: 24px; }
+  }
+  @media (max-width: 950px) and (min-width: 641px) {
+    .sidebar { width: 72px; }
+    main { margin-left: 72px; padding: 22px; }
+    .topbar { padding-left: 18px; padding-right: 18px; }
+    .settings-layout { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 640px) {
+    html, body { min-width: 320px; }
+    .login { min-height: 100vh; min-height: 100dvh; padding: 16px 0; }
+    .loginbox { width: calc(100% - 24px); max-width: 440px; padding: 24px 18px; border-radius: 18px; }
+    .logo { font-size: clamp(25px, 7vw, 36px); overflow-wrap: anywhere; }
+    .loginbox h1 { font-size: clamp(23px, 6vw, 30px); }
+    .topbar { height: auto; min-height: 60px; padding: 10px 12px; align-items: center; gap: 8px; }
+    .topbar .logo { font-size: clamp(15px, 4.2vw, 20px); line-height: 1.2; }
+    .user { gap: 5px; }
+    .user .btn.danger { min-height: 40px; padding: 7px 8px; }
+    .icon-btn { min-width: 38px; min-height: 40px; padding: 7px; }
+    .nav-profile { min-width: 38px; min-height: 40px; }
+    .sidebar { left: 0; right: 0; bottom: 0; top: auto; width: 100%; height: calc(62px + env(safe-area-inset-bottom)); padding: 5px 5px calc(5px + env(safe-area-inset-bottom)); gap: 3px; overflow-x: auto; overflow-y: hidden; }
+    .nav { flex: 1 0 0; min-width: 0; padding: 5px 1px; margin: 0; font-size: 17px; }
+    .nav span { font-size: 10px; white-space: nowrap; }
+    main { margin-left: 0; width: 100%; max-width: 100%; padding: 16px 12px calc(88px + env(safe-area-inset-bottom)); }
+    .grid, .bookgrid, .unitgrid, .course, .settings-layout { grid-template-columns: minmax(0, 1fr); }
+    .card { padding: 16px; }
+    .book .body { padding: 15px; }
+    .actions { gap: 8px; }
+    .actions .btn { flex: 1 1 130px; }
+    .topline { flex-direction: column; }
+    .pdfbox iframe { height: min(60vh, 420px); }
+    .syl { max-height: 340px; }
+    .accessibility-table { min-width: 0; }
+    th, td { padding: 8px 7px; font-size: 13px; }
+    .faq-item summary { overflow-wrap: anywhere; }
+    .bold-editor { max-width: 100%; overflow-wrap: anywhere; }
+  }
+  @media (max-width: 380px) {
+    .loginbox { padding: 20px 14px; }
+    .topbar { flex-wrap: wrap; }
+    .topbar > .logo { flex: 1 1 100%; }
+    .topbar .user { width: 100%; justify-content: flex-end; }
+    .sidebar { gap: 1px; }
+    .nav span { font-size: 9px; }
+    main { padding-left: 9px; padding-right: 9px; }
+    .card { padding: 13px; }
+    .btn { white-space: normal; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
+
+</style>
 </head>
 
 <body>
