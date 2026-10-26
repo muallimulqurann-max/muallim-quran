@@ -8471,8 +8471,8 @@ async function sendResetLink(email) {
   const btn = $("authBtn"); btn.disabled = true;
   /* Where the emailed link sends the student back to. Set PASSWORD_RESET_URL in config.js to your live site
      (e.g. "https://yoursite.com/") so links always go there, even if a reset is requested from another address. */
-  const liveUrl = (typeof PASSWORD_RESET_URL === "string" && PASSWORD_RESET_URL) ? PASSWORD_RESET_URL : "";
-  const opts = liveUrl ? { redirectTo: liveUrl } : (/^https?:$/.test(location.protocol) ? { redirectTo: location.origin + location.pathname } : {});
+  const liveUrl = "https://muallim-quran.vercel.app";
+  const opts = { redirectTo: liveUrl };
   const { error } = await sb.auth.resetPasswordForEmail(email, opts);
   if (error) { btn.disabled = false; authNotice("We could not send the reset link. " + (error.message || "Please wait a minute and try again.")); return false; }
   /* Same message whether or not the account exists, so nobody can use this to find out who is registered. */
@@ -8493,7 +8493,7 @@ function startRecovery() {
   $("app").classList.add("hidden");
   $("login").classList.remove("hidden");
   setAuthMode("recovery");
-  cleanResetUrl();
+  /* Do not remove the recovery token from the URL until Supabase has processed it. */
   setTimeout(function () { $("loginPass").focus(); }, 50);
 }
 async function saveNewPassword(pass, confirm) {
@@ -10683,7 +10683,11 @@ sb.auth.getSession().then(function (r) {
 });
 /* Reset-password email link: show "set a new password" instead of logging straight in */
 sb.auth.onAuthStateChange(function (event) {
-  if (event === "PASSWORD_RECOVERY" && authMode !== "recovery") startRecovery();
+  if (event === "PASSWORD_RECOVERY") {
+    if (authMode !== "recovery") startRecovery();
+    /* Supabase has now recognized the recovery event; it is safe to hide tokens from the address bar. */
+    cleanResetUrl();
+  }
 });
 if (RESET_LINK_ERROR) {
   cleanResetUrl();
