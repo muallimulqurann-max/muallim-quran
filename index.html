@@ -8469,7 +8469,10 @@ async function sendResetLink(email) {
   if (!email) { authNotice("Please enter your email address."); $("loginEmail").focus(); return false; }
   if (!$("loginEmail").checkValidity()) { authNotice("Enter a valid email address, such as name@example.com."); $("loginEmail").focus(); return false; }
   const btn = $("authBtn"); btn.disabled = true;
-  const opts = /^https?:$/.test(location.protocol) ? { redirectTo: location.origin + location.pathname } : {};
+  /* Where the emailed link sends the student back to. Set PASSWORD_RESET_URL in config.js to your live site
+     (e.g. "https://yoursite.com/") so links always go there, even if a reset is requested from another address. */
+  const liveUrl = (typeof PASSWORD_RESET_URL === "string" && PASSWORD_RESET_URL) ? PASSWORD_RESET_URL : "";
+  const opts = liveUrl ? { redirectTo: liveUrl } : (/^https?:$/.test(location.protocol) ? { redirectTo: location.origin + location.pathname } : {});
   const { error } = await sb.auth.resetPasswordForEmail(email, opts);
   if (error) { btn.disabled = false; authNotice("We could not send the reset link. " + (error.message || "Please wait a minute and try again.")); return false; }
   /* Same message whether or not the account exists, so nobody can use this to find out who is registered. */
