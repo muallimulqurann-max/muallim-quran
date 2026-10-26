@@ -10226,11 +10226,8 @@ async function submitActivities() {
           value = selected.value;
         }
       }
-      /* EMPTY TEXT */
-      if (
-        (question.type === "text" && !value) ||
-        (question.type === "bold" && !getBoldText(value))
-      ) {
+      /* EMPTY TEXT (bold/highlight questions are optional, so they are never "missing") */
+      if (question.type === "text" && !value) {
         missing.push(inputId);
       }
       answers[groupIndex][subIndex] = value;
